@@ -54,14 +54,12 @@ public class FichierDocumentService {
     }
 
     private void linkClientEtDocument(Client client, FichierDocument fichierDocument) {
-        client.setFichierDocuments(ListUtil.initList(client.getFichierDocuments()));
-        client.getFichierDocuments().add(fichierDocument);
+        this.clientService.ajouterFichierDocument(client, fichierDocument);
         this.clientService.saveClient(client);
     }
 
     private void linkNotaireEtDocument(Notaire notaire, FichierDocument fichierDocument) {
-        notaire.setFichierDocuments(ListUtil.initList(notaire.getFichierDocuments()));
-        notaire.getFichierDocuments().add(fichierDocument);
+        this.notaireService.ajouterFichierDocument(notaire, fichierDocument);
         this.notaireService.saveNotaire(notaire);
     }
 

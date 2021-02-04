@@ -13,16 +13,19 @@ public class NotaireService {
     public NotaireService(NotaireRepository notaireRepository) {
         this.notaireRepository = notaireRepository;
     }
+
     //TODO gerer avec une erreur 400 dans le orElse
-    public Notaire getNotaire(Long notaireId){
+    public Notaire getNotaire(Long notaireId) {
         return notaireRepository.findById(notaireId).orElse(null);
     }
-    public Notaire ajouterFichierDocument(Notaire notaire, FichierDocument fichierDocument){
+
+    public Notaire ajouterFichierDocument(Notaire notaire, FichierDocument fichierDocument) {
         notaire.setFichierDocuments(ListUtil.initList(notaire.getFichierDocuments()));
         notaire.getFichierDocuments().add(fichierDocument);
         return notaire;
     }
-    public Notaire saveNotaire(Notaire notaire){
+
+    public Notaire saveNotaire(Notaire notaire) {
         return this.notaireRepository.save(notaire);
     }
 }

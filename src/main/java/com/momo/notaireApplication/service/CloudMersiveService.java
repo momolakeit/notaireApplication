@@ -26,7 +26,7 @@ public class CloudMersiveService {
     @Value("${pdf.cloudMersive.apiKey}")
     private String cloudMersiveapiKey;
 
-    public byte[] convertDocxToPDF(byte[] byteArray)throws IOException {
+    public byte[] convertDocxToPDF(byte[] byteArray) throws IOException {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         ApiKeyAuth Apikey = (ApiKeyAuth) defaultClient.getAuthentication("Apikey");
         Apikey.setApiKey(cloudMersiveapiKey);
