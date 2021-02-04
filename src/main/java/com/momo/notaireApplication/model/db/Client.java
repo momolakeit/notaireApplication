@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity
@@ -15,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Client extends User {
     @ManyToMany
-    private List<Document> documents;
+    private List<FichierDocument> fichierDocuments;
 
 }
