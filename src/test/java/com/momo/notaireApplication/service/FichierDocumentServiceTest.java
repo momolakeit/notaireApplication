@@ -1,5 +1,8 @@
 package com.momo.notaireApplication.service;
 
+import com.momo.notaireApplication.model.db.Client;
+import com.momo.notaireApplication.model.db.FichierDocument;
+import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repository.DocumentRepository;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +16,9 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -45,13 +50,38 @@ class FichierDocumentServiceTest {
     private void init() {
         Mockito.when(notaireService.getNotaire(anyLong())).thenReturn(NotaireServiceTest.initNotaire());
         Mockito.when(clientService.findClient(anyLong())).thenReturn(ClientServiceTest.initClient());
+        Mockito.when(documentRepository.save(any(FichierDocument.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
     }
 
     @Test
     public void testAvecFichierWordAppelCloudMersive() throws IOException {
-        MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_WORD, "multipart/form-data",initDocumentByteArray());
-        fichierDocumentService.createDocument(1L,1L,file);
+        Notaire notaire = NotaireServiceTest.initNotaire();
+        Client client = ClientServiceTest.initClient();
+        MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_WORD, "multipart/form-data", initDocumentByteArray());
+        FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
         Mockito.verify(cloudMersiveService, times(1)).convertDocxToPDF(any());
+        assertEquals(notaire.getNom(), fichier.getNotaire().getNom());
+        assertEquals(notaire.getEmail(), fichier.getNotaire().getEmail());
+        assertEquals(notaire.getPrenom(), fichier.getNotaire().getPrenom());
+        assertEquals(client.getNom(), fichier.getClient().get(0).getNom());
+        assertEquals(client.getEmail(), fichier.getClient().get(0).getEmail());
+        assertEquals(client.getPrenom(), fichier.getClient().get(0).getPrenom());
+
+    }
+    @Test
+    public void testAvecFichierPdfAppelCloudMersive() throws IOException {
+        Notaire notaire = NotaireServiceTest.initNotaire();
+        Client client = ClientServiceTest.initClient();
+        MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_PDF, "multipart/form-data", initDocumentByteArray());
+        FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
+        Mockito.verify(cloudMersiveService, times(0)).convertDocxToPDF(any());
+        assertEquals(notaire.getNom(), fichier.getNotaire().getNom());
+        assertEquals(notaire.getEmail(), fichier.getNotaire().getEmail());
+        assertEquals(notaire.getPrenom(), fichier.getNotaire().getPrenom());
+        assertEquals(client.getNom(), fichier.getClient().get(0).getNom());
+        assertEquals(client.getEmail(), fichier.getClient().get(0).getEmail());
+        assertEquals(client.getPrenom(), fichier.getClient().get(0).getPrenom());
+
     }
 
     private byte[] initDocumentByteArray() throws IOException {
