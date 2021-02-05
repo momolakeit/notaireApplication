@@ -5,6 +5,7 @@ import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repository.DocumentRepository;
 import com.momo.notaireApplication.utils.ListUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,7 +70,7 @@ public class FichierDocumentService {
 
     private byte[] getBytesDuFichier(MultipartFile file) throws IOException {
         byte[] bytes;
-        if (!file.getContentType().equalsIgnoreCase(PDF_FILETYPE)) {
+        if (!FilenameUtils.getExtension(file.getOriginalFilename()).equalsIgnoreCase(PDF_FILETYPE)) {
             bytes = cloudMersiveService.convertDocxToPDF(file.getBytes());
         } else {
             bytes = file.getBytes();

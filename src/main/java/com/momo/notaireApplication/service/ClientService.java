@@ -1,5 +1,6 @@
 package com.momo.notaireApplication.service;
 
+import com.momo.notaireApplication.exception.ClientNotFoundException;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.repository.ClientRepository;
@@ -16,7 +17,7 @@ public class ClientService {
 
     //todo lancer erreur 400 et gerer
     public Client findClient(Long id) {
-        return this.clientRepository.findById(id).orElse(null);
+        return this.clientRepository.findById(id).orElseThrow(ClientNotFoundException::new);
     }
 
     public Client ajouterFichierDocument(Client client, FichierDocument fichierDocument) {
