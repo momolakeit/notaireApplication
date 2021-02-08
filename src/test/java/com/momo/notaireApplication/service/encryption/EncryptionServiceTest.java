@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class EncryptionServiceTest {
-    @Autowired
+    @InjectMocks
     private EncryptionService encryptionService;
 
     private final String secretText = "momo je suis un secret";
