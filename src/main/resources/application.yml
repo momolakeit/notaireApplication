@@ -1,3 +1,5 @@
 pdf:
   cloudMersive:
     apiKey: 230f7ecc-2c90-4398-a609-dd7f501e21fa
+encryption:
+  privateKey: ${ENCRYPTION_PRIVATE_KEY}

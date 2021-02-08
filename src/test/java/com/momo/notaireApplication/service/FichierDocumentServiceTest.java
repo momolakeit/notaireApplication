@@ -4,6 +4,7 @@ import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repository.DocumentRepository;
+import com.momo.notaireApplication.testUtils.TestDocumentUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,15 +14,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
-
-import java.io.File;
 import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -42,7 +36,6 @@ class FichierDocumentServiceTest {
     @Mock
     private CloudMersiveService cloudMersiveService;
 
-    private final String FILE_PATH = "\\src\\test\\resources\\";
     private final String NOM_FICHIER_WORD = "testDocuments.docx";
     private final String NOM_FICHIER_PDF = "testDocuments.pdf";
 
@@ -57,7 +50,7 @@ class FichierDocumentServiceTest {
     public void testAvecFichierWordAppelCloudMersive() throws IOException {
         Notaire notaire = NotaireServiceTest.initNotaire();
         Client client = ClientServiceTest.initClient();
-        MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_WORD, "multipart/form-data", initDocumentByteArray());
+        MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_WORD, "multipart/form-data", TestDocumentUtils.initWordDocument());
         FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
         Mockito.verify(cloudMersiveService, times(1)).convertDocxToPDF(any());
         assertEquals(notaire.getNom(), fichier.getNotaire().getNom());
@@ -72,7 +65,7 @@ class FichierDocumentServiceTest {
     public void testAvecFichierPdfAppelCloudMersive() throws IOException {
         Notaire notaire = NotaireServiceTest.initNotaire();
         Client client = ClientServiceTest.initClient();
-        MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_PDF, "multipart/form-data", initDocumentByteArray());
+        MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_PDF, "multipart/form-data", TestDocumentUtils.initPDFDocument());
         FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
         Mockito.verify(cloudMersiveService, times(0)).convertDocxToPDF(any());
         assertEquals(notaire.getNom(), fichier.getNotaire().getNom());
@@ -84,11 +77,5 @@ class FichierDocumentServiceTest {
 
     }
 
-    private byte[] initDocumentByteArray() throws IOException {
-        Path currentRelativePath = Paths.get("");
-        String absolutePath = currentRelativePath.toAbsolutePath().toString();
-        String pathDansProjet = FILE_PATH + NOM_FICHIER_WORD;
-        File file = new File(absolutePath + pathDansProjet);
-        return FileUtils.readFileToByteArray(file);
-    }
+
 }

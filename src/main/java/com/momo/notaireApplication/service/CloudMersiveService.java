@@ -7,6 +7,7 @@ import com.cloudmersive.client.invoker.ApiException;
 import com.cloudmersive.client.invoker.Configuration;
 import com.cloudmersive.client.invoker.auth.ApiKeyAuth;
 import com.cloudmersive.client.model.ReplaceStringRequest;
+import com.momo.notaireApplication.utils.ApplicationFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class CloudMersiveService {
         Apikey.setApiKey(cloudMersiveapiKey);
 
         ConvertDocumentApi apiInstance = new ConvertDocumentApi();
-        File tempFile = initTempFile(byteArray);
+        File tempFile = ApplicationFileUtils.initTempFile(byteArray);
         try {
             return apiInstance.convertDocumentAutodetectToPdf(tempFile);
         } catch (ApiException e) {
@@ -42,10 +43,5 @@ public class CloudMersiveService {
         return null;
     }
 
-    private File initTempFile(byte[] byteArray) throws IOException {
-        File tempFile = File.createTempFile("", "", null);
-        FileOutputStream fos = new FileOutputStream(tempFile);
-        fos.write(byteArray);
-        return tempFile;
-    }
+
 }
