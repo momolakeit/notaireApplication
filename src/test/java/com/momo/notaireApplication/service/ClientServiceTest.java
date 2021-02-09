@@ -37,7 +37,7 @@ class ClientServiceTest {
 
     @Test
     public void getClientLanceExceptionAssert() {
-        Mockito.when(clientRepository.findById(anyLong())).thenThrow(new ClientNotFoundException());
+        Mockito.when(clientRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(ClientNotFoundException.class, () -> {
             clientService.findClient(Long.valueOf(1));
         });

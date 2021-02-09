@@ -38,7 +38,7 @@ class NotaireServiceTest {
 
     @Test
     public void getNotaireLanceExceptionAssert() {
-        Mockito.when(notaireRepository.findById(anyLong())).thenThrow(new NotaireNotFoundException());
+        Mockito.when(notaireRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(NotaireNotFoundException.class, () -> {
             notaireService.getNotaire(Long.valueOf(1));
         });
