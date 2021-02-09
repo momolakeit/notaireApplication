@@ -54,20 +54,6 @@ class NotaireServiceTest {
     }
 
     @Test
-    public void ajouterFichierDocumentListeVide() {
-
-        Notaire notaire = notaireService.ajouterFichierDocument(initNotaire(), new FichierDocument());
-        assertEquals(1, notaire.getFichierDocuments().size());
-    }
-
-    @Test
-    public void ajouterFichierDocumentListeAvecContenu() {
-
-        Notaire notaire = notaireService.ajouterFichierDocument(initNotaireAvecListeDeFichier(), new FichierDocument());
-        assertEquals(2, notaire.getFichierDocuments().size());
-    }
-
-    @Test
     public void saveNotaire() {
         Notaire notaire = new Notaire();
         Mockito.when(notaireRepository.save(any(Notaire.class))).thenReturn(initNotaire());

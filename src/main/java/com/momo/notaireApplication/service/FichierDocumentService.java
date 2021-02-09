@@ -3,31 +3,36 @@ package com.momo.notaireApplication.service;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.repository.DocumentRepository;
+import com.momo.notaireApplication.repository.FichierDocumentRepository;
+import com.momo.notaireApplication.service.encryption.EncryptionService;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 @Service
 public class FichierDocumentService {
     private CloudMersiveService cloudMersiveService;
-    private DocumentRepository documentRepository;
+    private FichierDocumentRepository fichierDocumentRepository;
     private NotaireService notaireService;
     private ClientService clientService;
+    private EncryptionService encryptionService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FichierDocumentService.class);
     private String PDF_FILETYPE = "pdf";
 
 
-    public FichierDocumentService(CloudMersiveService cloudMersiveService, DocumentRepository documentRepository, NotaireService notaireService, ClientService clientService) {
+    public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, NotaireService notaireService, ClientService clientService, EncryptionService encryptionService) {
         this.cloudMersiveService = cloudMersiveService;
-        this.documentRepository = documentRepository;
+        this.fichierDocumentRepository = fichierDocumentRepository;
         this.notaireService = notaireService;
         this.clientService = clientService;
+        this.encryptionService = encryptionService;
     }
 
     public FichierDocument createDocument(Long clientId, Long notaireId, MultipartFile file) throws IOException {
@@ -39,12 +44,28 @@ public class FichierDocumentService {
         return fichierDocument;
 
     }
+    //todo gerer exception d'encryption , decryptage
+    public FichierDocument getDocument(Long documentId){
+        FichierDocument fichierDocument = fichierDocumentRepository.getOne(documentId);
+        try{
+            fichierDocument.setData(encryptionService.decryptData(fichierDocument.getData()));
+        }catch (Exception e){
+            LOGGER.info("Erreur dans le decryptage de donnée", e);
+        }
+        return fichierDocument;
 
+    }
     private FichierDocument initDocument(byte[] bytes, Notaire notaire, Client client) {
         FichierDocument fichierDocument = new FichierDocument();
         fichierDocument.setNotaire(notaire);
-        fichierDocument.setData(bytes);
         fichierDocument.setClient(new ArrayList<>(Arrays.asList(client)));
+        try{
+            fichierDocument.setData(encryptionService.encryptData(bytes));
+
+        }catch (Exception e)
+        {
+            LOGGER.info("Erreur lors de l'encryption du fichier PDF :",e);
+        }
         fichierDocument = saveDocument(fichierDocument);
         return fichierDocument;
     }
@@ -55,17 +76,17 @@ public class FichierDocumentService {
     }
 
     private void linkClientEtDocument(Client client, FichierDocument fichierDocument) {
-        this.clientService.ajouterFichierDocument(client, fichierDocument);
+        ListUtil.ajouterObjectAListe(fichierDocument,client.getFichierDocuments());
         this.clientService.saveClient(client);
     }
 
     private void linkNotaireEtDocument(Notaire notaire, FichierDocument fichierDocument) {
-        this.notaireService.ajouterFichierDocument(notaire, fichierDocument);
+        ListUtil.ajouterObjectAListe(fichierDocument,notaire.getFichierDocuments());
         this.notaireService.saveNotaire(notaire);
     }
 
     private FichierDocument saveDocument(FichierDocument fichierDocument) {
-        return this.documentRepository.save(fichierDocument);
+        return this.fichierDocumentRepository.save(fichierDocument);
     }
 
     private byte[] getBytesDuFichier(MultipartFile file) throws IOException {

@@ -53,20 +53,6 @@ class ClientServiceTest {
     }
 
     @Test
-    public void ajouterFichierDocumentListeVide() {
-
-        Client Client = clientService.ajouterFichierDocument(initClient(), new FichierDocument());
-        assertEquals(1, Client.getFichierDocuments().size());
-    }
-
-    @Test
-    public void ajouterFichierDocumentListeAvecContenu() {
-
-        Client Client = clientService.ajouterFichierDocument(initClientAvecListeDeFichier(), new FichierDocument());
-        assertEquals(2, Client.getFichierDocuments().size());
-    }
-
-    @Test
     public void saveClient() {
         Client client = new Client();
         Mockito.when(clientRepository.save(any(Client.class))).thenReturn(initClient());

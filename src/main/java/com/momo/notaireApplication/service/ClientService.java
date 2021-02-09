@@ -15,15 +15,8 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    //todo lancer erreur 400 et gerer
     public Client findClient(Long id) {
         return this.clientRepository.findById(id).orElseThrow(ClientNotFoundException::new);
-    }
-
-    public Client ajouterFichierDocument(Client client, FichierDocument fichierDocument) {
-        client.setFichierDocuments(ListUtil.initList(client.getFichierDocuments()));
-        client.getFichierDocuments().add(fichierDocument);
-        return client;
     }
 
     public Client saveClient(Client client) {

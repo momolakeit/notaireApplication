@@ -11,4 +11,9 @@ public class ListUtil {
         }
         return liste;
     }
+    public static <T> List<T> ajouterObjectAListe(T obj, List<T> list){
+        list =initList(list);
+        list.add(obj);
+        return list;
+    }
 }

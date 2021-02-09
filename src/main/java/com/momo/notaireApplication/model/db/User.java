@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -23,4 +24,10 @@ public class User {
     private String nom;
 
     private String password;
+
+    @ManyToMany
+    private List<FichierDocument> fichierDocuments;
+
+    @OneToMany
+    private List<Facture> factures;
 }

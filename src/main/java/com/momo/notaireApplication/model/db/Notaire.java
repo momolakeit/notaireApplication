@@ -13,6 +13,4 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Notaire extends User {
-    @OneToMany
-    private List<FichierDocument> fichierDocuments;
 }

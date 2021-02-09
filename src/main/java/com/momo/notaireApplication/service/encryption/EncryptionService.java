@@ -36,13 +36,6 @@ public class EncryptionService {
     private PrivateKey privateKey;
     private X509Certificate encryptionCertificate;
 
-  /*  private void initValues() throws CertificateException, FileNotFoundException, NoSuchProviderException, InvalidKeySpecException, NoSuchAlgorithmException {
-        initCertificate();
-
-        initPrivateKey();
-
-    }*/
-
     public byte[] encryptData(byte[] data)
             throws CertificateException, CMSException, IOException, NoSuchProviderException {
         encryptionCertificate = initCertificate();
