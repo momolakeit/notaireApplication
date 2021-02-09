@@ -1,5 +1,6 @@
 package com.momo.notaireApplication.service;
 
+import com.momo.notaireApplication.exception.FichierDocumentNotFoundException;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
@@ -46,7 +47,7 @@ public class FichierDocumentService {
     }
     //todo gerer exception d'encryption , decryptage
     public FichierDocument getDocument(Long documentId){
-        FichierDocument fichierDocument = fichierDocumentRepository.getOne(documentId);
+        FichierDocument fichierDocument = fichierDocumentRepository.findById(documentId).orElseThrow(FichierDocumentNotFoundException::new);
         try{
             fichierDocument.setData(encryptionService.decryptData(fichierDocument.getData()));
         }catch (Exception e){
