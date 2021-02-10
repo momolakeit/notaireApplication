@@ -21,6 +21,10 @@ public class NotaireService {
     public Notaire getNotaire(Long notaireId) {
         return notaireRepository.findById(notaireId).orElseThrow(NotaireNotFoundException::new);
     }
+    //todo test unitaire
+    public Notaire findNotaireByEmail(String email) {
+        return notaireRepository.findByEmail(email).orElseThrow(NotaireNotFoundException::new);
+    }
 
     public Notaire saveNotaire(Notaire notaire) {
         return this.notaireRepository.save(notaire);

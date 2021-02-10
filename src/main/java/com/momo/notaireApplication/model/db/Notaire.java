@@ -13,4 +13,5 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Notaire extends User {
+    private String stripeAccountId;
 }

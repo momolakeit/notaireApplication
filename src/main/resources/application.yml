@@ -1,5 +1,12 @@
 pdf:
   cloudMersive:
     apiKey: 230f7ecc-2c90-4398-a609-dd7f501e21fa
+
 encryption:
   privateKey: ${ENCRYPTION_PRIVATE_KEY}
+
+stripe:
+  apiKey: "sk_test_51HLwKgC5UoZOX4GRUFItjFyJNULwHrPtVdQneYTfdNWN8Jvaix5wabpNZk8JwjkSG36Mg2st9yV1VrhnfhUfhAOQ00NasvN6m1"
+
+front-end:
+  url : "http://localhost:3000"

@@ -120,6 +120,14 @@
 			<version>1.68</version>
 		</dependency>
 
+		<!--Stripe payments-->
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>20.37.0</version>
+		</dependency>
+
+
 
 	</dependencies>
 
