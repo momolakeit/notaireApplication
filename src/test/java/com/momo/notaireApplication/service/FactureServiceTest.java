@@ -4,6 +4,7 @@ import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repository.FactureRepository;
+import com.momo.notaireApplication.service.payment.StripeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,9 @@ class FactureServiceTest {
 
     @Mock
     private ClientService clientService;
+
+    @Mock
+    private StripeService stripeService;
 
     @Mock
     private FactureRepository factureRepository;

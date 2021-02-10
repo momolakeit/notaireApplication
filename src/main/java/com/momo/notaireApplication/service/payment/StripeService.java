@@ -2,6 +2,7 @@ package com.momo.notaireApplication.service.payment;
 
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
+import com.momo.notaireApplication.service.CloudMersiveService;
 import com.momo.notaireApplication.service.NotaireService;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -11,6 +12,9 @@ import com.stripe.model.PaymentIntent;
 import com.stripe.param.AccountCreateParams;
 import com.stripe.param.AccountLinkCreateParams;
 import com.stripe.param.PaymentIntentCreateParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,30 +32,49 @@ public class StripeService {
 
     private final String currency = "cad";
 
+    private final String stripePaymentErreurLogMsg = "Erreur lors de l'appel de stripe pour process un payment";
+
+    private final String stripeAccountErreurLogMsg = "Erreur lors de l'appel de stripe pour creer un compte";
+
     private NotaireService notaireService;
+
+
+    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(CloudMersiveService.class);
 
     public StripeService(NotaireService notaireService) {
         this.notaireService = notaireService;
     }
 
     //todo retourner les valueures de stripe par DTOS
-    public String processPayment(Facture facture, Notaire notaire) throws StripeException {
+    public String processPayment(Facture facture, Notaire notaire) {
         Stripe.apiKey = stripeAPIKey;
         PaymentIntentCreateParams params =
                 buildPaymentParams(facture, notaire);
+        PaymentIntent paymentIntent = null;
+        try {
+            paymentIntent = PaymentIntent.create(params);
 
-        PaymentIntent paymentIntent = PaymentIntent.create(params);
+        } catch (StripeException e) {
+            LOGGER.info(stripePaymentErreurLogMsg, e);
+        }
         return paymentIntent.getClientSecret();
 
     }
 
-    public String createStripeAccount(String notaireEmail) throws StripeException {
+    public String createStripeAccount(String notaireEmail) {
         Stripe.apiKey = stripeAPIKey;
 
         Notaire notaire = notaireService.findNotaireByEmail(notaireEmail);
         AccountCreateParams params = initAccountCreateParams(notaire);
-        Account account = fetchStripeAccount(notaire, params);
-        return createAccountLink(account);
+        try {
+            Account account = fetchStripeAccount(notaire, params);
+            return createAccountLink(account);
+
+        } catch (StripeException e) {
+            LOGGER.info(stripeAccountErreurLogMsg, e);
+        }
+        return null;
     }
 
     private String createAccountLink(Account account) throws StripeException {
