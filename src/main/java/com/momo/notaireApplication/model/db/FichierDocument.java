@@ -21,6 +21,8 @@ public class FichierDocument {
 
     private byte[] data;
 
+    private String description;
+
     @ManyToOne
     private Notaire notaire;
 

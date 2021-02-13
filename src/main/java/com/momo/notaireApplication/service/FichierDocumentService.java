@@ -36,6 +36,7 @@ public class FichierDocumentService {
         this.encryptionService = encryptionService;
     }
 
+    //todo gerer le commentaire passé pour le fichier document
     public FichierDocument createDocument(Long clientId, Long notaireId, MultipartFile file) throws IOException {
         byte[] bytes = getBytesDuFichier(file);
         Notaire notaire = this.notaireService.getNotaire(notaireId);
