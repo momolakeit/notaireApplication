@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class FactureServiceTest {
+public class FactureServiceTest {
     @InjectMocks
     private FactureService factureService;
 
@@ -63,5 +63,11 @@ class FactureServiceTest {
         Mockito.verify(clientService, Mockito.times(1)).saveClient(any(Client.class));
 
 
+    }
+
+    public static Facture initFacture() {
+        Facture facture = new Facture();
+        facture.setPrix(BigDecimal.valueOf(29.99));
+        return facture;
     }
 }
