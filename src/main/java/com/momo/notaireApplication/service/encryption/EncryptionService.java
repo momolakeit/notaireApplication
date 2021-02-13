@@ -1,5 +1,6 @@
 package com.momo.notaireApplication.service.encryption;
 
+import com.momo.notaireApplication.utils.EncryptionUtils;
 import lombok.SneakyThrows;
 import org.bouncycastle.cms.*;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
@@ -30,15 +31,16 @@ public class EncryptionService {
 
     @Value("${encryption.privateKey}")
     private String privateKeyStringValue;
-    private String BEGIN_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----";
-    private String END_PRIVATE_KEY = "-----END RSA PRIVATE KEY-----";
-    private static final String FILE_PATH = "src\\main\\resources\\certificate\\certificate.cer";
     private PrivateKey privateKey;
     private X509Certificate encryptionCertificate;
 
+    public EncryptionService() {
+        EncryptionUtils.registerBouncyCastleProvider();
+    }
+
     public byte[] encryptData(byte[] data)
             throws CertificateException, CMSException, IOException, NoSuchProviderException {
-        encryptionCertificate = initCertificate();
+        encryptionCertificate = EncryptionUtils.initCertificate();
         byte[] encryptedData = null;
         if (null != data && null != encryptionCertificate) {
             CMSEnvelopedDataGenerator cmsEnvelopedDataGenerator
@@ -62,7 +64,7 @@ public class EncryptionService {
             byte[] encryptedData)
             throws CMSException, InvalidKeySpecException, NoSuchAlgorithmException {
 
-        privateKey = initPrivateKey();
+        privateKey = EncryptionUtils.initPrivateKey(privateKeyStringValue);
         byte[] decryptedData = null;
         if (null != encryptedData && null != privateKey) {
             CMSEnvelopedData envelopedData = new CMSEnvelopedData(encryptedData);
@@ -79,25 +81,7 @@ public class EncryptionService {
         return decryptedData;
     }
 
-    private X509Certificate initCertificate() throws CertificateException, NoSuchProviderException, FileNotFoundException {
-        Security.addProvider(new BouncyCastleProvider());
-        CertificateFactory certFactory = CertificateFactory
-                .getInstance("X.509", "BC");
 
-        return  (X509Certificate) certFactory
-                .generateCertificate(new FileInputStream(FILE_PATH));
-    }
-
-    private PrivateKey initPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        privateKeyStringValue = privateKeyStringValue.replace(BEGIN_PRIVATE_KEY, "");
-        privateKeyStringValue = privateKeyStringValue.replace(END_PRIVATE_KEY, "");
-        privateKeyStringValue = privateKeyStringValue.replace("\n", "").replace("\r", "");
-
-        byte[] decodedByteArray = Base64.getDecoder().decode(privateKeyStringValue);
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedByteArray);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        return kf.generatePrivate(keySpec);
-    }
 
 
 }
