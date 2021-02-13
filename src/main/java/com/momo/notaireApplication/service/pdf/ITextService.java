@@ -20,10 +20,14 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
 import com.momo.notaireApplication.model.db.FichierDocument;
+import com.momo.notaireApplication.service.CloudMersiveService;
 import com.momo.notaireApplication.utils.ApplicationFileUtils;
 import com.momo.notaireApplication.utils.EncryptionUtils;
 import org.apache.commons.io.FileUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +37,9 @@ public class ITextService {
 
     @Value("${encryption.privateKey}")
     private String privateKeyStringValue;
+
+    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(ITextService.class);
 
     public ITextService() {
         EncryptionUtils.registerBouncyCastleProvider();
@@ -45,7 +52,7 @@ public class ITextService {
             throws GeneralSecurityException, IOException {
 
         PdfReader reader = new PdfReader(new FileInputStream(ApplicationFileUtils.initTempFile(byteArray)));
-        PdfSigner signer = new PdfSigner(reader, new FileOutputStream(DEST+RESULT_FILES), new StampingProperties());
+        PdfSigner signer = new PdfSigner(reader, new FileOutputStream(DEST + RESULT_FILES), new StampingProperties());
 
         // Create the signature appearance
         Rectangle rect = new Rectangle(36, 0, 200, 100);
@@ -69,16 +76,25 @@ public class ITextService {
         signer.signDetached(digest, pks, chain, null, null, null, 0, signatureType);
     }
 
-    public byte[] sign(byte[] byteArray, String description,String location) throws GeneralSecurityException, IOException {
-        createDirectory();
+    public byte[] sign(byte[] byteArray, String description, String location) {
+        try {
 
-        BouncyCastleProvider provider = new BouncyCastleProvider();
-        PrivateKey pk = EncryptionUtils.initPrivateKey(privateKeyStringValue);
-        Certificate[] chain = {EncryptionUtils.initCertificate()};
 
-        this.sign(  byteArray, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
-                PdfSigner.CryptoStandard.CMS, description, location);
-        return FileUtils.readFileToByteArray(new File(DEST+RESULT_FILES));
+            createDirectory();
+
+            BouncyCastleProvider provider = new BouncyCastleProvider();
+            PrivateKey pk = EncryptionUtils.initPrivateKey(privateKeyStringValue);
+            Certificate[] chain = {EncryptionUtils.initCertificate()};
+
+            this.sign(byteArray, chain, pk, DigestAlgorithms.SHA256, provider.getName(),
+                    PdfSigner.CryptoStandard.CMS, description, location);
+            return FileUtils.readFileToByteArray(new File(DEST + RESULT_FILES));
+        } catch (GeneralSecurityException e) {
+            LOGGER.info("erreur dans le securité dans la signature de document", e);
+        } catch (IOException e) {
+            LOGGER.info("Erreur dans la gestion des fichier ", e);
+        }
+        return null;
     }
 
     private void createDirectory() {

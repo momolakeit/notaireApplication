@@ -2,10 +2,12 @@ package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.exception.FichierDocumentNotFoundException;
 import com.momo.notaireApplication.model.db.Client;
+import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repository.FichierDocumentRepository;
 import com.momo.notaireApplication.service.encryption.EncryptionService;
+import com.momo.notaireApplication.service.pdf.ITextService;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -24,16 +26,18 @@ public class FichierDocumentService {
     private NotaireService notaireService;
     private ClientService clientService;
     private EncryptionService encryptionService;
+    private ITextService iTextService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FichierDocumentService.class);
     private String PDF_FILETYPE = "pdf";
 
 
-    public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, NotaireService notaireService, ClientService clientService, EncryptionService encryptionService) {
+    public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, NotaireService notaireService, ClientService clientService, EncryptionService encryptionService, ITextService iTextService) {
         this.cloudMersiveService = cloudMersiveService;
         this.fichierDocumentRepository = fichierDocumentRepository;
         this.notaireService = notaireService;
         this.clientService = clientService;
         this.encryptionService = encryptionService;
+        this.iTextService = iTextService;
     }
 
     //todo gerer le commentaire passé pour le fichier document
@@ -57,6 +61,13 @@ public class FichierDocumentService {
         return fichierDocument;
 
     }
+    //todo tester cette methode
+    public FichierDocument signDocument(Long documentId,String location){
+        FichierDocument fichierDocument = getDocument(documentId);
+        fichierDocument.setData(iTextService.sign(fichierDocument.getData(),fichierDocument.getDescription(),location));
+        return saveDocument(fichierDocument);
+    }
+
     private FichierDocument initDocument(byte[] bytes, Notaire notaire, Client client) {
         FichierDocument fichierDocument = new FichierDocument();
         fichierDocument.setNotaire(notaire);
