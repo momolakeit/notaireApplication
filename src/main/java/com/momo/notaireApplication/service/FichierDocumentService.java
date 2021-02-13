@@ -47,7 +47,7 @@ public class FichierDocumentService {
     }
     //todo gerer exception d'encryption , decryptage
     public FichierDocument getDocument(Long documentId){
-        FichierDocument fichierDocument = fichierDocumentRepository.findById(documentId).orElseThrow(FichierDocumentNotFoundException::new);
+          FichierDocument fichierDocument = fichierDocumentRepository.findById(documentId).orElseThrow(FichierDocumentNotFoundException::new);
         try{
             fichierDocument.setData(encryptionService.decryptData(fichierDocument.getData()));
         }catch (Exception e){
