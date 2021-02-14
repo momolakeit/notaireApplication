@@ -20,6 +20,6 @@ public class ClientController {
 
     @GetMapping("getClient/{clientId}")
     public ClientDTO getClient(@PathVariable final Long clientId){
-        return ClientMapper.instance.toDTO(this.clientService.findClient(clientId));
+        return this.clientService.findClientDTO(clientId);
     }
 }

@@ -1,16 +1,21 @@
 package com.momo.notaireApplication.service;
 
+import com.momo.notaireApplication.exception.FactureNotFoundException;
+import com.momo.notaireApplication.mapping.FactureMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
+import com.momo.notaireApplication.model.dto.FactureDTO;
 import com.momo.notaireApplication.repository.FactureRepository;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class FactureService {
     private FactureRepository factureRepository;
     private NotaireService notaireService;
@@ -34,6 +39,14 @@ public class FactureService {
         linkFactureAndItems(facture, notaire, client);
         return facture;
     }
+    //todo
+    public Facture getFacture(Long id){
+        return this.factureRepository.findById(id).orElseThrow(FactureNotFoundException::new);
+    }
+    public FactureDTO getFactureDTO(Long id){
+        return FactureMapper.instance.toDTO(this.getFacture(id));
+    }
+
 
     public Facture saveFacture(Facture facture) {
         return factureRepository.save(facture);

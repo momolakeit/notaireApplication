@@ -1,12 +1,16 @@
 package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.exception.NotaireNotFoundException;
+import com.momo.notaireApplication.mapping.NotaireMapper;
 import com.momo.notaireApplication.model.db.Notaire;
+import com.momo.notaireApplication.model.dto.NotaireDTO;
 import com.momo.notaireApplication.repository.NotaireRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class NotaireService {
     private NotaireRepository notaireRepository;
 
@@ -18,9 +22,15 @@ public class NotaireService {
     public Notaire getNotaire(Long notaireId) {
         return notaireRepository.findById(notaireId).orElseThrow(NotaireNotFoundException::new);
     }
+    public NotaireDTO getNotaireDTO(Long notaireId) {
+        return NotaireMapper.instance.toDTO(this.getNotaire(notaireId));
+    }
     //todo test unitaire
     public Notaire findNotaireByEmail(String email) {
-        return notaireRepository.findByEmail(email).orElseThrow(NotaireNotFoundException::new);
+        return notaireRepository.findByEmailAdress(email).orElseThrow(NotaireNotFoundException::new);
+    }
+    public NotaireDTO findNotaireDTOByEmail(String email) {
+        return NotaireMapper.instance.toDTO(this.findNotaireByEmail(email));
     }
 
     public Notaire saveNotaire(Notaire notaire) {

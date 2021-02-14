@@ -49,7 +49,7 @@ class ClientServiceTest {
         Client Client = clientService.findClient(Long.valueOf(1));
         assertEquals(NOM, Client.getNom());
         assertEquals(PRENOM, Client.getPrenom());
-        assertEquals(EMAIL, Client.getEmail());
+        assertEquals(EMAIL, Client.getEmailAdress());
     }
 
     @Test
@@ -59,14 +59,15 @@ class ClientServiceTest {
         Client returnClient = clientService.saveClient(client);
         assertEquals(NOM, returnClient.getNom());
         assertEquals(PRENOM, returnClient.getPrenom());
-        assertEquals(EMAIL, returnClient.getEmail());
+        assertEquals(EMAIL, returnClient.getEmailAdress());
     }
 
     public static Client initClient() {
         Client client = new Client();
+        client.setId(1L);
         client.setNom(NOM);
         client.setPrenom(PRENOM);
-        client.setEmail(EMAIL);
+        client.setEmailAdress(EMAIL);
         return client;
     }
 

@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 
 
 @ExtendWith(MockitoExtension.class)
-class NotaireServiceTest {
+public class NotaireServiceTest {
     @InjectMocks
     private NotaireService notaireService;
 
@@ -50,7 +50,7 @@ class NotaireServiceTest {
         Notaire notaire = notaireService.getNotaire(Long.valueOf(1));
         assertEquals(NOM, notaire.getNom());
         assertEquals(PRENOM, notaire.getPrenom());
-        assertEquals(EMAIL, notaire.getEmail());
+        assertEquals(EMAIL, notaire.getEmailAdress());
     }
 
     @Test
@@ -60,14 +60,15 @@ class NotaireServiceTest {
         Notaire returnNotaire = notaireService.saveNotaire(notaire);
         assertEquals(NOM, returnNotaire.getNom());
         assertEquals(PRENOM, returnNotaire.getPrenom());
-        assertEquals(EMAIL, returnNotaire.getEmail());
+        assertEquals(EMAIL, returnNotaire.getEmailAdress());
     }
 
     public static Notaire initNotaire() {
         Notaire notaire = new Notaire();
+        notaire.setId(1L);
         notaire.setNom(NOM);
         notaire.setPrenom(PRENOM);
-        notaire.setEmail(EMAIL);
+        notaire.setEmailAdress(EMAIL);
         return notaire;
     }
 

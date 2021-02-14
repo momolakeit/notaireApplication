@@ -93,7 +93,7 @@ public class StripeService {
         AccountCreateParams params =
                 AccountCreateParams.builder()
                         .setType(AccountCreateParams.Type.EXPRESS)
-                        .setEmail(notaire.getEmail())
+                        .setEmail(notaire.getEmailAdress())
                         .setBusinessType(AccountCreateParams.BusinessType.COMPANY)
                         .setCapabilities(
                                 AccountCreateParams.Capabilities.builder()

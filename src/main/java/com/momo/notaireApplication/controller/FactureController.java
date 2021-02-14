@@ -32,7 +32,7 @@ public class FactureController {
                 createFactureRequestDTO.getClientDTO().getId(),
                 createFactureRequestDTO.getPrix());
         String paymentClientSecret = this.stripeService.processPayment(facture, facture.getNotaire());
-        FactureDTO factureDTO = FactureMapper.instance.toDTO(facture);
+        FactureDTO factureDTO = this.factureService.getFactureDTO(facture.getId());
         factureDTO.setPaymentClientSecret(paymentClientSecret);
         return factureDTO;
     }

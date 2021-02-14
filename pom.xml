@@ -145,6 +145,22 @@
 			<version>1.4.2.Final</version>
 		</dependency>
 
+		<!--Servlet not found exception pour spring jpa test-->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!--jwt-->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.10.3</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

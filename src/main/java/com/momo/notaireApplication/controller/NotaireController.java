@@ -19,11 +19,11 @@ public class NotaireController {
 
     @GetMapping("/getNotaire/{notaireId}")
     public NotaireDTO getNotaire(@PathVariable final Long notaireId){
-        return NotaireMapper.instance.toDTO(this.notaireService.getNotaire(notaireId));
+        return this.notaireService.getNotaireDTO(notaireId);
     }
-    @GetMapping("/getNotaireByNotaire/{notaireEmail}")
+    @GetMapping("/getNotaireByEmail/{notaireEmail:.+}")
     public NotaireDTO getNotaire(@PathVariable final String notaireEmail){
-        return NotaireMapper.instance.toDTO(this.notaireService.findNotaireByEmail(notaireEmail));
+        return this.notaireService.findNotaireDTOByEmail(notaireEmail);
     }
 
 }
