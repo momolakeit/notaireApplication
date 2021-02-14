@@ -4,9 +4,7 @@ import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repository.FactureRepository;
-import com.momo.notaireApplication.service.payment.StripeService;
 import com.momo.notaireApplication.utils.ListUtil;
-import com.stripe.exception.StripeException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,24 +15,23 @@ public class FactureService {
     private FactureRepository factureRepository;
     private NotaireService notaireService;
     private ClientService clientService;
-    private StripeService stripeService;
 
-    public FactureService(FactureRepository factureRepository, NotaireService notaireService, ClientService clientService, StripeService stripeService) {
+    public FactureService(FactureRepository factureRepository, NotaireService notaireService, ClientService clientService) {
         this.factureRepository = factureRepository;
         this.notaireService = notaireService;
         this.clientService = clientService;
-        this.stripeService = stripeService;
     }
 
-    public Facture createFacture(Notaire notaire, Client client, BigDecimal prix) {
+    public Facture createFacture(Long notaireId,Long clientId, BigDecimal prix) {
         Facture facture = new Facture();
+        Notaire notaire = this.notaireService.getNotaire(notaireId);
+        Client client = this.clientService.findClient(clientId);
         facture.setNotaire(notaire);
         facture.setPrix(prix);
         facture.setDateDeCreation(LocalDateTime.now());
         facture.setClient(client);
         facture = saveFacture(facture);
         linkFactureAndItems(facture, notaire, client);
-        stripeService.processPayment(facture, notaire);
         return facture;
     }
 

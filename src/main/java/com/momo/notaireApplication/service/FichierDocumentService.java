@@ -12,6 +12,7 @@ import com.momo.notaireApplication.utils.ListUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,7 @@ public class FichierDocumentService {
     private ITextService iTextService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FichierDocumentService.class);
     private String PDF_FILETYPE = "pdf";
+    @Autowired
 
 
     public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, NotaireService notaireService, ClientService clientService, EncryptionService encryptionService, ITextService iTextService) {
@@ -41,7 +43,7 @@ public class FichierDocumentService {
     }
 
     //todo gerer le commentaire passé pour le fichier document
-    public FichierDocument createDocument(Long clientId, Long notaireId, MultipartFile file) throws IOException {
+    public FichierDocument createDocument(Long clientId, Long notaireId, MultipartFile file) {
         byte[] bytes = getBytesDuFichier(file);
         Notaire notaire = this.notaireService.getNotaire(notaireId);
         Client client = this.clientService.findClient(clientId);
@@ -50,21 +52,23 @@ public class FichierDocumentService {
         return fichierDocument;
 
     }
+
     //todo gerer exception d'encryption , decryptage
-    public FichierDocument getDocument(Long documentId){
-          FichierDocument fichierDocument = fichierDocumentRepository.findById(documentId).orElseThrow(FichierDocumentNotFoundException::new);
-        try{
+    public FichierDocument getDocument(Long documentId) {
+        FichierDocument fichierDocument = fichierDocumentRepository.findById(documentId).orElseThrow(FichierDocumentNotFoundException::new);
+        try {
             fichierDocument.setData(encryptionService.decryptData(fichierDocument.getData()));
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.info("Erreur dans le decryptage de donnée", e);
         }
         return fichierDocument;
 
     }
+
     //todo tester cette methode
-    public FichierDocument signDocument(Long documentId,String location){
+    public FichierDocument signDocument(Long documentId, String location) {
         FichierDocument fichierDocument = getDocument(documentId);
-        fichierDocument.setData(iTextService.sign(fichierDocument.getData(),fichierDocument.getDescription(),location));
+        fichierDocument.setData(iTextService.sign(fichierDocument.getData(), fichierDocument.getDescription(), location));
         return saveDocument(fichierDocument);
     }
 
@@ -72,12 +76,11 @@ public class FichierDocumentService {
         FichierDocument fichierDocument = new FichierDocument();
         fichierDocument.setNotaire(notaire);
         fichierDocument.setClient(new ArrayList<>(Arrays.asList(client)));
-        try{
+        try {
             fichierDocument.setData(encryptionService.encryptData(bytes));
 
-        }catch (Exception e)
-        {
-            LOGGER.info("Erreur lors de l'encryption du fichier PDF :",e);
+        } catch (Exception e) {
+            LOGGER.info("Erreur lors de l'encryption du fichier PDF :", e);
         }
         fichierDocument = saveDocument(fichierDocument);
         return fichierDocument;
@@ -89,12 +92,12 @@ public class FichierDocumentService {
     }
 
     private void linkClientEtDocument(Client client, FichierDocument fichierDocument) {
-        ListUtil.ajouterObjectAListe(fichierDocument,client.getFichierDocuments());
+        ListUtil.ajouterObjectAListe(fichierDocument, client.getFichierDocuments());
         this.clientService.saveClient(client);
     }
 
     private void linkNotaireEtDocument(Notaire notaire, FichierDocument fichierDocument) {
-        ListUtil.ajouterObjectAListe(fichierDocument,notaire.getFichierDocuments());
+        ListUtil.ajouterObjectAListe(fichierDocument, notaire.getFichierDocuments());
         this.notaireService.saveNotaire(notaire);
     }
 
@@ -102,12 +105,16 @@ public class FichierDocumentService {
         return this.fichierDocumentRepository.save(fichierDocument);
     }
 
-    private byte[] getBytesDuFichier(MultipartFile file) throws IOException {
-        byte[] bytes;
-        if (!FilenameUtils.getExtension(file.getOriginalFilename()).equalsIgnoreCase(PDF_FILETYPE)) {
-            bytes = cloudMersiveService.convertDocxToPDF(file.getBytes());
-        } else {
-            bytes = file.getBytes();
+    private byte[] getBytesDuFichier(MultipartFile file)  {
+        byte[] bytes =null;
+        try {
+            if (!FilenameUtils.getExtension(file.getOriginalFilename()).equalsIgnoreCase(PDF_FILETYPE)) {
+                bytes = cloudMersiveService.convertDocxToPDF(file.getBytes());
+            } else {
+                bytes = file.getBytes();
+            }
+        }catch (IOException e){
+            LOGGER.info("Erreur lors de l'obtention du fichierdocument",e);
         }
         return bytes;
     }

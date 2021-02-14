@@ -19,5 +19,7 @@ public class FactureDTO {
 
     private NotaireDTO notaire;
 
+    private String paymentClientSecret;
+
     private ClientDTO client;
 }

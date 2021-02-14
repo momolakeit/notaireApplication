@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
 public class FactureServiceTest {
@@ -46,12 +47,14 @@ public class FactureServiceTest {
         notaire = NotaireServiceTest.initNotaire();
         Mockito.when(factureRepository.save(any(Facture.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         Mockito.when(clientService.saveClient(any(Client.class))).thenReturn(client);
+        Mockito.when(clientService.findClient(anyLong())).thenReturn(client);
         Mockito.when(notaireService.saveNotaire(any(Notaire.class))).thenReturn(notaire);
+        Mockito.when(notaireService.getNotaire(anyLong())).thenReturn(notaire);
     }
 
     @Test
     void createFacture() {
-        Facture facture = factureService.createFacture(notaire, client, BigDecimal.valueOf(29.99));
+        Facture facture = factureService.createFacture(notaire.getId(), client.getId(), BigDecimal.valueOf(29.99));
 
         assertEquals(client, facture.getClient());
         assertEquals(notaire, facture.getNotaire());
