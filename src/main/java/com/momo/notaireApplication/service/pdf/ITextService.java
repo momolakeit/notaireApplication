@@ -53,14 +53,10 @@ public class ITextService {
 
         PdfReader reader = new PdfReader(new FileInputStream(ApplicationFileUtils.initTempFile(byteArray)));
         PdfSigner signer = new PdfSigner(reader, new FileOutputStream(DEST + RESULT_FILES), new StampingProperties());
-
         // Create the signature appearance
         Rectangle rect = new Rectangle(36, 0, 200, 100);
         PdfSignatureAppearance appearance = signer.getSignatureAppearance();
         appearance
-                .setContact("james")
-                .setSignatureCreator("melo")
-                .setContact("ball")
                 .setReason(reason)
                 .setLocation(location)
                 .setReuseAppearance(false)
