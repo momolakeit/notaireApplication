@@ -25,7 +25,6 @@ public class NotaireService {
     public NotaireDTO getNotaireDTO(Long notaireId) {
         return NotaireMapper.instance.toDTO(this.getNotaire(notaireId));
     }
-    //todo test unitaire
     public Notaire findNotaireByEmail(String email) {
         return notaireRepository.findByEmailAdress(email).orElseThrow(NotaireNotFoundException::new);
     }

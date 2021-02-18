@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +42,7 @@ public class FactureServiceTest {
 
     private Notaire notaire;
 
-    @BeforeEach
+
     private void initMocks() {
         client = ClientServiceTest.initClient();
         notaire = NotaireServiceTest.initNotaire();
@@ -54,6 +55,7 @@ public class FactureServiceTest {
 
     @Test
     void createFacture() {
+        initMocks();
         Facture facture = factureService.createFacture(notaire.getId(), client.getId(), BigDecimal.valueOf(29.99));
 
         assertEquals(client, facture.getClient());
@@ -67,9 +69,21 @@ public class FactureServiceTest {
 
 
     }
+    @Test
+    void getFacture() {
+        Mockito.when(factureRepository.findById(anyLong())).thenReturn(Optional.of(initFacture()));
+        Facture facture = factureService.getFacture(1L);
+        assertEquals(BigDecimal.valueOf(29.99), facture.getPrix());
+        assertEquals(LocalDateTime.now().getDayOfYear(), facture.getDateDeCreation().getDayOfYear());
+        assertEquals(LocalDateTime.now().getHour(), facture.getDateDeCreation().getHour());
+        assertEquals(LocalDateTime.now().getMinute(), facture.getDateDeCreation().getMinute());
+
+    }
+
 
     public static Facture initFacture() {
         Facture facture = new Facture();
+        facture.setDateDeCreation(LocalDateTime.now());
         facture.setPrix(BigDecimal.valueOf(29.99));
         return facture;
     }

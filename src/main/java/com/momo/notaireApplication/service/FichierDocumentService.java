@@ -67,7 +67,6 @@ public class FichierDocumentService {
 
     }
 
-    //todo tester cette methode
     public FichierDocument signDocument(Long documentId, String location) {
         FichierDocument fichierDocument = getDocument(documentId);
         fichierDocument.setData(iTextService.sign(fichierDocument.getData(), fichierDocument.getDescription(), location));

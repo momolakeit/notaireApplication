@@ -17,8 +17,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +51,16 @@ public class NotaireServiceTest {
         assertEquals(PRENOM, notaire.getPrenom());
         assertEquals(EMAIL, notaire.getEmailAdress());
     }
+
+    @Test
+    public void getNotaireAvecEmail() {
+        Mockito.when(notaireRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(initNotaire()));
+        Notaire notaire = notaireService.findNotaireByEmail(EMAIL);
+        assertEquals(NOM, notaire.getNom());
+        assertEquals(PRENOM, notaire.getPrenom());
+        assertEquals(EMAIL, notaire.getEmailAdress());
+    }
+
 
     @Test
     public void saveNotaire() {

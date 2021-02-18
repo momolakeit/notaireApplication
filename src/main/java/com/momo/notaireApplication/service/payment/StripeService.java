@@ -46,7 +46,6 @@ public class StripeService {
         this.notaireService = notaireService;
     }
 
-    //todo retourner les valueures de stripe par DTOS
     public String processPayment(Facture facture, Notaire notaire) {
         Stripe.apiKey = stripeAPIKey;
         PaymentIntentCreateParams params =

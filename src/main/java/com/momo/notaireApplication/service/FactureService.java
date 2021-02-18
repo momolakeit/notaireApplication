@@ -39,7 +39,7 @@ public class FactureService {
         linkFactureAndItems(facture, notaire, client);
         return facture;
     }
-    //todo
+
     public Facture getFacture(Long id){
         return this.factureRepository.findById(id).orElseThrow(FactureNotFoundException::new);
     }
