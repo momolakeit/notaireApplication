@@ -1,9 +1,9 @@
 package com.momo.notaireApplication.exception;
 
-public class FichierDocumentNotFoundException extends RuntimeException {
-    private static String FICHIER_DOCUMENT_NOT_FOUND_EXCEPTION_MESSAGE = "Fichier document not found";
+public class FichierDocumentNotFoundException extends ObjectNotFoundException {
+    private static String NOM_DE_CLASSE = "Fichier document";
 
     public FichierDocumentNotFoundException() {
-        super(FICHIER_DOCUMENT_NOT_FOUND_EXCEPTION_MESSAGE);
+        super(NOM_DE_CLASSE);
     }
 }

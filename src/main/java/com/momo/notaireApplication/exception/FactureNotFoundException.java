@@ -1,9 +1,9 @@
 package com.momo.notaireApplication.exception;
 
-public class FactureNotFoundException extends RuntimeException {
-    private static String FACTURE_NOT_FOUND_EXCEPTION_MESSAGE = "Facture not found";
+public class FactureNotFoundException extends ObjectNotFoundException {
+    private static String NOM_DE_CLASSE = "Facture ";
 
     public FactureNotFoundException() {
-        super(FACTURE_NOT_FOUND_EXCEPTION_MESSAGE);
+        super(NOM_DE_CLASSE);
     }
 }
