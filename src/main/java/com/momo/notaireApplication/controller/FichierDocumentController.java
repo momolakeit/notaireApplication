@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/fichierDocument")
-public class FichierDocumentController {
+public class FichierDocumentController extends BaseController {
     private FichierDocumentService fichierDocumentService;
 
     public FichierDocumentController(FichierDocumentService fichierDocumentService) {

@@ -1,16 +1,18 @@
 package com.momo.notaireApplication.controller;
 
+import com.momo.notaireApplication.exception.ObjectNotFoundException;
 import com.momo.notaireApplication.mapping.ClientMapper;
 import com.momo.notaireApplication.model.dto.ClientDTO;
 import com.momo.notaireApplication.service.ClientService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 @RestController
 @RequestMapping("/client")
-public class ClientController {
+public class ClientController extends BaseController{
 
     private ClientService clientService;
 
@@ -22,4 +24,9 @@ public class ClientController {
     public ClientDTO getClient(@PathVariable final Long clientId){
         return this.clientService.findClientDTO(clientId);
     }
+   /* @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "This should be application specific";
+       return null;
+    }*/
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/notaire")
-public class NotaireController {
+public class NotaireController extends BaseController {
     private NotaireService notaireService;
 
     public NotaireController(NotaireService notaireService) {

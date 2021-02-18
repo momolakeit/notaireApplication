@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/facture")
-public class FactureController {
+public class FactureController extends BaseController {
 
     private FactureService factureService;
     private StripeService stripeService;

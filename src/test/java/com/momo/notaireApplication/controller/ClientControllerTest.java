@@ -46,5 +46,13 @@ class ClientControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+    @Test
+    public void fetchNotFoundClient() throws Exception {
+        MockMvc mvc = initMockMvc();
+        mvc.perform(MockMvcRequestBuilders.get("/client/getClient/{clientId}",0)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
     private MockMvc initMockMvc(){return MockMvcBuilders.standaloneSetup(clientController).build();}
 }
