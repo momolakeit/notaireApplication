@@ -28,6 +28,4 @@ public class User {
     @ManyToMany
     private List<FichierDocument> fichierDocuments;
 
-    @OneToMany
-    private List<Facture> factures;
 }

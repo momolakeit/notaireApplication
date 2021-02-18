@@ -17,15 +17,15 @@ public class FichierDocumentController {
     }
 
     @PostMapping
-    public FichierDocumentDTO createFichierDocument(@RequestParam("file") MultipartFile file, @RequestBody CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO) {
+    public FichierDocumentDTO createFichierDocument(@RequestParam MultipartFile file, @RequestBody CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO) {
         return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.createDocument(
                 createFichierDocumentRequestDTO.getClientDTO().getId(),
                 createFichierDocumentRequestDTO.getNotaireDTO().getId(),
                 file));
     }
 
-    @GetMapping("/fichierDocument/{documentId}")
-    public FichierDocumentDTO getFichierDocument(@RequestParam Long documentId){
+    @GetMapping("/{documentId}")
+    public FichierDocumentDTO getFichierDocument(@PathVariable Long documentId){
         return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.getDocument(documentId));
     }
 }

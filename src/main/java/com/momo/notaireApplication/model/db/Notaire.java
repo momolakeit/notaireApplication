@@ -14,4 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Notaire extends User {
     private String stripeAccountId;
+
+    @OneToMany
+    private List<Facture> factures;
 }

@@ -19,6 +19,7 @@ public class FichierDocument {
 
     private LocalDateTime localDateTime;
 
+    @Lob
     private byte[] data;
 
     private String description;
