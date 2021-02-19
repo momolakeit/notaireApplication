@@ -62,7 +62,7 @@ class FichierDocumentControllerTest {
     }
 
     @Test
-    public void testFetchFacture() throws Exception {
+    public void testGetFichierDocument() throws Exception {
         MockMvc mvc = initMockMvc();
         mvc.perform(MockMvcRequestBuilders.get("/fichierDocument/{documentId}", fichierDocument.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +71,17 @@ class FichierDocumentControllerTest {
     }
 
     @Test
-    public void testCreateFacture() throws Exception {
+    public void testGetFichierDocumentNotFoundBadRequest() throws Exception {
+        MockMvc mvc = initMockMvc();
+        mvc.perform(MockMvcRequestBuilders.get("/fichierDocument/{documentId}", 0)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void testCreateFichierDocument() throws Exception {
         MockMvc mvc = initMockMvc();
         MockMultipartFile file = new MockMultipartFile("file", "mysuperfile.pdf", "multipart/form-data", TestDocumentUtils.initPDFDocument());
         CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO = new CreateFichierDocumentRequestDTO();

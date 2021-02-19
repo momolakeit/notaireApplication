@@ -44,6 +44,15 @@ class NotaireControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void fetchNotFoundNotaireBadRequest() throws Exception {
+        MockMvc mvc = initMockMvc();
+        mvc.perform(MockMvcRequestBuilders.get("/notaire/getNotaire/{notaireId}",0)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
     @Test
     public void fetchNotaireByEmail() throws Exception {
         MockMvc mvc = initMockMvc();
