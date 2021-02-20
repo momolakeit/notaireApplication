@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+public class AuthServiceTest {
 
     @InjectMocks
     private AuthService authService;
@@ -34,17 +34,17 @@ class AuthServiceTest {
     @Captor
     private ArgumentCaptor<User> userArgumentCaptor;
 
-    private final String EMAIL_ADRESS = "momo@email.com";
+    public final static String EMAIL_ADRESS = "momo@email.com";
 
-    private final String PRENOM = "Killua";
+    public final static String PRENOM = "Killua";
 
-    private final String NOM_DE_FAMILLE = "Uzumaki";
+    public final static String NOM_DE_FAMILLE = "Uzumaki";
 
-    private final String NOTAIRE_ROLE = "NOTAIRE";
+    public final static String NOTAIRE_ROLE = "NOTAIRE";
 
-    private final String CLIENT_ROLE = "CLIENT";
+    public final static String CLIENT_ROLE = "CLIENT";
 
-    private final String PASSWORD = "dontHackMe";
+    public final static String PASSWORD = "dontHackMe";
 
 
     @Test
@@ -88,7 +88,7 @@ class AuthServiceTest {
         when(passwordEncoder.encode(anyString())).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
     }
 
-    private SignUpDTO initSignUpDTO() {
+    private static SignUpDTO initSignUpDTO() {
         SignUpDTO signUpDTO = new SignUpDTO();
         signUpDTO.setEmailAdress(EMAIL_ADRESS);
         signUpDTO.setNom(NOM_DE_FAMILLE);
@@ -97,13 +97,13 @@ class AuthServiceTest {
         return signUpDTO;
     }
 
-    private SignUpDTO initSignUpDTONotaireRole() {
+    public static SignUpDTO initSignUpDTONotaireRole() {
         SignUpDTO signUpDTO = initSignUpDTO();
         signUpDTO.setRole(NOTAIRE_ROLE);
         return signUpDTO;
     }
 
-    private SignUpDTO initSignUpDTOClientRole() {
+    public static SignUpDTO initSignUpDTOClientRole() {
         SignUpDTO signUpDTO = initSignUpDTO();
         signUpDTO.setRole(CLIENT_ROLE);
         return signUpDTO;

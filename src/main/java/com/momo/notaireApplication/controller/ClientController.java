@@ -24,9 +24,4 @@ public class ClientController extends BaseController{
     public ClientDTO getClient(@PathVariable final Long clientId){
         return this.clientService.findClientDTO(clientId);
     }
-   /* @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "This should be application specific";
-       return null;
-    }*/
 }
