@@ -34,8 +34,10 @@ public class AuthService {
         switch (signUpDTO.getRole()){
             case NOTAIRE_ROLE:
                 userRepository.save(initUser(new Notaire(),signUpDTO));
+                break;
             case CLIENT_ROLE:
                 userRepository.save(initUser(new Client(),signUpDTO));
+                break;
         }
     }
 
