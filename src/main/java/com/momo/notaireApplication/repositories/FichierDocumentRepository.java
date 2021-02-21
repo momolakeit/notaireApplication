@@ -1,4 +1,4 @@
-package com.momo.notaireApplication.repository;
+package com.momo.notaireApplication.repositories;
 
 import com.momo.notaireApplication.model.db.FichierDocument;
 import org.springframework.data.jpa.repository.JpaRepository;
