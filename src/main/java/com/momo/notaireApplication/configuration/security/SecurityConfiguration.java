@@ -1,4 +1,4 @@
-package com.momo.notaireApplication.configuration;
+package com.momo.notaireApplication.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
