@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 @Data
 @Component
-public final class JwtProvider {
+public class JwtProvider {
 
     private final Algorithm algorithm;
 

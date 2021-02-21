@@ -1,11 +1,18 @@
 package com.momo.notaireApplication.service.authentification;
 
+import com.momo.notaireApplication.exception.BadPasswordException;
 import com.momo.notaireApplication.exception.UserAlreadyExistsException;
+import com.momo.notaireApplication.exception.UserNotFoundException;
+import com.momo.notaireApplication.jwt.JwtProvider;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.dto.JWTResponse;
+import com.momo.notaireApplication.model.dto.NotaireDTO;
+import com.momo.notaireApplication.model.request.LogInDTO;
 import com.momo.notaireApplication.model.request.SignUpDTO;
 import com.momo.notaireApplication.repositories.UserRepository;
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +39,9 @@ public class AuthServiceTest {
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Mock
+    private JwtProvider jwtProvider;
+
     @Captor
     private ArgumentCaptor<User> userArgumentCaptor;
 
@@ -45,6 +56,8 @@ public class AuthServiceTest {
     public final static String CLIENT_ROLE = "CLIENT";
 
     public final static String PASSWORD = "dontHackMe";
+
+    public final static String JWT_TOKEN = "bearer tokensoidontgethacked";
 
 
     @Test
@@ -69,6 +82,29 @@ public class AuthServiceTest {
         });
     }
 
+    @Test
+    public void logInUserNotFound() {
+        when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.empty());
+        Assertions.assertThrows(UserNotFoundException.class, () -> {
+            authService.logInUser(initLogInDTO());
+        });
+    }
+    @Test
+    public void logInUserBadPassword() {
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
+        when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(initNotaire()));
+        Assertions.assertThrows(BadPasswordException.class, () -> {
+            authService.logInUser(initLogInDTO());
+        });
+    }
+    @Test
+    public void logInUser() {
+        when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
+        when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(initNotaire()));
+        when(jwtProvider.generate(any(User.class))).thenReturn(JWT_TOKEN);
+        JWTResponse jwtResponse = authService.logInUser(initLogInDTO());
+        assertEquals(JWT_TOKEN, jwtResponse.getToken());
+    }
 
     @Test
     public void testCreateUserClient() {
@@ -109,4 +145,17 @@ public class AuthServiceTest {
         return signUpDTO;
     }
 
+    public static LogInDTO initLogInDTO() {
+        LogInDTO logInDTO = new LogInDTO();
+        logInDTO.setEmailAdress(EMAIL_ADRESS);
+        logInDTO.setPassword(PASSWORD);
+        return logInDTO;
+    }
+
+    public static Notaire initNotaire() {
+        Notaire notaire = new Notaire();
+        notaire.setPassword(PASSWORD);
+        notaire.setEmailAdress(EMAIL_ADRESS);
+        return notaire;
+    }
 }
