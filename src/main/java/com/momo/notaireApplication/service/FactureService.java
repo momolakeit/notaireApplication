@@ -6,7 +6,7 @@ import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.dto.FactureDTO;
-import com.momo.notaireApplication.repository.FactureRepository;
+import com.momo.notaireApplication.repositories.FactureRepository;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

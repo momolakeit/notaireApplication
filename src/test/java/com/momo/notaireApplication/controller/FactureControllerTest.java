@@ -6,8 +6,8 @@ import com.momo.notaireApplication.mapping.NotaireMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.request.CreateFactureRequestDTO;
-import com.momo.notaireApplication.repository.ClientRepository;
-import com.momo.notaireApplication.repository.NotaireRepository;
+import com.momo.notaireApplication.repositories.ClientRepository;
+import com.momo.notaireApplication.repositories.NotaireRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
 

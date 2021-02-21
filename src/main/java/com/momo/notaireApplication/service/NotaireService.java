@@ -4,7 +4,7 @@ import com.momo.notaireApplication.exception.NotaireNotFoundException;
 import com.momo.notaireApplication.mapping.NotaireMapper;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.dto.NotaireDTO;
-import com.momo.notaireApplication.repository.NotaireRepository;
+import com.momo.notaireApplication.repositories.NotaireRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

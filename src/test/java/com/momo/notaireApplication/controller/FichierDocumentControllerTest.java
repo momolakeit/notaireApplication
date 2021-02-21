@@ -6,11 +6,10 @@ import com.momo.notaireApplication.mapping.NotaireMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.model.request.CreateFactureRequestDTO;
 import com.momo.notaireApplication.model.request.CreateFichierDocumentRequestDTO;
-import com.momo.notaireApplication.repository.ClientRepository;
-import com.momo.notaireApplication.repository.FichierDocumentRepository;
-import com.momo.notaireApplication.repository.NotaireRepository;
+import com.momo.notaireApplication.repositories.ClientRepository;
+import com.momo.notaireApplication.repositories.FichierDocumentRepository;
+import com.momo.notaireApplication.repositories.NotaireRepository;
 import com.momo.notaireApplication.testUtils.TestDocumentUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,9 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest

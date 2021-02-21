@@ -3,10 +3,8 @@ package com.momo.notaireApplication.service;
 import com.momo.notaireApplication.exception.ClientNotFoundException;
 import com.momo.notaireApplication.mapping.ClientMapper;
 import com.momo.notaireApplication.model.db.Client;
-import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.dto.ClientDTO;
-import com.momo.notaireApplication.repository.ClientRepository;
-import com.momo.notaireApplication.utils.ListUtil;
+import com.momo.notaireApplication.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

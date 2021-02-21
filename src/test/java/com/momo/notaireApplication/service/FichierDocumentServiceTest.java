@@ -4,7 +4,7 @@ import com.momo.notaireApplication.exception.FichierDocumentNotFoundException;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.repository.FichierDocumentRepository;
+import com.momo.notaireApplication.repositories.FichierDocumentRepository;
 import com.momo.notaireApplication.service.encryption.EncryptionService;
 import com.momo.notaireApplication.service.pdf.ITextService;
 import com.momo.notaireApplication.testUtils.TestDocumentUtils;

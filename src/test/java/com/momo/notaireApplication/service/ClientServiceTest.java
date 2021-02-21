@@ -3,7 +3,7 @@ package com.momo.notaireApplication.service;
 import com.momo.notaireApplication.exception.ClientNotFoundException;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
-import com.momo.notaireApplication.repository.ClientRepository;
+import com.momo.notaireApplication.repositories.ClientRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

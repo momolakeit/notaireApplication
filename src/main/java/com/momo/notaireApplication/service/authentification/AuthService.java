@@ -5,7 +5,7 @@ import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.model.request.SignUpDTO;
-import com.momo.notaireApplication.repository.UserRepository;
+import com.momo.notaireApplication.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
