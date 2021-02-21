@@ -1,9 +1,14 @@
 package com.momo.notaireApplication.service.authentification;
 
+import com.momo.notaireApplication.exception.BadPasswordException;
 import com.momo.notaireApplication.exception.UserAlreadyExistsException;
+import com.momo.notaireApplication.exception.UserNotFoundException;
+import com.momo.notaireApplication.jwt.JwtProvider;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.dto.JWTResponse;
+import com.momo.notaireApplication.model.request.LogInDTO;
 import com.momo.notaireApplication.model.request.SignUpDTO;
 import com.momo.notaireApplication.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,13 +23,16 @@ public class AuthService {
 
     private PasswordEncoder encoder;
 
+    private JwtProvider jwtProvider;
+
     private final String NOTAIRE_ROLE="NOTAIRE";
     private final String CLIENT_ROLE="CLIENT";
 
 
-    public AuthService(UserRepository userRepository, PasswordEncoder encoder) {
+    public AuthService(UserRepository userRepository, PasswordEncoder encoder, JwtProvider jwtProvider) {
         this.userRepository = userRepository;
         this.encoder = encoder;
+        this.jwtProvider = jwtProvider;
     }
 
     public void createUser(SignUpDTO signUpDTO){
@@ -39,6 +47,18 @@ public class AuthService {
                 userRepository.save(initUser(new Client(),signUpDTO));
                 break;
         }
+    }
+
+    public JWTResponse logInUser(LogInDTO logInDTO){
+        User user = userRepository.findByEmailAdress(logInDTO.getEmailAdress()).orElseThrow(UserNotFoundException::new);
+        JWTResponse jwt=null ;
+        if(encoder.matches(user.getPassword(),logInDTO.getPassword())){
+            jwt = new JWTResponse();
+            jwt.setToken(jwtProvider.generate(user));
+        }else{
+            throw new BadPasswordException();
+        }
+        return jwt;
     }
 
     private User initUser(User user,SignUpDTO signUpDTO){

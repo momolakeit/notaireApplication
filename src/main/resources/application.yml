@@ -10,3 +10,8 @@ stripe:
 
 front-end:
   url : "http://localhost:3000"
+
+security:
+  jwt:
+    duration: 5
+    secret: "dP5O3KjgLbAtU1oUIMM1"
