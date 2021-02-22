@@ -55,7 +55,7 @@ public class AuthService {
     public JWTResponse logInUser(LogInDTO logInDTO){
         User user = userRepository.findByEmailAdress(logInDTO.getEmailAdress()).orElseThrow(UserNotFoundException::new);
         JWTResponse jwt=null ;
-        if(encoder.matches(user.getPassword(),logInDTO.getPassword())){
+        if(encoder.matches(logInDTO.getPassword(), user.getPassword())){
             jwt = new JWTResponse();
             jwt.setToken(jwtProvider.generate(user));
         }else{

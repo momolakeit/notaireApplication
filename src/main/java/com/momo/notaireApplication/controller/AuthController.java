@@ -26,7 +26,7 @@ public class AuthController extends BaseController {
         return ResponseEntity.ok("user created");
     }
     @PostMapping("/logIn")
-    public JWTResponse logIn(@RequestBody LogInDTO logInDTO) {
-        return authService.logInUser(logInDTO);
+    public ResponseEntity<JWTResponse> logIn(@RequestBody LogInDTO logInDTO) {
+        return ResponseEntity.ok(authService.logInUser(logInDTO));
     }
 }
