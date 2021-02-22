@@ -25,6 +25,9 @@ public class User {
 
     private String password;
 
+    @OneToMany
+    private List<Facture> factures;
+
     @ManyToMany
     private List<FichierDocument> fichierDocuments;
 

@@ -32,9 +32,9 @@ public class FactureService {
         Notaire notaire = this.notaireService.getNotaire(notaireId);
         Client client = this.clientService.findClient(clientId);
         facture.setNotaire(notaire);
+        facture.setClient(client);
         facture.setPrix(prix);
         facture.setDateDeCreation(LocalDateTime.now());
-        facture.setClient(client);
         facture = saveFacture(facture);
         linkFactureAndItems(facture, notaire, client);
         return facture;
