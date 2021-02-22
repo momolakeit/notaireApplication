@@ -31,6 +31,7 @@ class AuthControllerTest {
 
     private final String EMAIL = "lebron@james.com";
 
+    public final String MAUVAIS_ROLE = "MAUVAIS ROLE";
 
 
     @Test
@@ -41,6 +42,18 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createUserBadRoleThrowsException() throws Exception {
+        MockMvc mvc = initMockMvc();
+        SignUpDTO signUpDTO = AuthServiceTest.initSignUpDTONotaireRole();
+        signUpDTO.setRole(MAUVAIS_ROLE);
+        mvc.perform(MockMvcRequestBuilders.post("/user")
+                .content(new ObjectMapper().writeValueAsString(MAUVAIS_ROLE))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

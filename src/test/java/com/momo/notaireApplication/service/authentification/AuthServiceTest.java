@@ -1,6 +1,7 @@
 package com.momo.notaireApplication.service.authentification;
 
 import com.momo.notaireApplication.exception.BadPasswordException;
+import com.momo.notaireApplication.exception.BadRoleException;
 import com.momo.notaireApplication.exception.UserAlreadyExistsException;
 import com.momo.notaireApplication.exception.UserNotFoundException;
 import com.momo.notaireApplication.jwt.JwtProvider;
@@ -59,6 +60,8 @@ public class AuthServiceTest {
 
     public final static String JWT_TOKEN = "bearer tokensoidontgethacked";
 
+    public final static String MAUVAIS_ROLE = "MAUVAIS ROLE";
+
 
     @Test
     public void testCreateUserNotaire() {
@@ -71,6 +74,15 @@ public class AuthServiceTest {
         assertEquals(PASSWORD, notaire.getPassword());
         assertEquals(PRENOM, notaire.getPrenom());
         assertEquals(NOM_DE_FAMILLE, notaire.getNom());
+    }
+
+    @Test
+    public void testCreateUserMauvaisRole() {
+        SignUpDTO signUpDTO = initSignUpDTONotaireRole();
+        signUpDTO.setRole(MAUVAIS_ROLE);
+        Assertions.assertThrows(BadRoleException.class, () -> {
+            authService.createUser(signUpDTO);
+        });
     }
 
     @Test
@@ -89,6 +101,7 @@ public class AuthServiceTest {
             authService.logInUser(initLogInDTO());
         });
     }
+
     @Test
     public void logInUserBadPassword() {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
@@ -97,6 +110,7 @@ public class AuthServiceTest {
             authService.logInUser(initLogInDTO());
         });
     }
+
     @Test
     public void logInUser() {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);

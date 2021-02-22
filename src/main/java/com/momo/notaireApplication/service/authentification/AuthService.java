@@ -1,6 +1,7 @@
 package com.momo.notaireApplication.service.authentification;
 
 import com.momo.notaireApplication.exception.BadPasswordException;
+import com.momo.notaireApplication.exception.BadRoleException;
 import com.momo.notaireApplication.exception.UserAlreadyExistsException;
 import com.momo.notaireApplication.exception.UserNotFoundException;
 import com.momo.notaireApplication.jwt.JwtProvider;
@@ -39,13 +40,15 @@ public class AuthService {
         userRepository.findByEmailAdress(signUpDTO.getEmailAdress()).ifPresent(user -> {
                 throw new UserAlreadyExistsException();
         });
-        switch (signUpDTO.getRole()){
+        switch (signUpDTO.getRole().toUpperCase()){
             case NOTAIRE_ROLE:
                 userRepository.save(initUser(new Notaire(),signUpDTO));
                 break;
             case CLIENT_ROLE:
                 userRepository.save(initUser(new Client(),signUpDTO));
                 break;
+            default:
+                throw new BadRoleException();
         }
     }
 
