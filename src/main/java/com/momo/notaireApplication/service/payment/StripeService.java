@@ -4,6 +4,7 @@ import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.service.CloudMersiveService;
 import com.momo.notaireApplication.service.NotaireService;
+import com.momo.notaireApplication.utils.ObjectUtils;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
@@ -48,7 +49,7 @@ public class StripeService {
 
     public String processPayment(Facture facture) {
         Stripe.apiKey = stripeAPIKey;
-        Notaire notaire = this.notaireService.findNotaireInFacture(facture);
+        Notaire notaire = ObjectUtils.findNotaireInList(facture.getUsers());
         PaymentIntentCreateParams params =
                 buildPaymentParams(facture, notaire);
         PaymentIntent paymentIntent = null;

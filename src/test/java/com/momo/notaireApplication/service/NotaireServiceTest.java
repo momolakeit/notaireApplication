@@ -72,6 +72,7 @@ public class NotaireServiceTest {
         assertEquals(EMAIL, returnNotaire.getEmailAdress());
     }
 
+
     public static Notaire initNotaire() {
         Notaire notaire = new Notaire();
         notaire.setId(1L);
