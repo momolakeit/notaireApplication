@@ -74,8 +74,7 @@ public class FichierDocumentService {
 
     private FichierDocument initDocument(byte[] bytes, Notaire notaire, Client client) {
         FichierDocument fichierDocument = new FichierDocument();
-        fichierDocument.setNotaire(notaire);
-        fichierDocument.setClient(new ArrayList<>(Arrays.asList(client)));
+        fichierDocument.setUsers(new ArrayList<>(Arrays.asList(client,notaire)));
         try {
             fichierDocument.setData(encryptionService.encryptData(bytes));
 

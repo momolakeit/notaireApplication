@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Service
 @Transactional
@@ -31,13 +33,19 @@ public class FactureService {
         Facture facture = new Facture();
         Notaire notaire = this.notaireService.getNotaire(notaireId);
         Client client = this.clientService.findClient(clientId);
-        facture.setNotaire(notaire);
-        facture.setClient(client);
+        facture.setUsers(new ArrayList<>(Arrays.asList(client,notaire)));
         facture.setPrix(prix);
         facture.setDateDeCreation(LocalDateTime.now());
         facture = saveFacture(facture);
         linkFactureAndItems(facture, notaire, client);
         return facture;
+    }
+    public Notaire findNotaireInFacture(Facture facture){
+        return (Notaire) facture.getUsers()
+                                .stream()
+                                .filter(user -> user instanceof Notaire)
+                                .findFirst()
+                                .orElseThrow(FactureNotFoundException::new);
     }
 
     public Facture getFacture(Long id){

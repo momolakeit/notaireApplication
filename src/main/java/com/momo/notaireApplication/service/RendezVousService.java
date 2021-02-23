@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Service
 public class RendezVousService {
@@ -31,16 +33,13 @@ public class RendezVousService {
         Notaire notaire = this.notaireService.getNotaire(notaireId);
         LocalDateTime dateTime =
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
-        RendezVous rendezVous = new RendezVous();
-        rendezVous.setLocalDateTime(dateTime);
-        rendezVous.setClient(client);
-        rendezVous.setNotaire(notaire);
-        rendezVous = this.saveRendezVous(rendezVous);
+        RendezVous rendezVous = initRendezVous(client, notaire, dateTime);
         this.linkRendezVousAndItems(client, notaire, rendezVous);
         return rendezVous;
 
     }
-    public RendezVous getRendezVous(Long id){
+
+    public RendezVous getRendezVous(Long id) {
         return rendezVousRepository.findById(id).orElseThrow(RendezVousNotFoundException::new);
     }
 
@@ -56,6 +55,14 @@ public class RendezVousService {
     private void linkRendezVousAndClient(Client client, RendezVous rendezVous) {
         ListUtil.ajouterObjectAListe(rendezVous, client.getRendezVous());
         this.clientService.saveClient(client);
+    }
+
+    private RendezVous initRendezVous(Client client, Notaire notaire, LocalDateTime dateTime) {
+        RendezVous rendezVous = new RendezVous();
+        rendezVous.setLocalDateTime(dateTime);
+        rendezVous.setUsers(new ArrayList<>(Arrays.asList(client,notaire)));
+        rendezVous = this.saveRendezVous(rendezVous);
+        return rendezVous;
     }
 
     private void linkRendezVousAndNotaire(Notaire notaire, RendezVous rendezVous) {

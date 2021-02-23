@@ -4,6 +4,7 @@ import com.momo.notaireApplication.mapping.ClientMapper;
 import com.momo.notaireApplication.mapping.FactureMapper;
 import com.momo.notaireApplication.mapping.NotaireMapper;
 import com.momo.notaireApplication.model.db.Facture;
+import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.dto.FactureDTO;
 import com.momo.notaireApplication.model.request.CreateFactureRequestDTO;
 import com.momo.notaireApplication.service.FactureService;
@@ -31,7 +32,7 @@ public class FactureController extends BaseController {
                 createFactureRequestDTO.getNotaireDTO().getId(),
                 createFactureRequestDTO.getClientDTO().getId(),
                 createFactureRequestDTO.getPrix());
-        String paymentClientSecret = this.stripeService.processPayment(facture, facture.getNotaire());
+        String paymentClientSecret = this.stripeService.processPayment(facture);
         FactureDTO factureDTO = this.factureService.getFactureDTO(facture.getId());
         factureDTO.setPaymentClientSecret(paymentClientSecret);
         return factureDTO;

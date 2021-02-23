@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,13 +17,11 @@ public class RendezVous {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Notaire notaire;
-
-    @ManyToOne
-    private Client client;
-
     private LocalDateTime localDateTime;
 
     private int dureeEnMinute;
+
+    @ManyToMany
+    private List<User> users;
+
 }

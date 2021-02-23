@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,9 +18,8 @@ public class FactureDTO {
 
     private LocalDateTime dateDeCreation;
 
-    private NotaireDTO notaire;
+    private List<UserDTO> users;
 
     private String paymentClientSecret;
 
-    private ClientDTO client;
 }

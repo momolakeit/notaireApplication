@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,12 +22,8 @@ public class Facture {
 
     private LocalDateTime dateDeCreation;
 
-    @ManyToOne
-    private Notaire notaire;
-
-    @ManyToOne
-    private Client client;
-
+    @ManyToMany
+    private List<User> users;
 
 
 }

@@ -25,10 +25,13 @@ public class User {
 
     private String password;
 
-    @OneToMany
+    @ManyToMany
     private List<Facture> factures;
 
     @ManyToMany
     private List<FichierDocument> fichierDocuments;
+
+    @ManyToMany
+    private List<RendezVous> rendezVous;
 
 }

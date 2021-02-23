@@ -7,6 +7,7 @@ import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repositories.FichierDocumentRepository;
 import com.momo.notaireApplication.service.encryption.EncryptionService;
 import com.momo.notaireApplication.service.pdf.ITextService;
+import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import com.momo.notaireApplication.testUtils.TestDocumentUtils;
 import org.bouncycastle.cms.CMSException;
 import org.junit.jupiter.api.Assertions;
@@ -70,12 +71,16 @@ class FichierDocumentServiceTest {
         FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
         Mockito.verify(cloudMersiveService, times(1)).convertDocxToPDF(any());
         Mockito.verify(encryptionService, times(1)).encryptData(any(byte[].class));
-        assertEquals(notaire.getNom(), fichier.getNotaire().getNom());
-        assertEquals(notaire.getEmailAdress(), fichier.getNotaire().getEmailAdress());
-        assertEquals(notaire.getPrenom(), fichier.getNotaire().getPrenom());
-        assertEquals(client.getNom(), fichier.getClient().get(0).getNom());
-        assertEquals(client.getEmailAdress(), fichier.getClient().get(0).getEmailAdress());
-        assertEquals(client.getPrenom(), fichier.getClient().get(0).getPrenom());
+        
+        Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
+        Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
+        
+        assertEquals(notaire.getNom(), notaireResult.getNom());
+        assertEquals(notaire.getEmailAdress(), notaireResult.getEmailAdress());
+        assertEquals(notaire.getPrenom(), notaireResult.getPrenom());
+        assertEquals(client.getNom(), clientResult.getNom());
+        assertEquals(client.getEmailAdress(), clientResult.getEmailAdress());
+        assertEquals(client.getPrenom(), clientResult.getPrenom());
 
     }
 
@@ -106,12 +111,16 @@ class FichierDocumentServiceTest {
         FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
         Mockito.verify(cloudMersiveService, times(0)).convertDocxToPDF(any());
         Mockito.verify(encryptionService, times(1)).encryptData(any(byte[].class));
-        assertEquals(notaire.getNom(), fichier.getNotaire().getNom());
-        assertEquals(notaire.getEmailAdress(), fichier.getNotaire().getEmailAdress());
-        assertEquals(notaire.getPrenom(), fichier.getNotaire().getPrenom());
-        assertEquals(client.getNom(), fichier.getClient().get(0).getNom());
-        assertEquals(client.getEmailAdress(), fichier.getClient().get(0).getEmailAdress());
-        assertEquals(client.getPrenom(), fichier.getClient().get(0).getPrenom());
+       
+        Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
+        Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
+       
+        assertEquals(notaire.getNom(), notaireResult.getNom());
+        assertEquals(notaire.getEmailAdress(), notaireResult.getEmailAdress());
+        assertEquals(notaire.getPrenom(), notaireResult.getPrenom());
+        assertEquals(client.getNom(), clientResult.getNom());
+        assertEquals(client.getEmailAdress(), clientResult.getEmailAdress());
+        assertEquals(client.getPrenom(), clientResult.getPrenom());
 
     }
 

@@ -10,11 +10,9 @@ import org.mapstruct.factory.Mappers;
 public interface FichierDocumentMapper {
     FichierDocumentMapper instance = Mappers.getMapper(FichierDocumentMapper.class);
 
-    @Mapping(source = "notaire", target = "notaire", ignore = true)
-    @Mapping(source = "client", target = "client", ignore = true)
+    @Mapping(source = "users", target = "users", ignore = true)
     FichierDocumentDTO toDTO(FichierDocument fichierDocument);
 
-    @Mapping(source = "notaire", target = "notaire", ignore = true)
-    @Mapping(source = "client", target = "client", ignore = true)
+    @Mapping(source = "users", target = "users", ignore = true)
     FichierDocument toEntity(FichierDocumentDTO fichierDocumentDTO);
 }

@@ -46,8 +46,9 @@ public class StripeService {
         this.notaireService = notaireService;
     }
 
-    public String processPayment(Facture facture, Notaire notaire) {
+    public String processPayment(Facture facture) {
         Stripe.apiKey = stripeAPIKey;
+        Notaire notaire = this.notaireService.findNotaireInFacture(facture);
         PaymentIntentCreateParams params =
                 buildPaymentParams(facture, notaire);
         PaymentIntent paymentIntent = null;

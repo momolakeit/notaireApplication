@@ -24,9 +24,6 @@ public class FichierDocument {
 
     private String description;
 
-    @ManyToOne
-    private Notaire notaire;
-
     @ManyToMany
-    private List<Client> client;
+    private List<User> users;
 }

@@ -10,11 +10,9 @@ import org.mapstruct.factory.Mappers;
 public interface FactureMapper {
     FactureMapper instance = Mappers.getMapper(FactureMapper.class);
 
-    @Mapping(source = "notaire", target = "notaire", ignore = true)
-    @Mapping(source = "client", target = "client", ignore = true)
+    @Mapping(source = "users", target = "users", ignore = true)
     FactureDTO toDTO(Facture facture);
 
-    @Mapping(source = "notaire", target = "notaire", ignore = true)
-    @Mapping(source = "client", target = "client", ignore = true)
+    @Mapping(source = "users", target = "users", ignore = true)
     Facture toEntity(FactureDTO factureDTO);
 }

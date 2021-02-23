@@ -5,6 +5,7 @@ import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repositories.FactureRepository;
 import com.momo.notaireApplication.service.payment.StripeService;
+import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -57,8 +58,11 @@ public class FactureServiceTest {
         initMocks();
         Facture facture = factureService.createFacture(notaire.getId(), client.getId(), BigDecimal.valueOf(29.99));
 
-        assertEquals(client, facture.getClient());
-        assertEquals(notaire, facture.getNotaire());
+        Notaire notaireResult = ObjectTestUtils.findNotaireInList(facture.getUsers());
+        Client clientResult = ObjectTestUtils.findClientInList(facture.getUsers());
+
+        assertEquals(client, clientResult);
+        assertEquals(notaire, notaireResult);
         assertEquals(BigDecimal.valueOf(29.99), facture.getPrix());
         assertEquals(LocalDateTime.now().getDayOfYear(), facture.getDateDeCreation().getDayOfYear());
         assertEquals(LocalDateTime.now().getHour(), facture.getDateDeCreation().getHour());
