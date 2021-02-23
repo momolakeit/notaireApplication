@@ -40,14 +40,6 @@ public class FactureService {
         linkFactureAndItems(facture, notaire, client);
         return facture;
     }
-    public Notaire findNotaireInFacture(Facture facture){
-        return (Notaire) facture.getUsers()
-                                .stream()
-                                .filter(user -> user instanceof Notaire)
-                                .findFirst()
-                                .orElseThrow(FactureNotFoundException::new);
-    }
-
     public Facture getFacture(Long id){
         return this.factureRepository.findById(id).orElseThrow(FactureNotFoundException::new);
     }
