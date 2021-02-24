@@ -57,7 +57,7 @@ public class RendezVousServiceTest {
     @Test
     public void createRendezVousMemePlageHoraireTest() {
         Client client = ClientServiceTest.initClient();
-        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousMemePlageHoraire())));
+        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(0))));
         Long millisecond = System.currentTimeMillis();
 
         Mockito.when(clientService.findClient(anyLong())).thenReturn(client);
@@ -70,7 +70,7 @@ public class RendezVousServiceTest {
     @Test
     public void createRendezVousPlageHoraireJusteApresTest() {
         Client client = ClientServiceTest.initClient();
-        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHoraireJusteApres())));
+        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(31))));
         Notaire notaire = NotaireServiceTest.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
@@ -84,7 +84,7 @@ public class RendezVousServiceTest {
     @Test
     public void createRendezVousPlageHoraireCommenceEtTermineEnMMTmpsTest() {
         Client client = ClientServiceTest.initClient();
-        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHoraireCommenceEnMMTmps())));
+        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(30))));
         Notaire notaire = NotaireServiceTest.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
@@ -98,7 +98,7 @@ public class RendezVousServiceTest {
     @Test
     public void createRendezVousPlageHoraireJusteAvantTest() {
         Client client = ClientServiceTest.initClient();
-        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHoraireJusteAvant())));
+        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(29))));
         Notaire notaire = NotaireServiceTest.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
@@ -152,37 +152,15 @@ public class RendezVousServiceTest {
         ObjectTestUtils.assertUsers(client, clientResult);
     }
 
-    private RendezVous initRendezVousMemePlageHoraire() {
+
+    private RendezVous initRendezVousPlageHorairePlusMinutes(int minutes) {
         RendezVous rendezVous = new RendezVous();
         Long millisecond = System.currentTimeMillis();
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneId.systemDefault());
-        rendezVous.setLocalDateTime(localDateTime);
+        rendezVous.setLocalDateTime(localDateTime.plusMinutes(minutes));
         return rendezVous;
     }
 
-    private RendezVous initRendezVousPlageHoraireJusteApres() {
-        RendezVous rendezVous = new RendezVous();
-        Long millisecond = System.currentTimeMillis();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneId.systemDefault());
-        rendezVous.setLocalDateTime(localDateTime.plusMinutes(31));
-        return rendezVous;
-    }
-
-    private RendezVous initRendezVousPlageHoraireCommenceEnMMTmps() {
-        RendezVous rendezVous = new RendezVous();
-        Long millisecond = System.currentTimeMillis();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneId.systemDefault());
-        rendezVous.setLocalDateTime(localDateTime.plusMinutes(30));
-        return rendezVous;
-    }
-
-    private RendezVous initRendezVousPlageHoraireJusteAvant() {
-        RendezVous rendezVous = new RendezVous();
-        Long millisecond = System.currentTimeMillis();
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneId.systemDefault());
-        rendezVous.setLocalDateTime(localDateTime.plusMinutes(29));
-        return rendezVous;
-    }
     private RendezVous initRendezVousPlageHier() {
         RendezVous rendezVous = new RendezVous();
         Long millisecond = System.currentTimeMillis();
@@ -194,7 +172,7 @@ public class RendezVousServiceTest {
         RendezVous rendezVous = new RendezVous();
         Long millisecond = System.currentTimeMillis();
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneId.systemDefault());
-        rendezVous.setLocalDateTime(localDateTime.minusDays(1));
+        rendezVous.setLocalDateTime(localDateTime.plusDays(1));
         return rendezVous;
     }
 
