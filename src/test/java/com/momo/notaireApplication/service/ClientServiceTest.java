@@ -68,6 +68,7 @@ class ClientServiceTest {
         client.setNom(NOM);
         client.setPrenom(PRENOM);
         client.setEmailAdress(EMAIL);
+        client.setRendezVous(new ArrayList<>());
         return client;
     }
 

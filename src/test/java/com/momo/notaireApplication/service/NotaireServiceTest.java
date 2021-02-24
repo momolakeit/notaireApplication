@@ -79,6 +79,7 @@ public class NotaireServiceTest {
         notaire.setNom(NOM);
         notaire.setPrenom(PRENOM);
         notaire.setEmailAdress(EMAIL);
+        notaire.setRendezVous(new ArrayList<>());
         return notaire;
     }
 

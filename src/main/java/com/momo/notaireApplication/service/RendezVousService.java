@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +34,7 @@ public class RendezVousService {
     public RendezVous createRendezVous(Long clientId, Long notaireId, Long date, int dureeEnMinute) {
         Client client = this.clientService.findClient(clientId);
         Notaire notaire = this.notaireService.getNotaire(notaireId);
-        LocalDateTime dateTime =
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
+        LocalDateTime dateTime = getDateTimeFromMillis(date);
         if (checkIfRendezVousLibre(dureeEnMinute, client, notaire, dateTime)) {
             RendezVous rendezVous = initRendezVous(client, notaire, dateTime, dureeEnMinute);
             this.linkRendezVousAndItems(client, notaire, rendezVous);
@@ -79,22 +77,14 @@ public class RendezVousService {
         this.notaireService.saveNotaire(notaire);
     }
 
-    private Boolean checkIfRendezVousLibre(List<RendezVous> rendezVous, LocalDateTime dateRendezVous, int dureeEnMinute) {
-        List heureDesRndezVousQuonPiettine = rendezVous.stream()
-                .map(RendezVous::getLocalDateTime)
-                .filter(date -> ifRendezVousSameDay(date, dateRendezVous) &&
-                        ifPlageHoraireLibre(date, dateRendezVous, dureeEnMinute))
-                .collect(Collectors.toList());
-        if (heureDesRndezVousQuonPiettine.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     private Boolean ifPlageHoraireLibre(LocalDateTime date, LocalDateTime dateRendezVous, int dureeEnMinute) {
-        return dateRendezVous.isBefore(date) &&
-                dateRendezVous.isAfter(dateRendezVous.plusMinutes(dureeEnMinute));
+        //retirer nanos set seconde pour pouvoir faire comparaison
+        date = setLocalDateWithoutNanoOrSeconds(date);
+        dateRendezVous = setLocalDateWithoutNanoOrSeconds(dateRendezVous);
+
+        return  date.isBefore(dateRendezVous) ||
+                date.isAfter(dateRendezVous.plusMinutes(dureeEnMinute)) ||
+                date.isEqual(dateRendezVous.plusMinutes(dureeEnMinute));
     }
 
     private Boolean ifRendezVousSameDay(LocalDateTime date, LocalDateTime dateRendezVous) {
@@ -102,8 +92,32 @@ public class RendezVousService {
                 date.getDayOfYear() == dateRendezVous.getDayOfYear();
     }
 
+    private Boolean checkIfRendezVousLibre(List<RendezVous> rendezVous, LocalDateTime dateRendezVous, int dureeEnMinute) {
+        List heureDesRndezVousQuonPiettine = rendezVous.stream()
+                .map(RendezVous::getLocalDateTime)
+                .filter(date -> ifRendezVousSameDay(date, dateRendezVous) &&
+                        !ifPlageHoraireLibre(date, dateRendezVous, dureeEnMinute))
+                .collect(Collectors.toList());
+        if (heureDesRndezVousQuonPiettine.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     private boolean checkIfRendezVousLibre(int dureeEnMinute, Client client, Notaire notaire, LocalDateTime dateTime) {
         return checkIfRendezVousLibre(client.getRendezVous(), dateTime, dureeEnMinute) &&
                 checkIfRendezVousLibre(notaire.getRendezVous(), dateTime, dureeEnMinute);
+    }
+
+    private LocalDateTime getDateTimeFromMillis(Long date) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault());
+    }
+
+    private LocalDateTime setLocalDateWithoutNanoOrSeconds(LocalDateTime date) {
+        date = date.withNano(0);
+        date = date.withSecond(0);
+        return date;
     }
 }

@@ -75,12 +75,8 @@ class FichierDocumentServiceTest {
         Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
         Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
         
-        assertEquals(notaire.getNom(), notaireResult.getNom());
-        assertEquals(notaire.getEmailAdress(), notaireResult.getEmailAdress());
-        assertEquals(notaire.getPrenom(), notaireResult.getPrenom());
-        assertEquals(client.getNom(), clientResult.getNom());
-        assertEquals(client.getEmailAdress(), clientResult.getEmailAdress());
-        assertEquals(client.getPrenom(), clientResult.getPrenom());
+        ObjectTestUtils.assertUsers(notaire,notaireResult);
+        ObjectTestUtils.assertUsers(client ,clientResult);
 
     }
 
@@ -114,13 +110,9 @@ class FichierDocumentServiceTest {
        
         Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
         Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
-       
-        assertEquals(notaire.getNom(), notaireResult.getNom());
-        assertEquals(notaire.getEmailAdress(), notaireResult.getEmailAdress());
-        assertEquals(notaire.getPrenom(), notaireResult.getPrenom());
-        assertEquals(client.getNom(), clientResult.getNom());
-        assertEquals(client.getEmailAdress(), clientResult.getEmailAdress());
-        assertEquals(client.getPrenom(), clientResult.getPrenom());
+
+        ObjectTestUtils.assertUsers(notaire,notaireResult);
+        ObjectTestUtils.assertUsers(client ,clientResult);
 
     }
 

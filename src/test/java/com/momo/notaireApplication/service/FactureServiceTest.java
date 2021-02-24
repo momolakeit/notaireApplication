@@ -61,8 +61,8 @@ public class FactureServiceTest {
         Notaire notaireResult = ObjectTestUtils.findNotaireInList(facture.getUsers());
         Client clientResult = ObjectTestUtils.findClientInList(facture.getUsers());
 
-        assertEquals(client, clientResult);
-        assertEquals(notaire, notaireResult);
+        ObjectTestUtils.assertUsers(notaire,notaireResult);
+        ObjectTestUtils.assertUsers(client ,clientResult);
         assertEquals(BigDecimal.valueOf(29.99), facture.getPrix());
         assertEquals(LocalDateTime.now().getDayOfYear(), facture.getDateDeCreation().getDayOfYear());
         assertEquals(LocalDateTime.now().getHour(), facture.getDateDeCreation().getHour());
