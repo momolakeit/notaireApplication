@@ -26,4 +26,6 @@ public class UserDTO {
     private List<FichierDocumentDTO> fichierDocuments;
 
     private List<FactureDTO> factures;
+
+    private List<RendezVousDTO> rendezVous;
 }

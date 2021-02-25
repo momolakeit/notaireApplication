@@ -2,12 +2,15 @@ package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.exception.PlageHoraireRendezVousException;
 import com.momo.notaireApplication.exception.RendezVousNotFoundException;
+import com.momo.notaireApplication.mapping.RendezVousMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.RendezVous;
+import com.momo.notaireApplication.model.dto.RendezVousDTO;
 import com.momo.notaireApplication.repositories.RendezVousRepository;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RendezVousService {
     private RendezVousRepository rendezVousRepository;
 
@@ -47,6 +51,10 @@ public class RendezVousService {
 
     public RendezVous getRendezVous(Long id) {
         return rendezVousRepository.findById(id).orElseThrow(RendezVousNotFoundException::new);
+    }
+
+    public RendezVousDTO toDTO(RendezVous rendezVous){
+        return RendezVousMapper.instance.toDTO(rendezVous);
     }
 
     public RendezVous saveRendezVous(RendezVous rendezVous) {
