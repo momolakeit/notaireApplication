@@ -1,6 +1,7 @@
 package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.exception.PlageHoraireRendezVousException;
+import com.momo.notaireApplication.exception.RendezVousNotFoundException;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.RendezVous;
@@ -20,6 +21,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -134,6 +136,21 @@ public class RendezVousServiceTest {
         Mockito.when(rendezVousRepository.save(any(RendezVous.class))).thenAnswer(invocation -> invocation.getArgument(0));
         RendezVous rendezVous = rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         assertValues(client, notaire, millisecond, rendezVous);
+    }
+
+    @Test
+    public void fetchRendezVous(){
+        Mockito.when(rendezVousRepository.findById(anyLong())).thenReturn(Optional.of(initRendezVousPlageHorairePlusMinutes(0)));
+        RendezVous rendezVous = rendezVousService.getRendezVous(1L);
+        assertNotNull(rendezVous);
+    }
+    @Test
+    public void fetchRendezVousNotFound(){
+        Mockito.when(rendezVousRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(RendezVousNotFoundException.class,()->{
+            rendezVousService.getRendezVous(1L);
+        });
+
     }
 
     private void assertValues(Client client, Notaire notaire, Long millisecond, RendezVous rendezVous) {

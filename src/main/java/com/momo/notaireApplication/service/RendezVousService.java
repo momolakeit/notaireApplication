@@ -37,7 +37,7 @@ public class RendezVousService {
         LocalDateTime dateTime = getDateTimeFromMillis(date);
         if (checkIfRendezVousLibre(dureeEnMinute, client, notaire, dateTime)) {
             RendezVous rendezVous = initRendezVous(client, notaire, dateTime, dureeEnMinute);
-            this.linkRendezVousAndItems(client, notaire, rendezVous);
+            linkRendezVousAndItems(client, notaire, rendezVous);
             return rendezVous;
         } else {
             throw new PlageHoraireRendezVousException();
@@ -82,7 +82,7 @@ public class RendezVousService {
         date = setLocalDateWithoutNanoOrSeconds(date);
         dateRendezVous = setLocalDateWithoutNanoOrSeconds(dateRendezVous);
 
-        return  date.isBefore(dateRendezVous) ||
+        return date.isBefore(dateRendezVous) ||
                 date.isAfter(dateRendezVous.plusMinutes(dureeEnMinute)) ||
                 date.isEqual(dateRendezVous.plusMinutes(dureeEnMinute));
     }
@@ -98,12 +98,7 @@ public class RendezVousService {
                 .filter(date -> ifRendezVousSameDay(date, dateRendezVous) &&
                         !ifPlageHoraireLibre(date, dateRendezVous, dureeEnMinute))
                 .collect(Collectors.toList());
-        if (heureDesRndezVousQuonPiettine.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
-
+        return heureDesRndezVousQuonPiettine.isEmpty();
     }
 
     private boolean checkIfRendezVousLibre(int dureeEnMinute, Client client, Notaire notaire, LocalDateTime dateTime) {
