@@ -5,6 +5,7 @@ import com.momo.notaireApplication.mapping.FactureMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
+import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.model.dto.FactureDTO;
 import com.momo.notaireApplication.repositories.FactureRepository;
 import com.momo.notaireApplication.utils.ListUtil;
@@ -20,30 +21,30 @@ import java.util.Arrays;
 @Transactional
 public class FactureService {
     private FactureRepository factureRepository;
-    private NotaireService notaireService;
-    private ClientService clientService;
+    private UserService userService;
 
-    public FactureService(FactureRepository factureRepository, NotaireService notaireService, ClientService clientService) {
+    public FactureService(FactureRepository factureRepository, UserService userService) {
         this.factureRepository = factureRepository;
-        this.notaireService = notaireService;
-        this.clientService = clientService;
+        this.userService = userService;
     }
 
-    public Facture createFacture(Long notaireId,Long clientId, BigDecimal prix) {
+    public Facture createFacture(Long notaireId, Long clientId, BigDecimal prix) {
         Facture facture = new Facture();
-        Notaire notaire = this.notaireService.getNotaire(notaireId);
-        Client client = this.clientService.findClient(clientId);
-        facture.setUsers(new ArrayList<>(Arrays.asList(client,notaire)));
+        Notaire notaire = (Notaire) userService.getUser(notaireId);
+        Client client = (Client) userService.getUser(clientId);
+        facture.setUsers(new ArrayList<>(Arrays.asList(client, notaire)));
         facture.setPrix(prix);
         facture.setDateDeCreation(LocalDateTime.now());
         facture = saveFacture(facture);
         linkFactureAndItems(facture, notaire, client);
         return facture;
     }
-    public Facture getFacture(Long id){
+
+    public Facture getFacture(Long id) {
         return this.factureRepository.findById(id).orElseThrow(FactureNotFoundException::new);
     }
-    public FactureDTO getFactureDTO(Long id){
+
+    public FactureDTO getFactureDTO(Long id) {
         return FactureMapper.instance.toDTO(this.getFacture(id));
     }
 
@@ -53,18 +54,13 @@ public class FactureService {
     }
 
     private void linkFactureAndItems(Facture facture, Notaire notaire, Client client) {
-        linkFactureAndClient(facture, client);
-        linkFactureAndNotaire(facture, notaire);
+        linkFactureAndUser(facture, client);
+        linkFactureAndUser(facture, notaire);
     }
 
-    private void linkFactureAndNotaire(Facture facture, Notaire notaire) {
-        ListUtil.ajouterObjectAListe(facture, notaire.getFactures());
-        notaireService.saveNotaire(notaire);
-    }
-
-    private void linkFactureAndClient(Facture facture, Client client) {
-        ListUtil.ajouterObjectAListe(facture, client.getFactures());
-        clientService.saveClient(client);
+    private void linkFactureAndUser(Facture facture, User user) {
+        ListUtil.ajouterObjectAListe(facture, user.getFactures());
+        userService.saveUser(user);
     }
 
 }

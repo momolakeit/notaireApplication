@@ -183,8 +183,8 @@ public class RendezVousServiceTest {
         assertEquals(getLastRendezVousInList(notaireResult.getRendezVous()), rendezVous);
         assertEquals(getLastRendezVousInList(clientResult.getRendezVous()), rendezVous);
 
-        ObjectTestUtils.assertUsers(notaire, notaireResult);
-        ObjectTestUtils.assertUsers(client, clientResult);
+        ObjectTestUtils.assertUsers(notaire.getNom(),notaire.getPrenom(),notaire.getEmailAdress(),notaireResult);
+        ObjectTestUtils.assertUsers(client.getNom(),client.getPrenom(),client.getEmailAdress(),clientResult);
     }
 
 

@@ -4,6 +4,7 @@ import com.momo.notaireApplication.exception.validation.notFound.FichierDocument
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
+import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.repositories.FichierDocumentRepository;
 import com.momo.notaireApplication.service.encryption.EncryptionService;
 import com.momo.notaireApplication.service.pdf.CloudMersiveService;
@@ -12,7 +13,6 @@ import com.momo.notaireApplication.utils.ListUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,29 +26,25 @@ import java.util.Arrays;
 public class FichierDocumentService {
     private CloudMersiveService cloudMersiveService;
     private FichierDocumentRepository fichierDocumentRepository;
-    private NotaireService notaireService;
-    private ClientService clientService;
     private EncryptionService encryptionService;
     private ITextService iTextService;
+    private UserService userService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FichierDocumentService.class);
     private String PDF_FILETYPE = "pdf";
-    @Autowired
 
-
-    public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, NotaireService notaireService, ClientService clientService, EncryptionService encryptionService, ITextService iTextService) {
+    public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, EncryptionService encryptionService, ITextService iTextService, UserService userService) {
         this.cloudMersiveService = cloudMersiveService;
         this.fichierDocumentRepository = fichierDocumentRepository;
-        this.notaireService = notaireService;
-        this.clientService = clientService;
         this.encryptionService = encryptionService;
         this.iTextService = iTextService;
+        this.userService = userService;
     }
 
     //todo gerer le commentaire passé pour le fichier document
     public FichierDocument createDocument(Long clientId, Long notaireId, MultipartFile file) {
         byte[] bytes = getBytesDuFichier(file);
-        Notaire notaire = this.notaireService.getNotaire(notaireId);
-        Client client = this.clientService.findClient(clientId);
+        Notaire notaire = (Notaire) userService.getUser(notaireId);
+        Client client = (Client) userService.getUser(clientId);
         FichierDocument fichierDocument = initDocument(bytes, notaire, client);
         linkDocumentAndItems(notaire, client, fichierDocument);
         return fichierDocument;
@@ -87,18 +83,13 @@ public class FichierDocumentService {
     }
 
     private void linkDocumentAndItems(Notaire notaire, Client client, FichierDocument fichierDocument) {
-        linkNotaireEtDocument(notaire, fichierDocument);
-        linkClientEtDocument(client, fichierDocument);
+        linkUserEtFichier(client, fichierDocument);
+        linkUserEtFichier(notaire, fichierDocument);
     }
 
-    private void linkClientEtDocument(Client client, FichierDocument fichierDocument) {
-        ListUtil.ajouterObjectAListe(fichierDocument, client.getFichierDocuments());
-        this.clientService.saveClient(client);
-    }
-
-    private void linkNotaireEtDocument(Notaire notaire, FichierDocument fichierDocument) {
-        ListUtil.ajouterObjectAListe(fichierDocument, notaire.getFichierDocuments());
-        this.notaireService.saveNotaire(notaire);
+    private void linkUserEtFichier(User user, FichierDocument fichierDocument) {
+        ListUtil.ajouterObjectAListe(fichierDocument, user.getFichierDocuments());
+        userService.saveUser(user);
     }
 
     private FichierDocument saveDocument(FichierDocument fichierDocument) {

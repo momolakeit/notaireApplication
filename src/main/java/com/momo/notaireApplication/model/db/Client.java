@@ -14,7 +14,4 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Client extends User {
-    @OneToMany
-    private List<Facture> factures;
-
 }

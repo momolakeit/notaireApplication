@@ -10,6 +10,7 @@ import com.momo.notaireApplication.model.request.CreateFichierDocumentRequestDTO
 import com.momo.notaireApplication.repositories.ClientRepository;
 import com.momo.notaireApplication.repositories.FichierDocumentRepository;
 import com.momo.notaireApplication.repositories.NotaireRepository;
+import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.TestDocumentUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,9 @@ class FichierDocumentControllerTest {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private FichierDocument fichierDocument;
 
     private Client client;
@@ -53,8 +57,8 @@ class FichierDocumentControllerTest {
     public void init() {
         fichierDocument = new FichierDocument();
         fichierDocument = fichierDocumentRepository.save(fichierDocument);
-        client = clientRepository.save(new Client());
-        notaire = notaireRepository.save(new Notaire());
+        client = userRepository.save(new Client());
+        notaire = userRepository.save(new Notaire());
     }
 
     @Test

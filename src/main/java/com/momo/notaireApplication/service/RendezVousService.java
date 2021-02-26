@@ -6,6 +6,7 @@ import com.momo.notaireApplication.mapping.RendezVousMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.RendezVous;
+import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.model.dto.RendezVousDTO;
 import com.momo.notaireApplication.repositories.RendezVousRepository;
 import com.momo.notaireApplication.utils.ListUtil;
@@ -24,20 +25,17 @@ import java.util.stream.Collectors;
 @Transactional
 public class RendezVousService {
     private RendezVousRepository rendezVousRepository;
+    private UserService userService;
 
-    private ClientService clientService;
 
-    private NotaireService notaireService;
-
-    public RendezVousService(RendezVousRepository rendezVousRepository, ClientService clientService, NotaireService notaireService) {
+    public RendezVousService(RendezVousRepository rendezVousRepository, UserService userService) {
         this.rendezVousRepository = rendezVousRepository;
-        this.clientService = clientService;
-        this.notaireService = notaireService;
+        this.userService = userService;
     }
 
     public RendezVous createRendezVous(Long clientId, Long notaireId, Long date, int dureeEnMinute) {
-        Client client = this.clientService.findClient(clientId);
-        Notaire notaire = this.notaireService.getNotaire(notaireId);
+        Client client = (Client) userService.getUser(clientId);
+        Notaire notaire = (Notaire) userService.getUser(notaireId);
         LocalDateTime dateTime = getDateTimeFromMillis(date);
         if (checkIfRendezVousLibre(dureeEnMinute, client, notaire, dateTime)) {
             RendezVous rendezVous = initRendezVous(client, notaire, dateTime, dureeEnMinute);
@@ -62,13 +60,13 @@ public class RendezVousService {
     }
 
     private void linkRendezVousAndItems(Client client, Notaire notaire, RendezVous rendezVous) {
-        this.linkRendezVousAndClient(client, rendezVous);
-        this.linkRendezVousAndNotaire(notaire, rendezVous);
+        linkRendezVousAndUser(client, rendezVous);
+        linkRendezVousAndUser(notaire, rendezVous);
     }
 
-    private void linkRendezVousAndClient(Client client, RendezVous rendezVous) {
-        ListUtil.ajouterObjectAListe(rendezVous, client.getRendezVous());
-        this.clientService.saveClient(client);
+    private void linkRendezVousAndUser(User user, RendezVous rendezVous) {
+        ListUtil.ajouterObjectAListe(rendezVous, user.getRendezVous());
+        userService.saveUser(user);
     }
 
     private RendezVous initRendezVous(Client client, Notaire notaire, LocalDateTime dateTime, int dureeEnMinute) {
@@ -78,11 +76,6 @@ public class RendezVousService {
         rendezVous.setUsers(new ArrayList<>(Arrays.asList(client, notaire)));
         rendezVous = this.saveRendezVous(rendezVous);
         return rendezVous;
-    }
-
-    private void linkRendezVousAndNotaire(Notaire notaire, RendezVous rendezVous) {
-        ListUtil.ajouterObjectAListe(rendezVous, notaire.getRendezVous());
-        this.notaireService.saveNotaire(notaire);
     }
 
     private Boolean ifPlageHoraireLibre(LocalDateTime date, LocalDateTime dateRendezVous, int dureeEnMinuteAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {

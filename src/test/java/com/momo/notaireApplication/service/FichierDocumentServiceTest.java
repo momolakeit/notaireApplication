@@ -76,8 +76,8 @@ class FichierDocumentServiceTest {
         Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
         Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
         
-        ObjectTestUtils.assertUsers(notaire,notaireResult);
-        ObjectTestUtils.assertUsers(client ,clientResult);
+        ObjectTestUtils.assertUsers(notaire.getNom(),notaire.getPrenom(),notaire.getEmailAdress(),notaireResult);
+        ObjectTestUtils.assertUsers(client.getNom(),client.getPrenom(),client.getEmailAdress(),clientResult);
 
     }
 
@@ -112,8 +112,8 @@ class FichierDocumentServiceTest {
         Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
         Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
 
-        ObjectTestUtils.assertUsers(notaire,notaireResult);
-        ObjectTestUtils.assertUsers(client ,clientResult);
+        ObjectTestUtils.assertUsers(notaire.getNom(),notaire.getPrenom(),notaire.getEmailAdress(),notaireResult);
+        ObjectTestUtils.assertUsers(client.getNom(),client.getPrenom(),client.getEmailAdress(),clientResult);
 
     }
 

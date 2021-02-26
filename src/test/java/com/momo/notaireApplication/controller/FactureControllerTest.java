@@ -8,6 +8,7 @@ import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.request.CreateFactureRequestDTO;
 import com.momo.notaireApplication.repositories.ClientRepository;
 import com.momo.notaireApplication.repositories.NotaireRepository;
+import com.momo.notaireApplication.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,10 +33,7 @@ class FactureControllerTest {
     private FactureController factureController;
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private NotaireRepository notaireRepository;
+    private UserRepository userRepository;
 
     private Client client;
 
@@ -44,9 +42,9 @@ class FactureControllerTest {
     @BeforeEach
     public void init() {
         client = new Client();
-        client = clientRepository.save(client);
+        client = userRepository.save(client);
         notaire = new Notaire();
-        notaire = notaireRepository.save(notaire);
+        notaire = userRepository.save(notaire);
     }
 
     @Test
