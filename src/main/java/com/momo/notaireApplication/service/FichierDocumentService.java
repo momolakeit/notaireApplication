@@ -6,6 +6,7 @@ import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repositories.FichierDocumentRepository;
 import com.momo.notaireApplication.service.encryption.EncryptionService;
+import com.momo.notaireApplication.service.pdf.CloudMersiveService;
 import com.momo.notaireApplication.service.pdf.ITextService;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.apache.commons.io.FilenameUtils;

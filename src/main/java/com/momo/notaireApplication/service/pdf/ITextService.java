@@ -19,8 +19,6 @@ import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
-import com.momo.notaireApplication.model.db.FichierDocument;
-import com.momo.notaireApplication.service.CloudMersiveService;
 import com.momo.notaireApplication.utils.ApplicationFileUtils;
 import com.momo.notaireApplication.utils.EncryptionUtils;
 import org.apache.commons.io.FileUtils;

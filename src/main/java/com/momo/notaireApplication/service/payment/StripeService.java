@@ -2,7 +2,7 @@ package com.momo.notaireApplication.service.payment;
 
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.service.CloudMersiveService;
+import com.momo.notaireApplication.service.pdf.CloudMersiveService;
 import com.momo.notaireApplication.service.NotaireService;
 import com.momo.notaireApplication.utils.ObjectUtils;
 import com.stripe.Stripe;

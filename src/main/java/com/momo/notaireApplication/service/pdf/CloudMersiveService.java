@@ -1,12 +1,10 @@
-package com.momo.notaireApplication.service;
+package com.momo.notaireApplication.service.pdf;
 
 import com.cloudmersive.client.ConvertDocumentApi;
-import com.cloudmersive.client.EditDocumentApi;
 import com.cloudmersive.client.invoker.ApiClient;
 import com.cloudmersive.client.invoker.ApiException;
 import com.cloudmersive.client.invoker.Configuration;
 import com.cloudmersive.client.invoker.auth.ApiKeyAuth;
-import com.cloudmersive.client.model.ReplaceStringRequest;
 import com.momo.notaireApplication.utils.ApplicationFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Service
