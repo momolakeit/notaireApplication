@@ -1,6 +1,7 @@
 package com.momo.notaireApplication.controller;
 
 import com.momo.notaireApplication.exception.*;
+import com.momo.notaireApplication.exception.validation.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

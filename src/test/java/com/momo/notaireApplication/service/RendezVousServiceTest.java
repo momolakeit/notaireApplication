@@ -1,7 +1,7 @@
 package com.momo.notaireApplication.service;
 
-import com.momo.notaireApplication.exception.PlageHoraireRendezVousException;
-import com.momo.notaireApplication.exception.RendezVousNotFoundException;
+import com.momo.notaireApplication.exception.validation.PlageHoraireRendezVousException;
+import com.momo.notaireApplication.exception.validation.notFound.RendezVousNotFoundException;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.RendezVous;

@@ -1,6 +1,6 @@
 package com.momo.notaireApplication.service;
 
-import com.momo.notaireApplication.exception.NotaireNotFoundException;
+import com.momo.notaireApplication.exception.validation.notFound.NotaireNotFoundException;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.repositories.NotaireRepository;

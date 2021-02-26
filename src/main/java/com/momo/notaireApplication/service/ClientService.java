@@ -1,6 +1,6 @@
 package com.momo.notaireApplication.service;
 
-import com.momo.notaireApplication.exception.ClientNotFoundException;
+import com.momo.notaireApplication.exception.validation.notFound.ClientNotFoundException;
 import com.momo.notaireApplication.mapping.ClientMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.dto.ClientDTO;

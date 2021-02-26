@@ -1,6 +1,6 @@
 package com.momo.notaireApplication.service;
 
-import com.momo.notaireApplication.exception.FactureNotFoundException;
+import com.momo.notaireApplication.exception.validation.notFound.FactureNotFoundException;
 import com.momo.notaireApplication.mapping.FactureMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Facture;

@@ -1,4 +1,6 @@
-package com.momo.notaireApplication.exception;
+package com.momo.notaireApplication.exception.validation.notFound;
+
+import com.momo.notaireApplication.exception.validation.notFound.ObjectNotFoundException;
 
 public class UserNotFoundException extends ObjectNotFoundException {
 

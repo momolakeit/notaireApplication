@@ -1,19 +1,17 @@
 package com.momo.notaireApplication.service.authentification;
 
 import com.momo.notaireApplication.exception.BadPasswordException;
-import com.momo.notaireApplication.exception.BadRoleException;
-import com.momo.notaireApplication.exception.UserAlreadyExistsException;
-import com.momo.notaireApplication.exception.UserNotFoundException;
+import com.momo.notaireApplication.exception.validation.BadRoleException;
+import com.momo.notaireApplication.exception.validation.UserAlreadyExistsException;
+import com.momo.notaireApplication.exception.validation.notFound.UserNotFoundException;
 import com.momo.notaireApplication.jwt.JwtProvider;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.model.dto.JWTResponse;
-import com.momo.notaireApplication.model.dto.NotaireDTO;
 import com.momo.notaireApplication.model.request.LogInDTO;
 import com.momo.notaireApplication.model.request.SignUpDTO;
 import com.momo.notaireApplication.repositories.UserRepository;
-import lombok.extern.java.Log;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

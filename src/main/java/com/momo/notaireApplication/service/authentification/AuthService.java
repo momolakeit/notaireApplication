@@ -1,9 +1,9 @@
 package com.momo.notaireApplication.service.authentification;
 
 import com.momo.notaireApplication.exception.BadPasswordException;
-import com.momo.notaireApplication.exception.BadRoleException;
-import com.momo.notaireApplication.exception.UserAlreadyExistsException;
-import com.momo.notaireApplication.exception.UserNotFoundException;
+import com.momo.notaireApplication.exception.validation.BadRoleException;
+import com.momo.notaireApplication.exception.validation.UserAlreadyExistsException;
+import com.momo.notaireApplication.exception.validation.notFound.UserNotFoundException;
 import com.momo.notaireApplication.jwt.JwtProvider;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;

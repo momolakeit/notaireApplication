@@ -1,4 +1,4 @@
-package com.momo.notaireApplication.exception;
+package com.momo.notaireApplication.exception.validation.notFound;
 
 public class NotaireNotFoundException extends UserNotFoundException {
     private static String NOM_DE_CLASSE = "Notaire";

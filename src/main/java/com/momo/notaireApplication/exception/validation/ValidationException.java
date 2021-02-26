@@ -1,4 +1,4 @@
-package com.momo.notaireApplication.exception;
+package com.momo.notaireApplication.exception.validation;
 
 public class ValidationException extends RuntimeException {
 
