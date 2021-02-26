@@ -53,7 +53,7 @@ public class RendezVousService {
         return rendezVousRepository.findById(id).orElseThrow(RendezVousNotFoundException::new);
     }
 
-    public RendezVousDTO toDTO(RendezVous rendezVous){
+    public RendezVousDTO toDTO(RendezVous rendezVous) {
         return RendezVousMapper.instance.toDTO(rendezVous);
     }
 
@@ -85,14 +85,15 @@ public class RendezVousService {
         this.notaireService.saveNotaire(notaire);
     }
 
-    private Boolean ifPlageHoraireLibre(LocalDateTime date, LocalDateTime dateRendezVous, int dureeEnMinute) {
+    private Boolean ifPlageHoraireLibre(LocalDateTime date, LocalDateTime dateRendezVous, int dureeEnMinuteAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {
         //retirer nanos set seconde pour pouvoir faire comparaison
         date = setLocalDateWithoutNanoOrSeconds(date);
         dateRendezVous = setLocalDateWithoutNanoOrSeconds(dateRendezVous);
 
-        return date.isBefore(dateRendezVous) ||
-                date.isAfter(dateRendezVous.plusMinutes(dureeEnMinute)) ||
-                date.isEqual(dateRendezVous.plusMinutes(dureeEnMinute));
+        return (date.isBefore(dateRendezVous) &&
+                date.plusMinutes(dureeEnMinuteAncienRendezVous).isBefore(dateRendezVous)) ||
+                date.isAfter(dateRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous)) ||
+                date.isEqual(dateRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous));
     }
 
     private Boolean ifRendezVousSameDay(LocalDateTime date, LocalDateTime dateRendezVous) {
@@ -102,9 +103,9 @@ public class RendezVousService {
 
     private Boolean checkIfRendezVousLibre(List<RendezVous> rendezVous, LocalDateTime dateRendezVous, int dureeEnMinute) {
         List heureDesRndezVousQuonPiettine = rendezVous.stream()
-                .map(RendezVous::getLocalDateTime)
-                .filter(date -> ifRendezVousSameDay(date, dateRendezVous) &&
-                        !ifPlageHoraireLibre(date, dateRendezVous, dureeEnMinute))
+                //.map(RendezVous::getLocalDateTime)
+                .filter(rv -> ifRendezVousSameDay(rv.getLocalDateTime(), dateRendezVous) &&
+                        !ifPlageHoraireLibre(rv.getLocalDateTime(), dateRendezVous, rv.getDureeEnMinute(), dureeEnMinute))
                 .collect(Collectors.toList());
         return heureDesRndezVousQuonPiettine.isEmpty();
     }

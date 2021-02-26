@@ -98,6 +98,22 @@ public class RendezVousServiceTest {
     }
 
     @Test
+    public void createRendezVousPlageHoraireCommenceAvantEtTerminePendantQueLeNouveauxCommence() {
+        Client client = ClientServiceTest.initClient();
+        RendezVous rendezVous = initRendezVousPlageHorairePlusMinutes(-15);
+        rendezVous.setDureeEnMinute(40);
+
+        client.setRendezVous(new ArrayList<>(Arrays.asList(rendezVous)));
+        Long millisecond = System.currentTimeMillis();
+        Mockito.when(clientService.findClient(anyLong())).thenReturn(client);
+        Mockito.when(notaireService.getNotaire(anyLong())).thenReturn(NotaireServiceTest.initNotaire());
+        Assertions.assertThrows(PlageHoraireRendezVousException.class,()->{
+            rendezVousService.createRendezVous(1L,2L,millisecond,30);
+        });
+
+    }
+
+    @Test
     public void createRendezVousPlageHoraireJusteAvantTest() {
         Client client = ClientServiceTest.initClient();
         client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(29))));
@@ -124,6 +140,7 @@ public class RendezVousServiceTest {
         RendezVous rendezVous = rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         assertValues(client, notaire, millisecond, rendezVous);
     }
+
     @Test
     public void createRendezVousPlageHoraireDemainTest() {
         Client client = ClientServiceTest.initClient();
@@ -139,15 +156,16 @@ public class RendezVousServiceTest {
     }
 
     @Test
-    public void fetchRendezVous(){
+    public void fetchRendezVous() {
         Mockito.when(rendezVousRepository.findById(anyLong())).thenReturn(Optional.of(initRendezVousPlageHorairePlusMinutes(0)));
         RendezVous rendezVous = rendezVousService.getRendezVous(1L);
         assertNotNull(rendezVous);
     }
+
     @Test
-    public void fetchRendezVousNotFound(){
+    public void fetchRendezVousNotFound() {
         Mockito.when(rendezVousRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThrows(RendezVousNotFoundException.class,()->{
+        Assertions.assertThrows(RendezVousNotFoundException.class, () -> {
             rendezVousService.getRendezVous(1L);
         });
 
@@ -185,6 +203,7 @@ public class RendezVousServiceTest {
         rendezVous.setLocalDateTime(localDateTime.minusDays(1));
         return rendezVous;
     }
+
     private RendezVous initRendezVousPlageDemain() {
         RendezVous rendezVous = new RendezVous();
         Long millisecond = System.currentTimeMillis();
