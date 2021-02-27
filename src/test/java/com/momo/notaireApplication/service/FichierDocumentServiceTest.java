@@ -41,11 +41,9 @@ class FichierDocumentServiceTest {
     @Mock
     private FichierDocumentRepository fichierDocumentRepository;
 
-    @Mock
-    private NotaireService notaireService;
 
     @Mock
-    private ClientService clientService;
+    private UserService userService;
 
     @Mock
     private CloudMersiveService cloudMersiveService;
@@ -69,7 +67,7 @@ class FichierDocumentServiceTest {
         Notaire notaire = NotaireServiceTest.initNotaire();
         Client client = ClientServiceTest.initClient();
         MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_WORD, "multipart/form-data", TestDocumentUtils.initWordDocument());
-        FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
+        FichierDocument fichier = fichierDocumentService.createDocument(1L, 2L, file);
         Mockito.verify(cloudMersiveService, times(1)).convertDocxToPDF(any());
         Mockito.verify(encryptionService, times(1)).encryptData(any(byte[].class));
         
@@ -105,7 +103,7 @@ class FichierDocumentServiceTest {
         Notaire notaire = NotaireServiceTest.initNotaire();
         Client client = ClientServiceTest.initClient();
         MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_PDF, "multipart/form-data", TestDocumentUtils.initPDFDocument());
-        FichierDocument fichier = fichierDocumentService.createDocument(1L, 1L, file);
+        FichierDocument fichier = fichierDocumentService.createDocument(1L, 2L, file);
         Mockito.verify(cloudMersiveService, times(0)).convertDocxToPDF(any());
         Mockito.verify(encryptionService, times(1)).encryptData(any(byte[].class));
        
@@ -119,7 +117,6 @@ class FichierDocumentServiceTest {
 
     @Test
     public void testSignDocument() throws IOException, CertificateException, CMSException, NoSuchProviderException, InvalidKeySpecException, NoSuchAlgorithmException {
-        //init();
         byte[] bytes =TestDocumentUtils.initPDFDocument();
         FichierDocument fichierDocument = initFichierDocumentPDF(LocalDateTime.now());
         when(fichierDocumentRepository.findById(anyLong())).thenReturn(Optional.of(fichierDocument));
@@ -132,8 +129,8 @@ class FichierDocumentServiceTest {
     }
 
     private void init() throws IOException {
-        Mockito.when(notaireService.getNotaire(anyLong())).thenReturn(NotaireServiceTest.initNotaire());
-        Mockito.when(clientService.findClient(anyLong())).thenReturn(ClientServiceTest.initClient());
+        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(1L)).thenReturn(ClientServiceTest.initClient());
         Mockito.when(fichierDocumentRepository.save(any(FichierDocument.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
     }
 

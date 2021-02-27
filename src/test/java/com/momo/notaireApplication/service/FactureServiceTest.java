@@ -26,14 +26,9 @@ public class FactureServiceTest {
     @InjectMocks
     private FactureService factureService;
 
-    @Mock
-    private NotaireService notaireService;
 
     @Mock
-    private ClientService clientService;
-
-    @Mock
-    private StripeService stripeService;
+    private UserService userService;
 
     @Mock
     private FactureRepository factureRepository;
@@ -47,15 +42,17 @@ public class FactureServiceTest {
         client = ClientServiceTest.initClient();
         notaire = NotaireServiceTest.initNotaire();
         Mockito.when(factureRepository.save(any(Facture.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-        Mockito.when(clientService.saveClient(any(Client.class))).thenReturn(client);
-        Mockito.when(clientService.findClient(anyLong())).thenReturn(client);
-        Mockito.when(notaireService.saveNotaire(any(Notaire.class))).thenReturn(notaire);
-        Mockito.when(notaireService.getNotaire(anyLong())).thenReturn(notaire);
+        Mockito.when(userService.saveUser(any(Client.class))).thenReturn(client);
+        Mockito.when(userService.getUser(1L)).thenReturn(client);
+        Mockito.when(userService.saveUser(any(Notaire.class))).thenReturn(notaire);
+        Mockito.when(userService.getUser(2L)).thenReturn(notaire);
     }
 
     @Test
     void createFacture() {
         initMocks();
+        client.setId(1L);
+        notaire.setId(2L);
         Facture facture = factureService.createFacture(notaire.getId(), client.getId(), BigDecimal.valueOf(29.99));
 
         Notaire notaireResult = ObjectTestUtils.findNotaireInList(facture.getUsers());
@@ -67,8 +64,8 @@ public class FactureServiceTest {
         assertEquals(LocalDateTime.now().getDayOfYear(), facture.getDateDeCreation().getDayOfYear());
         assertEquals(LocalDateTime.now().getHour(), facture.getDateDeCreation().getHour());
         assertEquals(LocalDateTime.now().getMinute(), facture.getDateDeCreation().getMinute());
-        Mockito.verify(notaireService, Mockito.times(1)).saveNotaire(any(Notaire.class));
-        Mockito.verify(clientService, Mockito.times(1)).saveClient(any(Client.class));
+        Mockito.verify(userService, Mockito.times(1)).saveUser(any(Notaire.class));
+        Mockito.verify(userService, Mockito.times(1)).saveUser(any(Client.class));
 
 
     }
