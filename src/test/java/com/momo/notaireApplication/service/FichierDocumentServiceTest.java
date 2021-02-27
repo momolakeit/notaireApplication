@@ -64,8 +64,8 @@ class FichierDocumentServiceTest {
     public void testAvecFichierWordAppelCloudMersive() throws IOException, CertificateException, CMSException, NoSuchProviderException {
         init();
         Mockito.when(cloudMersiveService.convertDocxToPDF(any(byte[].class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-        Notaire notaire = NotaireServiceTest.initNotaire();
-        Client client = ClientServiceTest.initClient();
+        Notaire notaire = ObjectTestUtils.initNotaire();
+        Client client = ObjectTestUtils.initClient();
         MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_WORD, "multipart/form-data", TestDocumentUtils.initWordDocument());
         FichierDocument fichier = fichierDocumentService.createDocument(1L, 2L, file);
         Mockito.verify(cloudMersiveService, times(1)).convertDocxToPDF(any());
@@ -100,8 +100,8 @@ class FichierDocumentServiceTest {
     @Test
     public void testAvecFichierPdfAppelCloudMersive() throws IOException, CertificateException, CMSException, NoSuchProviderException {
         init();
-        Notaire notaire = NotaireServiceTest.initNotaire();
-        Client client = ClientServiceTest.initClient();
+        Notaire notaire = ObjectTestUtils.initNotaire();
+        Client client = ObjectTestUtils.initClient();
         MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_PDF, "multipart/form-data", TestDocumentUtils.initPDFDocument());
         FichierDocument fichier = fichierDocumentService.createDocument(1L, 2L, file);
         Mockito.verify(cloudMersiveService, times(0)).convertDocxToPDF(any());
@@ -129,8 +129,8 @@ class FichierDocumentServiceTest {
     }
 
     private void init() throws IOException {
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
-        Mockito.when(userService.getUser(1L)).thenReturn(ClientServiceTest.initClient());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
+        Mockito.when(userService.getUser(1L)).thenReturn(ObjectTestUtils.initClient());
         Mockito.when(fichierDocumentRepository.save(any(FichierDocument.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
     }
 

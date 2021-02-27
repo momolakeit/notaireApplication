@@ -40,12 +40,12 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousTest() {
-        Client client = ClientServiceTest.initClient();
-        Notaire notaire = NotaireServiceTest.initNotaire();
+        Client client = ObjectTestUtils.initClient();
+        Notaire notaire = ObjectTestUtils.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
-        Mockito.when(userService.getUser(1L)).thenReturn(ClientServiceTest.initClient());
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(1L)).thenReturn(ObjectTestUtils.initClient());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Mockito.when(rendezVousRepository.save(any(RendezVous.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         RendezVous rendezVous = rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
@@ -55,12 +55,12 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousMemePlageHoraireTest() {
-        Client client = ClientServiceTest.initClient();
+        Client client = ObjectTestUtils.initClient();
         client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(0))));
         Long millisecond = System.currentTimeMillis();
 
         Mockito.when(userService.getUser(1L)).thenReturn(client);
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Assertions.assertThrows(PlageHoraireRendezVousException.class, () -> {
             rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         });
@@ -68,13 +68,13 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousPlageHoraireJusteApresTest() {
-        Client client = ClientServiceTest.initClient();
+        Client client = ObjectTestUtils.initClient();
         client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(31))));
-        Notaire notaire = NotaireServiceTest.initNotaire();
+        Notaire notaire = ObjectTestUtils.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
         Mockito.when(userService.getUser(1L)).thenReturn(client);
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Mockito.when(rendezVousRepository.save(any(RendezVous.class))).thenAnswer(invocation -> invocation.getArgument(0));
         RendezVous rendezVous = rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         assertValues(client, notaire, millisecond, rendezVous);
@@ -82,13 +82,13 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousPlageHoraireCommenceEtTermineEnMMTmpsTest() {
-        Client client = ClientServiceTest.initClient();
+        Client client = ObjectTestUtils.initClient();
         client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(30))));
-        Notaire notaire = NotaireServiceTest.initNotaire();
+        Notaire notaire = ObjectTestUtils.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
         Mockito.when(userService.getUser(1L)).thenReturn(client);
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Mockito.when(rendezVousRepository.save(any(RendezVous.class))).thenAnswer(invocation -> invocation.getArgument(0));
         RendezVous rendezVous = rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         assertValues(client, notaire, millisecond, rendezVous);
@@ -96,14 +96,14 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousPlageHoraireCommenceAvantEtTerminePendantQueLeNouveauxCommence() {
-        Client client = ClientServiceTest.initClient();
+        Client client = ObjectTestUtils.initClient();
         RendezVous rendezVous = initRendezVousPlageHorairePlusMinutes(-15);
         rendezVous.setDureeEnMinute(40);
 
         client.setRendezVous(new ArrayList<>(Arrays.asList(rendezVous)));
         Long millisecond = System.currentTimeMillis();
         Mockito.when(userService.getUser(1L)).thenReturn(client);
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Assertions.assertThrows(PlageHoraireRendezVousException.class,()->{
             rendezVousService.createRendezVous(1L,2L,millisecond,30);
         });
@@ -112,13 +112,13 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousPlageHoraireJusteAvantTest() {
-        Client client = ClientServiceTest.initClient();
+        Client client = ObjectTestUtils.initClient();
         client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHorairePlusMinutes(29))));
-        Notaire notaire = NotaireServiceTest.initNotaire();
+        Notaire notaire = ObjectTestUtils.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
         Mockito.when(userService.getUser(1L)).thenReturn(client);
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Assertions.assertThrows(PlageHoraireRendezVousException.class, () -> {
             rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         });
@@ -126,13 +126,13 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousPlageHoraireHierTest() {
-        Client client = ClientServiceTest.initClient();
+        Client client = ObjectTestUtils.initClient();
         client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageHier())));
-        Notaire notaire = NotaireServiceTest.initNotaire();
+        Notaire notaire = ObjectTestUtils.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
         Mockito.when(userService.getUser(1L)).thenReturn(client);
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Mockito.when(rendezVousRepository.save(any(RendezVous.class))).thenAnswer(invocation -> invocation.getArgument(0));
         RendezVous rendezVous = rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         assertValues(client, notaire, millisecond, rendezVous);
@@ -140,13 +140,13 @@ public class RendezVousServiceTest {
 
     @Test
     public void createRendezVousPlageHoraireDemainTest() {
-        Client client = ClientServiceTest.initClient();
+        Client client = ObjectTestUtils.initClient();
         client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousPlageDemain())));
-        Notaire notaire = NotaireServiceTest.initNotaire();
+        Notaire notaire = ObjectTestUtils.initNotaire();
         Long millisecond = System.currentTimeMillis();
 
         Mockito.when(userService.getUser(1L)).thenReturn(client);
-        Mockito.when(userService.getUser(2L)).thenReturn(NotaireServiceTest.initNotaire());
+        Mockito.when(userService.getUser(2L)).thenReturn(ObjectTestUtils.initNotaire());
         Mockito.when(rendezVousRepository.save(any(RendezVous.class))).thenAnswer(invocation -> invocation.getArgument(0));
         RendezVous rendezVous = rendezVousService.createRendezVous(1L, 2L, millisecond, 30);
         assertValues(client, notaire, millisecond, rendezVous);

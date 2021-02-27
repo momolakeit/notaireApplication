@@ -1,9 +1,9 @@
 package com.momo.notaireApplication.service.payment;
 
+import com.momo.notaireApplication.exception.validation.BadStripeRoleException;
 import com.momo.notaireApplication.model.db.Facture;
 import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.service.pdf.CloudMersiveService;
-import com.momo.notaireApplication.service.NotaireService;
+import com.momo.notaireApplication.service.UserService;
 import com.momo.notaireApplication.utils.ObjectUtils;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -15,7 +15,6 @@ import com.stripe.param.AccountLinkCreateParams;
 import com.stripe.param.PaymentIntentCreateParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +36,13 @@ public class StripeService {
 
     private final String stripeAccountErreurLogMsg = "Erreur lors de l'appel de stripe pour creer un compte";
 
-    private NotaireService notaireService;
+    private UserService userService;
 
 
-    @Autowired
-    private static final Logger LOGGER = LoggerFactory.getLogger(CloudMersiveService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StripeService.class);
 
-    public StripeService(NotaireService notaireService) {
-        this.notaireService = notaireService;
+    public StripeService(UserService userService) {
+        this.userService = userService;
     }
 
     public String processPayment(Facture facture) {
@@ -66,7 +64,12 @@ public class StripeService {
     public String createStripeAccount(String notaireEmail) {
         Stripe.apiKey = stripeAPIKey;
 
-        Notaire notaire = notaireService.findNotaireByEmail(notaireEmail);
+        Notaire notaire;
+        try {
+            notaire = (Notaire) userService.foundUserByEmail(notaireEmail);
+        } catch (ClassCastException e) {
+            throw new BadStripeRoleException();
+        }
         AccountCreateParams params = initAccountCreateParams(notaire);
         try {
             Account account = fetchStripeAccount(notaire, params);
@@ -110,7 +113,7 @@ public class StripeService {
         if (Objects.isNull(notaire.getStripeAccountId())) {
             account = Account.create(params);
             notaire.setStripeAccountId(account.getId());
-            notaireService.saveNotaire(notaire);
+            userService.saveUser(notaire);
         } else {
             account = Account.retrieve(notaire.getStripeAccountId());
         }

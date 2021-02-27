@@ -39,8 +39,8 @@ public class FactureServiceTest {
 
 
     private void initMocks() {
-        client = ClientServiceTest.initClient();
-        notaire = NotaireServiceTest.initNotaire();
+        client = ObjectTestUtils.initClient();
+        notaire = ObjectTestUtils.initNotaire();
         Mockito.when(factureRepository.save(any(Facture.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         Mockito.when(userService.saveUser(any(Client.class))).thenReturn(client);
         Mockito.when(userService.getUser(1L)).thenReturn(client);
