@@ -4,6 +4,8 @@ import com.momo.notaireApplication.exception.validation.notFound.UserNotFoundExc
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.dto.ClientDTO;
+import com.momo.notaireApplication.model.dto.NotaireDTO;
 import com.momo.notaireApplication.model.dto.UserDTO;
 import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
@@ -15,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -63,18 +65,39 @@ class UserServiceTest {
     }
 
     @Test
-    public void notaireToDTO(){
+    public void notaireByEmailToDTO(){
         Notaire notaire = ObjectTestUtils.initNotaire();
-        UserDTO userDTO = userService.toDTO(notaire);
+        Mockito.when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(notaire));
+        UserDTO userDTO = userService.foundUserDTOByEmail("email@mail.com");
+        assertTrue(userDTO instanceof NotaireDTO);
         ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),notaire);
     }
 
     @Test
-    public void clientToDTO(){
+    public void clientByEmailToDTO(){
         Client client = ObjectTestUtils.initClient();
-        UserDTO userDTO = userService.toDTO(client);
+        Mockito.when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(client));
+        UserDTO userDTO = userService.foundUserDTOByEmail("email@mail");
+        assertTrue(userDTO instanceof ClientDTO);
         ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),client);
     }
 
+    @Test
+    public void notaireByIdToDTO(){
+        Notaire notaire = ObjectTestUtils.initNotaire();
+        Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(notaire));
+        UserDTO userDTO = userService.getUserDTOById(1L);
+        assertTrue(userDTO instanceof NotaireDTO);
+        ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),notaire);
+    }
+
+    @Test
+    public void clientByIdToDTO(){
+        Client client = ObjectTestUtils.initClient();
+        Mockito.when(userRepository.findById(anyLong())).thenReturn(Optional.of(client));
+        UserDTO userDTO = userService.getUserDTOById(1L);
+        assertTrue(userDTO instanceof ClientDTO);
+        ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),client);
+    }
 
 }

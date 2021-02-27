@@ -30,12 +30,18 @@ public class UserService {
     public User foundUserByEmail(String email) {
         return userRepository.findByEmailAdress(email).orElseThrow(UserNotFoundException::new);
     }
+    public UserDTO foundUserDTOByEmail(String email){
+        return toDTO(foundUserByEmail(email));
+    }
+    public UserDTO getUserDTOById(Long id){
+        return toDTO(getUser(id));
+    }
 
     public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public UserDTO toDTO(User user) {
+    private UserDTO toDTO(User user) {
         switch (user.getClass().getSimpleName().toUpperCase()){
             case CLIENT:
                 return ClientMapper.instance.toDTO((Client) user);
