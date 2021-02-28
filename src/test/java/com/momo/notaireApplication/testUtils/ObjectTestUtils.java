@@ -15,14 +15,18 @@ public class ObjectTestUtils {
     private static final String PRENOM = "prenom";
 
     private static final String EMAIL = "email";
-    public static Notaire findNotaireInList(List<User> users){
+
+    private static final String STRIPE_ACCOUNT_ID = "accountId";
+
+    public static Notaire findNotaireInList(List<User> users) {
         return (Notaire) users
                 .stream()
                 .filter(user -> user instanceof Notaire)
                 .findFirst()
                 .get();
     }
-    public static Client findClientInList(List<User> users){
+
+    public static Client findClientInList(List<User> users) {
         return (Client) users
                 .stream()
                 .filter(user -> user instanceof Client)
@@ -36,6 +40,7 @@ public class ObjectTestUtils {
         notaire.setNom(NOM);
         notaire.setPrenom(PRENOM);
         notaire.setEmailAdress(EMAIL);
+        notaire.setStripeAccountId(STRIPE_ACCOUNT_ID);
         notaire.setRendezVous(new ArrayList<>());
         return notaire;
     }
@@ -50,7 +55,7 @@ public class ObjectTestUtils {
         return client;
     }
 
-    public static void assertUsers(String nom , String prenom , String email,User userToAssert){
+    public static void assertUsers(String nom, String prenom, String email, User userToAssert) {
         assertEquals(nom, userToAssert.getNom());
         assertEquals(email, userToAssert.getEmailAdress());
         assertEquals(prenom, userToAssert.getPrenom());

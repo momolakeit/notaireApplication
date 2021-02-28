@@ -26,7 +26,6 @@ public class FactureServiceTest {
     @InjectMocks
     private FactureService factureService;
 
-
     @Mock
     private UserService userService;
 
