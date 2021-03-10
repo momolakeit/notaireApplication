@@ -85,8 +85,8 @@ class FichierDocumentControllerTest {
         MockMvc mvc = initMockMvc();
         MockMultipartFile file = new MockMultipartFile("file", "mysuperfile.pdf", "multipart/form-data", TestDocumentUtils.initPDFDocument());
         CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO = new CreateFichierDocumentRequestDTO();
-        createFichierDocumentRequestDTO.setClientDTO(ClientMapper.instance.toDTO(client));
-        createFichierDocumentRequestDTO.setNotaireDTO(NotaireMapper.instance.toDTO(notaire));
+        createFichierDocumentRequestDTO.setClientId(ClientMapper.instance.toDTO(client).getId());
+        createFichierDocumentRequestDTO.setNotaireId(NotaireMapper.instance.toDTO(notaire).getId());
 
         mvc.perform(MockMvcRequestBuilders.multipart("/fichierDocument", fichierDocument.getId())
                 .file(file)

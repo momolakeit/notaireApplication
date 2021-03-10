@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 public class CreateFichierDocumentRequestDTO {
-    private NotaireDTO notaireDTO;
+    private Long notaireId;
 
-    private ClientDTO clientDTO;
+    private Long clientId;
 
 }

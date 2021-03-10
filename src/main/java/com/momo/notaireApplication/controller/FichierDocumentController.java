@@ -19,8 +19,8 @@ public class FichierDocumentController extends BaseController {
     @PostMapping
     public FichierDocumentDTO createFichierDocument(@RequestParam MultipartFile file, @RequestBody CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO) {
         return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.createDocument(
-                createFichierDocumentRequestDTO.getClientDTO().getId(),
-                createFichierDocumentRequestDTO.getNotaireDTO().getId(),
+                createFichierDocumentRequestDTO.getClientId(),
+                createFichierDocumentRequestDTO.getNotaireId(),
                 file));
     }
 
