@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 public class CreateFactureRequestDTO {
-    private NotaireDTO notaireDTO;
+    private Long notaireId;
 
-    private ClientDTO clientDTO;
+    private Long clientId;
 
     private BigDecimal prix;
 

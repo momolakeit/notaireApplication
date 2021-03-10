@@ -51,8 +51,8 @@ class FactureControllerTest {
     public void testCreateFacture() throws Exception {
         MockMvc mvc = initMockMvc();
         CreateFactureRequestDTO factureRequestDTO = new CreateFactureRequestDTO();
-        factureRequestDTO.setClientDTO(ClientMapper.instance.toDTO(client));
-        factureRequestDTO.setNotaireDTO(NotaireMapper.instance.toDTO(notaire));
+        factureRequestDTO.setClientId(client.getId());
+        factureRequestDTO.setNotaireId(notaire.getId());
         factureRequestDTO.setPrix(BigDecimal.valueOf(55));
         mvc.perform(MockMvcRequestBuilders.post("/facture/")
                 .content(new ObjectMapper().writeValueAsString(factureRequestDTO))

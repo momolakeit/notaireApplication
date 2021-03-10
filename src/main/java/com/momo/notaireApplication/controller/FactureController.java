@@ -29,8 +29,8 @@ public class FactureController extends BaseController {
     @PostMapping
     public FactureDTO createFacture(@RequestBody CreateFactureRequestDTO createFactureRequestDTO) {
         Facture facture = this.factureService.createFacture(
-                createFactureRequestDTO.getNotaireDTO().getId(),
-                createFactureRequestDTO.getClientDTO().getId(),
+                createFactureRequestDTO.getNotaireId(),
+                createFactureRequestDTO.getClientId(),
                 createFactureRequestDTO.getPrix());
         String paymentClientSecret = this.stripeService.processPayment(facture);
         FactureDTO factureDTO = this.factureService.getFactureDTO(facture.getId());
