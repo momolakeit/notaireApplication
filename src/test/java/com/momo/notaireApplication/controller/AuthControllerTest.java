@@ -62,7 +62,7 @@ class AuthControllerTest {
         MockMvc mvc = initMockMvc();
         SignUpDTO signUpDTO = AuthServiceTest.initSignUpDTONotaireRole();
         signUpDTO.setEmailAdress(EMAIL);
-        mvc.perform(MockMvcRequestBuilders.post("/user")
+        mvc.perform(MockMvcRequestBuilders.post("/auth")
                 .content(new ObjectMapper().writeValueAsString(signUpDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

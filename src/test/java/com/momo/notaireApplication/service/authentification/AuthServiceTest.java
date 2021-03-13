@@ -32,6 +32,10 @@ public class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
+    @Spy
+    @InjectMocks
+    private AuthService authServiceSpy;
+
     @Mock
     private UserRepository userRepository;
 
@@ -65,7 +69,7 @@ public class AuthServiceTest {
     public void testCreateUserNotaire() {
         initMocks();
         SignUpDTO signUpDTO = initSignUpDTONotaireRole();
-        authService.createUser(signUpDTO);
+        initAuthServiceSpy(signUpDTO);
         Mockito.verify(userRepository).save(userArgumentCaptor.capture());
         Notaire notaire = (Notaire) userArgumentCaptor.getValue();
         assertEquals(EMAIL_ADRESS, notaire.getEmailAdress());
@@ -120,15 +124,20 @@ public class AuthServiceTest {
 
     @Test
     public void testCreateUserClient() {
-        initMocks();
         SignUpDTO signUpDTO = initSignUpDTOClientRole();
-        authService.createUser(signUpDTO);
+        initMocks();
+        initAuthServiceSpy(signUpDTO);
         Mockito.verify(userRepository).save(userArgumentCaptor.capture());
         Client client = (Client) userArgumentCaptor.getValue();
         assertEquals(EMAIL_ADRESS, client.getEmailAdress());
         assertEquals(PASSWORD, client.getPassword());
         assertEquals(PRENOM, client.getPrenom());
         assertEquals(NOM_DE_FAMILLE, client.getNom());
+    }
+
+    private void initAuthServiceSpy(SignUpDTO signUpDTO) {
+        Mockito.doReturn(null).when(authServiceSpy).logInUser(any(LogInDTO.class));
+        authServiceSpy.createUser(signUpDTO);
     }
 
 

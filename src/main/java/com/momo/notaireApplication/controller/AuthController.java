@@ -21,9 +21,8 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping
-    public ResponseEntity createUser(@RequestBody SignUpDTO signUpDTO) {
-        authService.createUser(signUpDTO);
-        return ResponseEntity.ok("user created");
+    public ResponseEntity<JWTResponse> createUser(@RequestBody SignUpDTO signUpDTO) {
+        return ResponseEntity.ok(authService.createUser(signUpDTO));
     }
     @PostMapping("/logIn")
     public ResponseEntity<JWTResponse> logIn(@RequestBody LogInDTO logInDTO) {

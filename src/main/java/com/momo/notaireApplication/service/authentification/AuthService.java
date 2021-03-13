@@ -36,7 +36,7 @@ public class AuthService {
         this.jwtProvider = jwtProvider;
     }
 
-    public void createUser(SignUpDTO signUpDTO){
+    public JWTResponse createUser(SignUpDTO signUpDTO){
         userRepository.findByEmailAdress(signUpDTO.getEmailAdress()).ifPresent(user -> {
                 throw new UserAlreadyExistsException();
         });
@@ -50,6 +50,8 @@ public class AuthService {
             default:
                 throw new BadRoleException();
         }
+
+        return logInUser(new LogInDTO(signUpDTO.getEmailAdress(),signUpDTO.getPassword()));
     }
 
     public JWTResponse logInUser(LogInDTO logInDTO){
