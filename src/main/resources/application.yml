@@ -9,7 +9,7 @@ stripe:
   apiKey: "sk_test_51HLwKgC5UoZOX4GRUFItjFyJNULwHrPtVdQneYTfdNWN8Jvaix5wabpNZk8JwjkSG36Mg2st9yV1VrhnfhUfhAOQ00NasvN6m1"
 
 front-end:
-  url : "http://localhost:3000"
+  url : "http://localhost:4200"
 
 security:
   jwt:
