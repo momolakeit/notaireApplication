@@ -4,10 +4,9 @@ import com.momo.notaireApplication.model.db.RendezVous;
 import com.momo.notaireApplication.model.dto.RendezVousDTO;
 import com.momo.notaireApplication.model.request.CreateRendezVousRequestDTO;
 import com.momo.notaireApplication.service.RendezVousService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/rendezVous")
 public class RendezVousController extends BaseController {
 

@@ -3,12 +3,11 @@ package com.momo.notaireApplication.controller;
 import com.momo.notaireApplication.model.dto.UserDTO;
 import com.momo.notaireApplication.model.request.UserSearchQueryDTO;
 import com.momo.notaireApplication.service.UserService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {
 
