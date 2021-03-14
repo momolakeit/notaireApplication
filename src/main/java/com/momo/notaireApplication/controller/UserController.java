@@ -1,15 +1,12 @@
 package com.momo.notaireApplication.controller;
 
-import com.momo.notaireApplication.model.db.User;
-import com.momo.notaireApplication.model.dto.JWTResponse;
 import com.momo.notaireApplication.model.dto.UserDTO;
-import com.momo.notaireApplication.model.request.LogInDTO;
-import com.momo.notaireApplication.model.request.SignUpDTO;
+import com.momo.notaireApplication.model.request.UserSearchQuery;
 import com.momo.notaireApplication.service.UserService;
-import com.momo.notaireApplication.service.authentification.AuthService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -29,5 +26,10 @@ public class UserController extends BaseController {
     @GetMapping("/{id}")
     public UserDTO findUserById(@PathVariable final Long id) {
         return userService.getUserDTOById(id);
+    }
+
+    @PostMapping("/search")
+    public List<UserDTO> findUsersListByQuery(@RequestBody UserSearchQuery userSearchQuery){
+        return userService.searchUsersByQuery(userSearchQuery.getQuery());
     }
 }

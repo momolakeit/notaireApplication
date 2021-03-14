@@ -1,5 +1,6 @@
 package com.momo.notaireApplication.service;
 
+import com.momo.notaireApplication.controller.request.HeaderCatcherService;
 import com.momo.notaireApplication.exception.validation.notFound.UserNotFoundException;
 import com.momo.notaireApplication.mapping.ClientMapper;
 import com.momo.notaireApplication.mapping.NotaireMapper;
@@ -11,6 +12,9 @@ import com.momo.notaireApplication.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class UserService {
@@ -19,8 +23,11 @@ public class UserService {
 
     private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    private HeaderCatcherService headerCatcherService;
+
+    public UserService(UserRepository userRepository, HeaderCatcherService headerCatcherService) {
         this.userRepository = userRepository;
+        this.headerCatcherService = headerCatcherService;
     }
 
     public User getUser(Long userID) {
@@ -30,11 +37,36 @@ public class UserService {
     public User foundUserByEmail(String email) {
         return userRepository.findByEmailAdress(email).orElseThrow(UserNotFoundException::new);
     }
-    public UserDTO foundUserDTOByEmail(String email){
+
+    public UserDTO foundUserDTOByEmail(String email) {
         return toDTO(foundUserByEmail(email));
     }
-    public UserDTO getUserDTOById(Long id){
+
+    public UserDTO getUserDTOById(Long id) {
         return toDTO(getUser(id));
+    }
+
+    public List<UserDTO> searchUsersByQuery(String searchQuery) {
+        String roleDuUserAChercher = "";
+
+        switch (headerCatcherService.getUserRole().toUpperCase()) {
+            case CLIENT:
+                roleDuUserAChercher = NOTAIRE;
+                break;
+            case NOTAIRE:
+                roleDuUserAChercher = CLIENT;
+                break;
+            default:
+                break;
+        }
+
+        String finalRoleDuUserAChercher = roleDuUserAChercher;
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getClass().getSimpleName().equalsIgnoreCase(finalRoleDuUserAChercher))
+                .filter(user -> filterByUsersByName(searchQuery, user))
+                .map(user -> toDTO(user))
+                .collect(Collectors.toList());
     }
 
     public User saveUser(User user) {
@@ -42,15 +74,19 @@ public class UserService {
     }
 
     private UserDTO toDTO(User user) {
-        switch (user.getClass().getSimpleName().toUpperCase()){
+        switch (user.getClass().getSimpleName().toUpperCase()) {
             case CLIENT:
                 return ClientMapper.instance.toDTO((Client) user);
             case NOTAIRE:
-                return NotaireMapper.instance.toDTO((Notaire)user);
+                return NotaireMapper.instance.toDTO((Notaire) user);
             default:
-               return null;
+                return null;
         }
 
+    }
+
+    private Boolean filterByUsersByName(String query, User user) {
+        return user.getNom().toLowerCase().contains(query.toLowerCase()) || user.getPrenom().toLowerCase().contains(query.toLowerCase());
     }
 
 }

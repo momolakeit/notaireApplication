@@ -23,8 +23,12 @@ public class JwtProvider {
 
     private final long duration;
 
+    private final String SECRET;
 
-    public JwtProvider(@Value("${security.jwt.duration}") long durationHours,@Value("${security.jwt.secret}") String secret) {
+    private final String ROLE_CLAIM = "role";
+
+    public JwtProvider(@Value("${security.jwt.duration}") long durationHours, @Value("${security.jwt.secret}") String secret) {
+        this.SECRET = secret;
         algorithm = Algorithm.HMAC256(secret);
         verifier = JWT.require(algorithm).build();
         duration = TimeUnit.HOURS.toMillis(durationHours);
@@ -35,7 +39,7 @@ public class JwtProvider {
 
         return JWT.create()
                 .withSubject(user.getId().toString())
-                .withClaim("role", user.getClass().getName().toUpperCase())
+                .withClaim(ROLE_CLAIM, user.getClass().getSimpleName().toUpperCase())
                 .withIssuedAt(new Date(time))
                 .withExpiresAt(new Date(time + duration))
                 .sign(algorithm);
@@ -46,9 +50,14 @@ public class JwtProvider {
             throw new JWTVerificationException("Token cannot be null");
 
         if (token.startsWith("Bearer "))
-            token = token.replace("Bearer ","");
+            token = token.replace("Bearer ", "");
 
         return verifier.verify(token.trim());
+    }
+
+    public String getUserRoleFromToken(String token) throws JWTVerificationException {
+        DecodedJWT decodedJWT= verify(token);
+        return decodedJWT.getClaim(ROLE_CLAIM).asString();
     }
 
 }
