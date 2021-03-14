@@ -1,12 +1,9 @@
 package com.momo.notaireApplication.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
-import com.momo.notaireApplication.model.request.CreateRendezVousRequestDTO;
 import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
