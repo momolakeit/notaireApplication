@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserSearchQuery {
+public class UserSearchQueryDTO {
     private String query;
 }

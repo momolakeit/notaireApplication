@@ -1,7 +1,7 @@
 package com.momo.notaireApplication.controller;
 
 import com.momo.notaireApplication.model.dto.UserDTO;
-import com.momo.notaireApplication.model.request.UserSearchQuery;
+import com.momo.notaireApplication.model.request.UserSearchQueryDTO;
 import com.momo.notaireApplication.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/search")
-    public List<UserDTO> findUsersListByQuery(@RequestBody UserSearchQuery userSearchQuery){
-        return userService.searchUsersByQuery(userSearchQuery.getQuery());
+    public List<UserDTO> findUsersListByQuery(@RequestBody UserSearchQueryDTO userSearchQueryDTO){
+        return userService.searchUsersByQuery(userSearchQueryDTO.getQuery());
     }
 }

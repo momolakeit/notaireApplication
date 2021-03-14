@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.momo.notaireApplication.jwt.JwtProvider;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
-import com.momo.notaireApplication.model.request.UserSearchQuery;
+import com.momo.notaireApplication.model.request.UserSearchQueryDTO;
 import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,10 +90,10 @@ class UserControllerTest {
     @Test
     public void fetchUserListByQuery() throws Exception {
         MockMvc mvc = initMockMvc();
-        UserSearchQuery userSearchQuery = new UserSearchQuery();
-        userSearchQuery.setQuery("nom");
+        UserSearchQueryDTO userSearchQueryDTO = new UserSearchQueryDTO();
+        userSearchQueryDTO.setQuery("nom");
         mvc.perform(MockMvcRequestBuilders.post("/user/search")
-                .content(objectMapper.writeValueAsString(userSearchQuery))
+                .content(objectMapper.writeValueAsString(userSearchQueryDTO))
                 .header("Authorization", JWT_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
