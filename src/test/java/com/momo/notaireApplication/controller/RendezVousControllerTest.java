@@ -9,6 +9,7 @@ import com.momo.notaireApplication.model.request.CreateRendezVousRequestDTO;
 import com.momo.notaireApplication.repositories.ClientRepository;
 import com.momo.notaireApplication.repositories.RendezVousRepository;
 import com.momo.notaireApplication.repositories.UserRepository;
+import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import com.sun.codemodel.JStatement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,8 +60,8 @@ public class RendezVousControllerTest {
         rendezVous.setDateDebut(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
 
 
-        client = userRepository.save(new Client());
-        notaire = userRepository.save(new Notaire());
+        client = userRepository.save(ObjectTestUtils.initClient());
+        notaire = userRepository.save(ObjectTestUtils.initNotaire());
         rendezVous = rendezVousRepository.save(new RendezVous());
     }
 
@@ -123,7 +124,9 @@ public class RendezVousControllerTest {
 
     private RendezVous initRendezVousAvecMauvaisePlageHoraire() {
         RendezVous rendezVous = new RendezVous();
-        rendezVous.setDateDebut(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
+        LocalDateTime localDateTime =LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault());
+        rendezVous.setDateDebut(localDateTime);
+        rendezVous.setDateFin(localDateTime.plusMinutes(1));
         return rendezVousRepository.save(rendezVous);
     }
 
