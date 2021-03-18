@@ -9,6 +9,8 @@ import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -16,11 +18,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     @Autowired
     private UserController userController;
@@ -89,9 +94,17 @@ class UserControllerTest {
 
     @Test
     public void fetchUserListByQuery() throws Exception {
+        String name="chekevara";
+        String lastName="sicily";
+
         MockMvc mvc = initMockMvc();
+        user = ObjectTestUtils.initClient();
+        user.setId(null);
+        user.setNom(name);
+        user.setPrenom(lastName);
+        user = userRepository.save(user);
         UserSearchQueryDTO userSearchQueryDTO = new UserSearchQueryDTO();
-        userSearchQueryDTO.setQuery("nom");
+        userSearchQueryDTO.setQuery(name);
         mvc.perform(MockMvcRequestBuilders.post("/user/search")
                 .content(objectMapper.writeValueAsString(userSearchQueryDTO))
                 .header("Authorization", JWT_TOKEN)

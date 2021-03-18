@@ -65,7 +65,7 @@ public class UserService {
                 .stream()
                 .filter(user -> user.getClass().getSimpleName().equalsIgnoreCase(finalRoleDuUserAChercher))
                 .filter(user -> filterByUsersByName(searchQuery, user))
-                .map(user -> toDTO(user))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
