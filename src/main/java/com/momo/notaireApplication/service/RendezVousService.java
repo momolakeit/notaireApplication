@@ -71,22 +71,23 @@ public class RendezVousService {
 
     private RendezVous initRendezVous(Client client, Notaire notaire, LocalDateTime dateTime, int dureeEnMinute) {
         RendezVous rendezVous = new RendezVous();
-        rendezVous.setLocalDateTime(dateTime);
-        rendezVous.setDureeEnMinute(dureeEnMinute);
+        rendezVous.setDateDebut(dateTime);
+        rendezVous.setDateFin(dateTime.plusMinutes((long) dureeEnMinute));
         rendezVous.setUsers(new ArrayList<>(Arrays.asList(client, notaire)));
         rendezVous = this.saveRendezVous(rendezVous);
         return rendezVous;
     }
 
-    private Boolean ifPlageHoraireLibre(LocalDateTime date, LocalDateTime dateRendezVous, int dureeEnMinuteAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {
+    private Boolean ifPlageHoraireLibre(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {
         //retirer nanos set seconde pour pouvoir faire comparaison
-        date = setLocalDateWithoutNanoOrSeconds(date);
-        dateRendezVous = setLocalDateWithoutNanoOrSeconds(dateRendezVous);
+        dateDebutAncienRendezVous = setLocalDateWithoutNanoOrSeconds(dateDebutAncienRendezVous);
+        dateDebutNouveauRendezVous = setLocalDateWithoutNanoOrSeconds(dateDebutNouveauRendezVous);
+        dateFinAncienRendezVous = setLocalDateWithoutNanoOrSeconds(dateFinAncienRendezVous);
 
-        return (date.isBefore(dateRendezVous) &&
-                date.plusMinutes(dureeEnMinuteAncienRendezVous).isBefore(dateRendezVous)) ||
-                date.isAfter(dateRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous)) ||
-                date.isEqual(dateRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous));
+        return (dateDebutAncienRendezVous.isBefore(dateDebutNouveauRendezVous) &&
+                dateFinAncienRendezVous.isBefore(dateDebutNouveauRendezVous)) ||
+                dateDebutAncienRendezVous.isAfter(dateDebutNouveauRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous)) ||
+                dateDebutAncienRendezVous.isEqual(dateDebutNouveauRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous));
     }
 
     private Boolean ifRendezVousSameDay(LocalDateTime date, LocalDateTime dateRendezVous) {
@@ -96,9 +97,8 @@ public class RendezVousService {
 
     private Boolean checkIfRendezVousLibre(List<RendezVous> rendezVous, LocalDateTime dateRendezVous, int dureeEnMinute) {
         List heureDesRndezVousQuonPiettine = rendezVous.stream()
-                //.map(RendezVous::getLocalDateTime)
-                .filter(rv -> ifRendezVousSameDay(rv.getLocalDateTime(), dateRendezVous) &&
-                        !ifPlageHoraireLibre(rv.getLocalDateTime(), dateRendezVous, rv.getDureeEnMinute(), dureeEnMinute))
+                .filter(rv -> ifRendezVousSameDay(rv.getDateDebut(), dateRendezVous) &&
+                        !ifPlageHoraireLibre(rv.getDateDebut(), dateRendezVous, rv.getDateFin(), dureeEnMinute))
                 .collect(Collectors.toList());
         return heureDesRndezVousQuonPiettine.isEmpty();
     }

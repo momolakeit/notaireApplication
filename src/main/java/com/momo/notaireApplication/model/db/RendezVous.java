@@ -17,9 +17,9 @@ public class RendezVous {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime localDateTime;
+    private LocalDateTime dateDebut;
 
-    private int dureeEnMinute;
+    private LocalDateTime dateFin;
 
     @ManyToMany
     private List<User> users;

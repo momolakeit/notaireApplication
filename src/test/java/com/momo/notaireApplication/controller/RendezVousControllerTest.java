@@ -51,7 +51,7 @@ public class RendezVousControllerTest {
     @BeforeEach
     public void init() {
         rendezVous = new RendezVous();
-        rendezVous.setLocalDateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
+        rendezVous.setDateDebut(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
 
 
         client = userRepository.save(new Client());
@@ -118,7 +118,7 @@ public class RendezVousControllerTest {
 
     private RendezVous initRendezVousAvecMauvaisePlageHoraire() {
         RendezVous rendezVous = new RendezVous();
-        rendezVous.setLocalDateTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
+        rendezVous.setDateDebut(LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault()));
         return rendezVousRepository.save(rendezVous);
     }
 
