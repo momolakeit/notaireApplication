@@ -13,7 +13,9 @@ import java.util.List;
 public class RendezVousDTO {
     private Long id;
 
-    private LocalDateTime localDateTime;
+    private LocalDateTime dateDebut;
+
+    private LocalDateTime dateFin;
 
     private int dureeEnMinute;
 

@@ -72,7 +72,7 @@ public class RendezVousService {
     private RendezVous initRendezVous(Client client, Notaire notaire, LocalDateTime dateTime, int dureeEnMinute) {
         RendezVous rendezVous = new RendezVous();
         rendezVous.setDateDebut(dateTime);
-        rendezVous.setDateFin(dateTime.plusMinutes((long) dureeEnMinute));
+        rendezVous.setDateFin(dateTime.plusMinutes(dureeEnMinute));
         rendezVous.setUsers(new ArrayList<>(Arrays.asList(client, notaire)));
         rendezVous = this.saveRendezVous(rendezVous);
         return rendezVous;
