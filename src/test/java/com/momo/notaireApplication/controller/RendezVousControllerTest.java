@@ -97,6 +97,15 @@ public class RendezVousControllerTest {
                 .andExpect(status().isOk());
     }
     @Test
+    public void fetchUsersRendezVous() throws Exception {
+        client = initClientAvecRendezVousMauvaisePlageHoraire();
+        MockMvc mvc = initMockMvc();
+        mvc.perform(MockMvcRequestBuilders.get("/rendezVous/getAllRendezVousForUser/{id}", client.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    @Test
     public void fetchRendezVousNotFoundBadRequest() throws Exception {
         MockMvc mvc = initMockMvc();
         mvc.perform(MockMvcRequestBuilders.get("/rendezVous/getRendezVous/{id}", 0L)
@@ -108,8 +117,12 @@ public class RendezVousControllerTest {
 
     private Client initClientAvecRendezVousMauvaisePlageHoraire() {
         client = new Client();
-        client.setRendezVous(new ArrayList<>(Arrays.asList(initRendezVousAvecMauvaisePlageHoraire())));
-        return userRepository.save(client);
+        RendezVous rV = rendezVousRepository.save(initRendezVousAvecMauvaisePlageHoraire());
+        client.setRendezVous(new ArrayList<>(Arrays.asList(rV)));
+        client =userRepository.save(client);
+        rV.setUsers(new ArrayList<>(Arrays.asList(client)));
+        rendezVousRepository.save(rV);
+        return client;
     }
 
 

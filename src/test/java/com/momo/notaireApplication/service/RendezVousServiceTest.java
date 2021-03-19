@@ -169,6 +169,13 @@ public class RendezVousServiceTest {
 
     }
 
+    @Test
+    public void fetchAllRendezVous(){
+        Mockito.when(rendezVousRepository.findByUsers_Id(anyLong())).thenReturn(Arrays.asList(initRendezVousPlageDemain(),initRendezVousPlageHier()));
+        List<RendezVous> rendezVousList =rendezVousService.fetchAllRendezVousForUser(1L);
+        assertEquals(2,rendezVousList.size());
+    }
+
     private void assertValues(Client client, Notaire notaire, Long millisecond, RendezVous rendezVous) {
         LocalDateTime dateDebut =
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(millisecond), ZoneId.systemDefault());

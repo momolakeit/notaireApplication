@@ -12,7 +12,6 @@ import com.momo.notaireApplication.repositories.RendezVousRepository;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -45,6 +44,10 @@ public class RendezVousService {
         } else {
             throw new PlageHoraireRendezVousException();
         }
+    }
+
+    public List<RendezVous> fetchAllRendezVousForUser(Long userId){
+        return rendezVousRepository.findByUsers_Id(userId);
     }
 
     public RendezVous getRendezVous(Long id) {
