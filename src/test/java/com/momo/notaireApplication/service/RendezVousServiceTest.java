@@ -69,7 +69,7 @@ public class RendezVousServiceTest {
     @Test
     public void createRendezVousPlageHoraireJusteApresTest() {
         Client client = ObjectTestUtils.initClient();
-        client.setRendezVous(new ArrayList<>(Collections.singletonList(initRendezVousPlageHorairePlusMinutes(31,DUREE_EN_MINUTE))));
+        client.setRendezVous(new ArrayList<>(Collections.singletonList(initRendezVousPlageHorairePlusMinutes(31,15+DUREE_EN_MINUTE))));
         Notaire notaire = ObjectTestUtils.initNotaire();
         Long millisecond = System.currentTimeMillis();
 

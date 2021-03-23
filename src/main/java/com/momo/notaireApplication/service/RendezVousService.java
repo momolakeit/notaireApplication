@@ -93,17 +93,15 @@ public class RendezVousService {
     }
 
     private boolean isNewRendezVousDateFinInRange(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous, LocalDateTime dateFinNouveauRendezVous) {
-        return (dateDebutAncienRendezVous.isBefore(dateFinNouveauRendezVous) ||
-                dateDebutAncienRendezVous.isEqual(dateFinNouveauRendezVous)) &&
-                (dateFinAncienRendezVous.isAfter(dateFinNouveauRendezVous) ||
-                        dateFinAncienRendezVous.isEqual(dateFinNouveauRendezVous));
+        return (dateDebutAncienRendezVous.isBefore(dateFinNouveauRendezVous) &&
+                dateFinAncienRendezVous.isAfter(dateFinNouveauRendezVous)) ||
+                dateFinAncienRendezVous.isEqual(dateFinNouveauRendezVous);
     }
 
     private boolean isNewRendezVousDateDebutInRange(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous) {
         return (dateDebutAncienRendezVous.isBefore(dateDebutNouveauRendezVous) ||
                 dateDebutAncienRendezVous.isEqual(dateDebutNouveauRendezVous)) &&
-                (dateFinAncienRendezVous.isAfter(dateDebutNouveauRendezVous) ||
-                        dateFinAncienRendezVous.isEqual(dateDebutNouveauRendezVous));
+                dateFinAncienRendezVous.isAfter(dateDebutNouveauRendezVous);
     }
 
     private boolean isNewRendezVousOver(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {
