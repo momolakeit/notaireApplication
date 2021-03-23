@@ -46,7 +46,7 @@ public class RendezVousService {
         }
     }
 
-    public List<RendezVous> fetchAllRendezVousForUser(Long userId){
+    public List<RendezVous> fetchAllRendezVousForUser(Long userId) {
         return rendezVousRepository.findByUsers_Id(userId);
     }
 
@@ -81,16 +81,34 @@ public class RendezVousService {
         return rendezVous;
     }
 
-    private Boolean ifPlageHoraireLibre(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {
+    private Boolean ifPlageHorairePrise(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {
         //retirer nanos set seconde pour pouvoir faire comparaison
         dateDebutAncienRendezVous = setLocalDateWithoutNanoOrSeconds(dateDebutAncienRendezVous);
         dateDebutNouveauRendezVous = setLocalDateWithoutNanoOrSeconds(dateDebutNouveauRendezVous);
         dateFinAncienRendezVous = setLocalDateWithoutNanoOrSeconds(dateFinAncienRendezVous);
+        LocalDateTime dateFinNouveauRendezVous = dateDebutNouveauRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous);
+        return isNewRendezVousDateDebutInRange(dateDebutAncienRendezVous, dateDebutNouveauRendezVous, dateFinAncienRendezVous) ||
+                isNewRendezVousOver(dateDebutAncienRendezVous, dateDebutNouveauRendezVous, dateFinAncienRendezVous, dureeEnMinuteNouveauRendezVous) ||
+                isNewRendezVousDateFinInRange(dateDebutAncienRendezVous, dateDebutNouveauRendezVous, dateFinAncienRendezVous, dateFinNouveauRendezVous);
+    }
 
-        return (dateDebutAncienRendezVous.isBefore(dateDebutNouveauRendezVous) &&
-                dateFinAncienRendezVous.isBefore(dateDebutNouveauRendezVous)) ||
-                dateDebutAncienRendezVous.isAfter(dateDebutNouveauRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous)) ||
-                dateDebutAncienRendezVous.isEqual(dateDebutNouveauRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous));
+    private boolean isNewRendezVousDateFinInRange(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous, LocalDateTime dateFinNouveauRendezVous) {
+        return (dateDebutAncienRendezVous.isBefore(dateFinNouveauRendezVous) ||
+                dateDebutAncienRendezVous.isEqual(dateFinNouveauRendezVous)) &&
+                (dateFinAncienRendezVous.isAfter(dateFinNouveauRendezVous) ||
+                        dateFinAncienRendezVous.isEqual(dateFinNouveauRendezVous));
+    }
+
+    private boolean isNewRendezVousDateDebutInRange(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous) {
+        return (dateDebutAncienRendezVous.isBefore(dateDebutNouveauRendezVous) ||
+                dateDebutAncienRendezVous.isEqual(dateDebutNouveauRendezVous)) &&
+                (dateFinAncienRendezVous.isAfter(dateDebutNouveauRendezVous) ||
+                        dateFinAncienRendezVous.isEqual(dateDebutNouveauRendezVous));
+    }
+
+    private boolean isNewRendezVousOver(LocalDateTime dateDebutAncienRendezVous, LocalDateTime dateDebutNouveauRendezVous, LocalDateTime dateFinAncienRendezVous, int dureeEnMinuteNouveauRendezVous) {
+        return dateDebutNouveauRendezVous.isBefore(dateDebutAncienRendezVous) && dateDebutNouveauRendezVous.plusMinutes(dureeEnMinuteNouveauRendezVous).isAfter(dateFinAncienRendezVous);
+
     }
 
     private Boolean ifRendezVousSameDay(LocalDateTime date, LocalDateTime dateRendezVous) {
@@ -101,7 +119,7 @@ public class RendezVousService {
     private Boolean checkIfRendezVousLibre(List<RendezVous> rendezVous, LocalDateTime dateRendezVous, int dureeEnMinute) {
         List heureDesRndezVousQuonPiettine = rendezVous.stream()
                 .filter(rv -> ifRendezVousSameDay(rv.getDateDebut(), dateRendezVous) &&
-                        !ifPlageHoraireLibre(rv.getDateDebut(), dateRendezVous, rv.getDateFin(), dureeEnMinute))
+                        ifPlageHorairePrise(rv.getDateDebut(), dateRendezVous, rv.getDateFin(), dureeEnMinute))
                 .collect(Collectors.toList());
         return heureDesRndezVousQuonPiettine.isEmpty();
     }
