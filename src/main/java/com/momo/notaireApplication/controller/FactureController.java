@@ -1,10 +1,6 @@
 package com.momo.notaireApplication.controller;
 
-import com.momo.notaireApplication.mapping.ClientMapper;
-import com.momo.notaireApplication.mapping.FactureMapper;
-import com.momo.notaireApplication.mapping.NotaireMapper;
 import com.momo.notaireApplication.model.db.Facture;
-import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.dto.FactureDTO;
 import com.momo.notaireApplication.model.request.CreateFactureRequestDTO;
 import com.momo.notaireApplication.service.FactureService;

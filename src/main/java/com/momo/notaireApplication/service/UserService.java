@@ -2,8 +2,7 @@ package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.controller.request.HeaderCatcherService;
 import com.momo.notaireApplication.exception.validation.notFound.UserNotFoundException;
-import com.momo.notaireApplication.mapping.ClientMapper;
-import com.momo.notaireApplication.mapping.NotaireMapper;
+import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
@@ -76,9 +75,9 @@ public class UserService {
     private UserDTO toDTO(User user) {
         switch (user.getClass().getSimpleName().toUpperCase()) {
             case CLIENT:
-                return ClientMapper.instance.toDTO((Client) user);
+                return UserMapper.instance.toDTO((Client) user);
             case NOTAIRE:
-                return NotaireMapper.instance.toDTO((Notaire) user);
+                return UserMapper.instance.toDTO((Notaire) user);
             default:
                 return null;
         }

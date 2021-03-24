@@ -77,7 +77,6 @@ class UserServiceTest {
         Notaire notaire = ObjectTestUtils.initNotaire();
         when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(notaire));
         UserDTO userDTO = userService.foundUserDTOByEmail("email@mail.com");
-        assertTrue(userDTO instanceof NotaireDTO);
         ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),notaire);
     }
 
@@ -86,7 +85,6 @@ class UserServiceTest {
         Client client = ObjectTestUtils.initClient();
         when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(client));
         UserDTO userDTO = userService.foundUserDTOByEmail("email@mail");
-        assertTrue(userDTO instanceof ClientDTO);
         ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),client);
     }
 
@@ -95,7 +93,6 @@ class UserServiceTest {
         Notaire notaire = ObjectTestUtils.initNotaire();
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(notaire));
         UserDTO userDTO = userService.getUserDTOById(1L);
-        assertTrue(userDTO instanceof NotaireDTO);
         ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),notaire);
     }
 
@@ -104,7 +101,6 @@ class UserServiceTest {
         Client client = ObjectTestUtils.initClient();
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(client));
         UserDTO userDTO = userService.getUserDTOById(1L);
-        assertTrue(userDTO instanceof ClientDTO);
         ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),client);
     }
 

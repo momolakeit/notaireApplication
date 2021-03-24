@@ -1,13 +1,9 @@
 package com.momo.notaireApplication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.momo.notaireApplication.mapping.ClientMapper;
-import com.momo.notaireApplication.mapping.NotaireMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.request.CreateFactureRequestDTO;
-import com.momo.notaireApplication.repositories.ClientRepository;
-import com.momo.notaireApplication.repositories.NotaireRepository;
 import com.momo.notaireApplication.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

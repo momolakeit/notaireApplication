@@ -1,8 +1,7 @@
 package com.momo.notaireApplication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.momo.notaireApplication.mapping.ClientMapper;
-import com.momo.notaireApplication.mapping.NotaireMapper;
+import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
@@ -87,8 +86,8 @@ class FichierDocumentControllerTest {
         MockMvc mvc = initMockMvc();
         MockMultipartFile file = new MockMultipartFile("file", "mysuperfile.pdf", "multipart/form-data", TestDocumentUtils.initPDFDocument());
         CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO = new CreateFichierDocumentRequestDTO();
-        createFichierDocumentRequestDTO.setClientId(ClientMapper.instance.toDTO(client).getId());
-        createFichierDocumentRequestDTO.setNotaireId(NotaireMapper.instance.toDTO(notaire).getId());
+        createFichierDocumentRequestDTO.setClientId(UserMapper.instance.toDTO(client).getId());
+        createFichierDocumentRequestDTO.setNotaireId(UserMapper.instance.toDTO(notaire).getId());
 
         mvc.perform(MockMvcRequestBuilders.multipart("/fichierDocument", fichierDocument.getId())
                 .file(file)
