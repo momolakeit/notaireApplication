@@ -84,18 +84,29 @@ class FichierDocumentControllerTest {
     @Test
     public void testCreateFichierDocument() throws Exception {
         MockMvc mvc = initMockMvc();
-        MockMultipartFile file = new MockMultipartFile("file", "mysuperfile.pdf", "multipart/form-data", TestDocumentUtils.initPDFDocument());
         CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO = new CreateFichierDocumentRequestDTO();
         createFichierDocumentRequestDTO.setClientId(UserMapper.instance.toDTO(client).getId());
         createFichierDocumentRequestDTO.setNotaireId(UserMapper.instance.toDTO(notaire).getId());
 
-        mvc.perform(MockMvcRequestBuilders.multipart("/fichierDocument", fichierDocument.getId())
-                .file(file)
+        mvc.perform(MockMvcRequestBuilders.post("/fichierDocument")
                 .content(new ObjectMapper().writeValueAsString(createFichierDocumentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void testUploadFichierDocumentData() throws Exception {
+        MockMvc mvc = initMockMvc();
+        MockMultipartFile file = new MockMultipartFile("file", "mysuperfile.pdf", "multipart/form-data", TestDocumentUtils.initPDFDocument());
+        mvc.perform(MockMvcRequestBuilders.multipart("/fichierDocument/upload/{documentId}",fichierDocument.getId())
+                .file(file)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
 
 
     private MockMvc initMockMvc() {

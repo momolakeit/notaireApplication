@@ -62,21 +62,12 @@ class FichierDocumentServiceTest {
 
     @Test
     public void testAvecFichierWordAppelCloudMersive() throws IOException, CertificateException, CMSException, NoSuchProviderException {
-        init();
         Mockito.when(cloudMersiveService.convertDocxToPDF(any(byte[].class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-        Notaire notaire = ObjectTestUtils.initNotaire();
-        Client client = ObjectTestUtils.initClient();
+        Mockito.when(fichierDocumentRepository.findById(anyLong())).thenReturn(Optional.of(new FichierDocument()));
         MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_WORD, "multipart/form-data", TestDocumentUtils.initWordDocument());
-        FichierDocument fichier = fichierDocumentService.createDocument(1L, 2L, file);
+        fichierDocumentService.saveDocumentFile(1L,file);
         Mockito.verify(cloudMersiveService, times(1)).convertDocxToPDF(any());
         Mockito.verify(encryptionService, times(1)).encryptData(any(byte[].class));
-        
-        Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
-        Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
-        
-        ObjectTestUtils.assertUsers(notaire.getNom(),notaire.getPrenom(),notaire.getEmailAdress(),notaireResult);
-        ObjectTestUtils.assertUsers(client.getNom(),client.getPrenom(),client.getEmailAdress(),clientResult);
-
     }
 
     @Test
@@ -99,20 +90,11 @@ class FichierDocumentServiceTest {
 
     @Test
     public void testAvecFichierPdfAppelCloudMersive() throws IOException, CertificateException, CMSException, NoSuchProviderException {
-        init();
-        Notaire notaire = ObjectTestUtils.initNotaire();
-        Client client = ObjectTestUtils.initClient();
+        Mockito.when(fichierDocumentRepository.findById(anyLong())).thenReturn(Optional.of(new FichierDocument()));
         MockMultipartFile file = new MockMultipartFile("testDocuments", NOM_FICHIER_PDF, "multipart/form-data", TestDocumentUtils.initPDFDocument());
-        FichierDocument fichier = fichierDocumentService.createDocument(1L, 2L, file);
+        fichierDocumentService.saveDocumentFile(1L,file);
         Mockito.verify(cloudMersiveService, times(0)).convertDocxToPDF(any());
         Mockito.verify(encryptionService, times(1)).encryptData(any(byte[].class));
-       
-        Notaire notaireResult = ObjectTestUtils.findNotaireInList(fichier.getUsers());
-        Client clientResult = ObjectTestUtils.findClientInList(fichier.getUsers());
-
-        ObjectTestUtils.assertUsers(notaire.getNom(),notaire.getPrenom(),notaire.getEmailAdress(),notaireResult);
-        ObjectTestUtils.assertUsers(client.getNom(),client.getPrenom(),client.getEmailAdress(),clientResult);
-
     }
 
     @Test

@@ -11,6 +11,7 @@ import com.momo.notaireApplication.service.pdf.CloudMersiveService;
 import com.momo.notaireApplication.service.pdf.ITextService;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.bouncycastle.cms.CMSException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -41,11 +44,10 @@ public class FichierDocumentService {
     }
 
     //todo gerer le commentaire passé pour le fichier document
-    public FichierDocument createDocument(Long clientId, Long notaireId, MultipartFile file) {
-        byte[] bytes = getBytesDuFichier(file);
+    public FichierDocument createDocument(Long clientId, Long notaireId) {
         Notaire notaire = (Notaire) userService.getUser(notaireId);
         Client client = (Client) userService.getUser(clientId);
-        FichierDocument fichierDocument = initDocument(bytes, notaire, client);
+        FichierDocument fichierDocument = initDocument(notaire, client);
         linkDocumentAndItems(notaire, client, fichierDocument);
         return fichierDocument;
 
@@ -69,15 +71,16 @@ public class FichierDocumentService {
         return saveDocument(fichierDocument);
     }
 
-    private FichierDocument initDocument(byte[] bytes, Notaire notaire, Client client) {
-        FichierDocument fichierDocument = new FichierDocument();
-        fichierDocument.setUsers(new ArrayList<>(Arrays.asList(client,notaire)));
-        try {
-            fichierDocument.setData(encryptionService.encryptData(bytes));
+    public void saveDocumentFile(Long fichierDocumentId, MultipartFile file) throws CertificateException, NoSuchProviderException, CMSException, IOException {
+        byte[] bytes = getBytesDuFichier(file);
+        FichierDocument fichierDocument = getDocument(fichierDocumentId);
+        fichierDocument.setData(encryptionService.encryptData(bytes));
+        saveDocument(fichierDocument);
+    }
 
-        } catch (Exception e) {
-            LOGGER.info("Erreur lors de l'encryption du fichier PDF :", e);
-        }
+    private FichierDocument initDocument(Notaire notaire, Client client) {
+        FichierDocument fichierDocument = new FichierDocument();
+        fichierDocument.setUsers(new ArrayList<>(Arrays.asList(client, notaire)));
         fichierDocument = saveDocument(fichierDocument);
         return fichierDocument;
     }
@@ -96,16 +99,16 @@ public class FichierDocumentService {
         return this.fichierDocumentRepository.save(fichierDocument);
     }
 
-    private byte[] getBytesDuFichier(MultipartFile file)  {
-        byte[] bytes =null;
+    private byte[] getBytesDuFichier(MultipartFile file) {
+        byte[] bytes = null;
         try {
             if (!FilenameUtils.getExtension(file.getOriginalFilename()).equalsIgnoreCase(PDF_FILETYPE)) {
                 bytes = cloudMersiveService.convertDocxToPDF(file.getBytes());
             } else {
                 bytes = file.getBytes();
             }
-        }catch (IOException e){
-            LOGGER.info("Erreur lors de l'obtention du fichierdocument",e);
+        } catch (IOException e) {
+            LOGGER.info("Erreur lors de l'obtention du fichierdocument", e);
         }
         return bytes;
     }
