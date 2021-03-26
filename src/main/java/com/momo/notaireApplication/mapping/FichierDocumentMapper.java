@@ -11,6 +11,7 @@ public interface FichierDocumentMapper {
     FichierDocumentMapper instance = Mappers.getMapper(FichierDocumentMapper.class);
 
     @Mapping(target = "users", ignore = true)
+    @Mapping(target = "data", ignore = true)
     FichierDocumentDTO toDTO(FichierDocument fichierDocument);
 
     @Mapping(target = "users", ignore = true)

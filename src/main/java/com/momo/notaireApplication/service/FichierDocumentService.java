@@ -65,6 +65,10 @@ public class FichierDocumentService {
 
     }
 
+    public byte[] getFichierDocumentData(Long id){
+        return getDocument(id).getData();
+    }
+
     public FichierDocument signDocument(Long documentId, String location) {
         FichierDocument fichierDocument = getDocument(documentId);
         fichierDocument.setData(iTextService.sign(fichierDocument.getData(), fichierDocument.getDescription(), location));
