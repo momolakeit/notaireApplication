@@ -28,15 +28,10 @@ public class FichierDocumentController extends BaseController {
                 createFichierDocumentRequestDTO.getClientId(),
                 createFichierDocumentRequestDTO.getNotaireId()));
     }
-    @PostMapping("/fichier")
-    public FichierDocumentDTO createFichierDocument2(@RequestBody CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO) {
-        return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.createDocument(
-                createFichierDocumentRequestDTO.getClientId(),
-                createFichierDocumentRequestDTO.getNotaireId()));
-    }
+
 
     @PostMapping("/upload/{documentId}")
-    public ResponseEntity uploadFichierDocument(@RequestParam MultipartFile file, @PathVariable final Long documentId) throws CertificateException, NoSuchProviderException, CMSException, IOException {
+    public ResponseEntity uploadFichierDocument(@RequestParam("file") MultipartFile file, @PathVariable final Long documentId) throws CertificateException, NoSuchProviderException, CMSException, IOException {
         this.fichierDocumentService.saveDocumentFile(documentId, file);
         return ResponseEntity.ok().build();
     }
