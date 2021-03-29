@@ -27,12 +27,23 @@ public class MessagingService {
     public ConversationDTO createConversation(ConversationDTO conversationDTO, MessagesDTO messagesDTO) {
         List<User> users = findAllUsersFromDTO(conversationDTO);
         Conversation conversation = ConversationMapper.instance.toEntity(conversationDTO);
-        Messages messages = MessageMapper.instance.toEntity(messagesDTO);
-        conversation.setMessages(ListUtil.ajouterObjectAListe(messages, conversation.getMessages()));
+        addMessagesDTOtoConversation(messagesDTO, conversation);
         conversation.setUsers(users);
         conversation = saveConversation(conversation);
-        addConvoToAllUsers(users,conversation);
+        addConvoToAllUsers(users, conversation);
         return ConversationMapper.instance.toDTO(conversation);
+    }
+
+    public ConversationDTO addMessage(Long id, MessagesDTO messagesDTO) {
+        Conversation conversation = conversationRepository.findById(id).get();
+        addMessagesDTOtoConversation(messagesDTO, conversation);
+        conversation = saveConversation(conversation);
+        return ConversationMapper.instance.toDTO(conversation);
+    }
+
+    private void addMessagesDTOtoConversation(MessagesDTO messagesDTO, Conversation conversation) {
+        Messages messages = MessageMapper.instance.toEntity(messagesDTO);
+        conversation.setMessages(ListUtil.ajouterObjectAListe(messages, conversation.getMessages()));
     }
 
     private Conversation saveConversation(Conversation conversation) {
@@ -46,9 +57,10 @@ public class MessagingService {
                 .collect(Collectors.toList());
         return users;
     }
-    private void addConvoToAllUsers(List<User> users,Conversation conversation){
+
+    private void addConvoToAllUsers(List<User> users, Conversation conversation) {
         users.stream().forEach(user -> {
-            user.setConversations(ListUtil.ajouterObjectAListe(conversation,user.getConversations()));
+            user.setConversations(ListUtil.ajouterObjectAListe(conversation, user.getConversations()));
         });
         userService.saveMutlipleUsers(users);
     }
