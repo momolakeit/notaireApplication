@@ -72,6 +72,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public List<User> saveMutlipleUsers(List<User> users) {
+        return userRepository.saveAll(users);
+    }
+
+
     private UserDTO toDTO(User user) {
         switch (user.getClass().getSimpleName().toUpperCase()) {
             case CLIENT:

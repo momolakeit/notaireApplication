@@ -20,4 +20,6 @@ public class Messages {
 
     @ManyToOne
     private Conversation conversation;
+
+    private String message;
 }

@@ -17,4 +17,6 @@ public class MessagesDTO {
     private UserDTO user;
 
     private ConversationDTO conversation;
+
+    private String message;
 }
