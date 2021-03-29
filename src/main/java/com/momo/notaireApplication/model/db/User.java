@@ -34,4 +34,10 @@ public class User {
     @ManyToMany
     private List<RendezVous> rendezVous;
 
+    @ManyToMany
+    private List<Conversation> conversations;
+
+    @OneToMany
+    private List<Messages> messages;
+
 }
