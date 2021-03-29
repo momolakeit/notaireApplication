@@ -24,20 +24,23 @@ public class MessagingService {
         this.userService = userService;
     }
 
-    public ConversationDTO createConversation(ConversationDTO conversationDTO, MessagesDTO messagesDTO) {
+    public Conversation createConversation(ConversationDTO conversationDTO, MessagesDTO messagesDTO) {
         List<User> users = findAllUsersFromDTO(conversationDTO);
         Conversation conversation = ConversationMapper.instance.toEntity(conversationDTO);
         addMessagesDTOtoConversation(messagesDTO, conversation);
         conversation.setUsers(users);
         conversation = saveConversation(conversation);
         addConvoToAllUsers(users, conversation);
-        return ConversationMapper.instance.toDTO(conversation);
+        return conversation;
     }
 
-    public ConversationDTO addMessage(Long id, MessagesDTO messagesDTO) {
+    public Conversation addMessage(Long id, MessagesDTO messagesDTO) {
         Conversation conversation = conversationRepository.findById(id).get();
         addMessagesDTOtoConversation(messagesDTO, conversation);
         conversation = saveConversation(conversation);
+        return conversation;
+    }
+    public ConversationDTO toDTO(Conversation conversation){
         return ConversationMapper.instance.toDTO(conversation);
     }
 

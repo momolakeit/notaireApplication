@@ -60,18 +60,18 @@ public class MessagingServiceTest {
 
         ConversationDTO conversationDTO = new ConversationDTO();
         conversationDTO.setUsers(users);
-        conversationDTO = messageService.createConversation(conversationDTO, messagesDTO);
+        Conversation conversation = messageService.createConversation(conversationDTO, messagesDTO);
 
         verify(conversationRepository).save(conversationArgumentCaptor.capture());
-        Conversation conversation = conversationArgumentCaptor.getValue();
+        Conversation conversationCapturedValue = conversationArgumentCaptor.getValue();
 
         verify(userService).saveMutlipleUsers(userListArgumentCaptor.capture());
         List<User> userList = userListArgumentCaptor.getValue();
         for (User user : userList) {
             assertEquals(1, user.getConversations().size());
         }
-        assertEquals(2, conversation.getUsers().size());
-        assertEquals(MESSAGE_DEFAULT, conversationDTO.getMessages().get(0).getMessage());
+        assertEquals(2, conversationCapturedValue.getUsers().size());
+        assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
 
     }
 
@@ -80,9 +80,9 @@ public class MessagingServiceTest {
         when(conversationRepository.findById(anyLong())).thenReturn(Optional.of(new Conversation()));
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
-        ConversationDTO conversationDTO = messageService.addMessage(1L,initMessageDTO());
-        assertEquals(1,conversationDTO.getMessages().size());
-        assertEquals(MESSAGE_DEFAULT, conversationDTO.getMessages().get(0).getMessage());
+        Conversation conversation = messageService.addMessage(1L,initMessageDTO());
+        assertEquals(1,conversation.getMessages().size());
+        assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
     }
 
     private MessagesDTO initMessageDTO() {
