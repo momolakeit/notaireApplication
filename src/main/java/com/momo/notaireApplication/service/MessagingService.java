@@ -1,5 +1,6 @@
 package com.momo.notaireApplication.service;
 
+import com.momo.notaireApplication.exception.validation.notFound.ConversationNotFoundException;
 import com.momo.notaireApplication.mapping.ConversationMapper;
 import com.momo.notaireApplication.mapping.MessageMapper;
 import com.momo.notaireApplication.model.db.Conversation;
@@ -10,11 +11,13 @@ import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class MessagingService {
     private ConversationRepository conversationRepository;
     private UserService userService;
@@ -35,7 +38,7 @@ public class MessagingService {
     }
 
     public Conversation addMessage(Long id, MessagesDTO messagesDTO) {
-        Conversation conversation = conversationRepository.findById(id).get();
+        Conversation conversation = conversationRepository.findById(id).orElseThrow(ConversationNotFoundException::new);
         addMessagesDTOtoConversation(messagesDTO, conversation);
         conversation = saveConversation(conversation);
         return conversation;

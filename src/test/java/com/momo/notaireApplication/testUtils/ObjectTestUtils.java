@@ -1,11 +1,19 @@
 package com.momo.notaireApplication.testUtils;
 
+import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.dto.ConversationDTO;
+import com.momo.notaireApplication.model.dto.MessagesDTO;
+import com.momo.notaireApplication.model.dto.UserDTO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,6 +25,8 @@ public class ObjectTestUtils {
     private static final String EMAIL = "email";
 
     private static final String STRIPE_ACCOUNT_ID = "accountId";
+
+    private static final String MESSAGE_DEFAULT = "salut";
 
     public static Notaire findNotaireInList(List<User> users) {
         return (Notaire) users
@@ -53,6 +63,21 @@ public class ObjectTestUtils {
         client.setEmailAdress(EMAIL);
         client.setRendezVous(new ArrayList<>());
         return client;
+    }
+    public static MessagesDTO initMessageDTO() {
+        MessagesDTO messagesDTO = new MessagesDTO();
+        messagesDTO.setUser(UserMapper.instance.toDTO(initClient()));
+        messagesDTO.setMessage(MESSAGE_DEFAULT);
+        return messagesDTO;
+    }
+    public static ConversationDTO conversationDTO(List<User> users){
+        List<UserDTO> usersDTO = users.stream()
+                .map(UserMapper.instance::toDTO)
+                .collect(Collectors.toList());
+        ConversationDTO conversationDTO = new ConversationDTO();
+        conversationDTO.setUsers(usersDTO);
+        conversationDTO.setMessages(Collections.singletonList(initMessageDTO()));
+        return conversationDTO;
     }
 
     public static void assertUsers(String nom, String prenom, String email, User userToAssert) {

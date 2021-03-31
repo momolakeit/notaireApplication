@@ -1,5 +1,6 @@
 package com.momo.notaireApplication.service;
 
+import com.momo.notaireApplication.exception.validation.notFound.ConversationNotFoundException;
 import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Conversation;
@@ -10,6 +11,7 @@ import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.model.dto.UserDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,14 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,14 +52,10 @@ public class MessagingServiceTest {
     @Test
     public void testCreateConversation() {
         initCreateConversationMock();
-        List<UserDTO> users = Stream.of(initClient(), initNotaire())
-                .map(UserMapper.instance::toDTO)
-                .collect(Collectors.toList());
 
-        MessagesDTO messagesDTO = initMessageDTO();
+        MessagesDTO messagesDTO = ObjectTestUtils.initMessageDTO();
 
-        ConversationDTO conversationDTO = new ConversationDTO();
-        conversationDTO.setUsers(users);
+        ConversationDTO conversationDTO = ObjectTestUtils.conversationDTO(Arrays.asList(initClient(),initNotaire()));
         Conversation conversation = messageService.createConversation(conversationDTO, messagesDTO);
 
         verify(conversationRepository).save(conversationArgumentCaptor.capture());
@@ -75,21 +71,23 @@ public class MessagingServiceTest {
 
     }
 
+
     @Test
     public void testAddMessage() {
         when(conversationRepository.findById(anyLong())).thenReturn(Optional.of(new Conversation()));
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
-        Conversation conversation = messageService.addMessage(1L,initMessageDTO());
+        Conversation conversation = messageService.addMessage(1L,ObjectTestUtils.initMessageDTO());
         assertEquals(1,conversation.getMessages().size());
         assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
     }
 
-    private MessagesDTO initMessageDTO() {
-        MessagesDTO messagesDTO = new MessagesDTO();
-        messagesDTO.setUser(UserMapper.instance.toDTO(initClient()));
-        messagesDTO.setMessage(MESSAGE_DEFAULT);
-        return messagesDTO;
+    @Test
+    public void testAddMessageConversationNotFoundLanceException() {
+        when(conversationRepository.findById(anyLong())).thenReturn(Optional.empty());
+        Assertions.assertThrows(ConversationNotFoundException.class,()->{
+             messageService.addMessage(1L,ObjectTestUtils.initMessageDTO());
+        });
     }
 
     private void initCreateConversationMock() {
