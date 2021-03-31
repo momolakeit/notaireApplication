@@ -1,12 +1,10 @@
 package com.momo.notaireApplication.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Conversation;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
-import com.momo.notaireApplication.model.dto.ConversationDTO;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.model.request.CreateConversationDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
@@ -14,21 +12,28 @@ import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-class ConversationControllerTest {
+@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
+@Transactional
+class MessagingControllerTest {
     @Autowired
     private UserRepository userRepository;
 
@@ -36,7 +41,7 @@ class ConversationControllerTest {
     private ConversationRepository conversationRepository;
 
     @Autowired
-    private ConversationController conversationController;
+    private MessagingController messagingController;
 
     private List<User> users;
 
@@ -47,7 +52,7 @@ class ConversationControllerTest {
         client.setId(null);
         Notaire notaire = ObjectTestUtils.initNotaire();
         notaire.setId(null);
-        users = Arrays.asList(client, notaire);
+        users = new ArrayList<>(Arrays.asList(client, notaire));
         userRepository.saveAll(users);
         conversation = new Conversation();
         conversation.setUsers(users);
@@ -91,6 +96,27 @@ class ConversationControllerTest {
 
     }
 
+    @Test
+    public void getConversation() throws Exception {
+        MockMvc mvc = initMockMvc();
+        mvc.perform(MockMvcRequestBuilders.post("/conversation/getConversation/{conversationID}",conversation.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void getConversationNotFound() throws Exception {
+        MockMvc mvc = initMockMvc();
+        mvc.perform(MockMvcRequestBuilders.post("/conversation/getConversation/{conversationID}",14444L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+    }
+
+
     private MessagesDTO getMessagesDTOWithProperClientId(Client client) {
         MessagesDTO messagesDTO = ObjectTestUtils.initMessageDTO();
         messagesDTO.getUser().setId(client.getId());
@@ -98,6 +124,6 @@ class ConversationControllerTest {
     }
 
     private MockMvc initMockMvc() {
-        return MockMvcBuilders.standaloneSetup(conversationController).build();
+        return MockMvcBuilders.standaloneSetup(messagingController).build();
     }
 }

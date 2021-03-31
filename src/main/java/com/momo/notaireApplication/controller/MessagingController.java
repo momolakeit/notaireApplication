@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/conversation")
-public class ConversationController extends BaseController {
+public class MessagingController extends BaseController {
 
 
     private MessagingService messagingService;
 
-    public ConversationController(MessagingService messagingService) {
+    public MessagingController(MessagingService messagingService) {
         this.messagingService = messagingService;
     }
 
@@ -32,6 +32,11 @@ public class ConversationController extends BaseController {
     @PostMapping("/addMessage/{conversationID}")
     public ConversationDTO addMessage(@RequestBody MessagesDTO messagesDTO, @PathVariable Long conversationID) {
         Conversation conversation = messagingService.addMessage(conversationID,messagesDTO);
+        return messagingService.toDTO(conversation);
+    }
+    @PostMapping("/getConversation/{conversationID}")
+    public ConversationDTO getMessage(@PathVariable Long conversationID){
+        Conversation conversation = messagingService.getConversation(conversationID);
         return messagingService.toDTO(conversation);
     }
 }

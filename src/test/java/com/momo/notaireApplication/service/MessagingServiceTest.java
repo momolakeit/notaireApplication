@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,7 +72,6 @@ public class MessagingServiceTest {
 
     }
 
-
     @Test
     public void testAddMessage() {
         when(conversationRepository.findById(anyLong())).thenReturn(Optional.of(new Conversation()));
@@ -83,12 +83,20 @@ public class MessagingServiceTest {
     }
 
     @Test
-    public void testAddMessageConversationNotFoundLanceException() {
+    public void testGetMessage() {
+        when(conversationRepository.findById(anyLong())).thenReturn(Optional.of(new Conversation()));
+        Conversation conversation = messageService.getConversation(1L);
+        assertNotNull(conversation);
+    }
+
+    @Test
+    public void testGetMessageLanceException() {
         when(conversationRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(ConversationNotFoundException.class,()->{
-             messageService.addMessage(1L,ObjectTestUtils.initMessageDTO());
+            messageService.getConversation(1L);
         });
     }
+
 
     private void initCreateConversationMock() {
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
