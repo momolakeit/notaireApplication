@@ -38,15 +38,17 @@ public class MessagingService {
     }
 
     public Conversation addMessage(Long id, MessagesDTO messagesDTO) {
-        Conversation conversation =getConversation(id);
+        Conversation conversation = getConversation(id);
         addMessagesDTOtoConversation(messagesDTO, conversation);
         conversation = saveConversation(conversation);
         return conversation;
     }
-    public Conversation getConversation (Long id){
+
+    public Conversation getConversation(Long id) {
         return conversationRepository.findById(id).orElseThrow(ConversationNotFoundException::new);
     }
-    public ConversationDTO toDTO(Conversation conversation){
+
+    public ConversationDTO toDTO(Conversation conversation) {
         return ConversationMapper.instance.toDTO(conversation);
     }
 

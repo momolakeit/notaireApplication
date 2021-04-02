@@ -73,28 +73,7 @@ class MessagingControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void addMessage() throws Exception {
-        MockMvc mvc = initMockMvc();
-        MessagesDTO messagesDTO = getMessagesDTOWithProperClientId(ObjectTestUtils.findClientInList(users));
-        mvc.perform(MockMvcRequestBuilders.post("/conversation/addMessage/{conversationID}",conversation.getId())
-                .content(new ObjectMapper().writeValueAsString(messagesDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
 
-    }
-    @Test
-    public void addMessageConversationNotFound() throws Exception {
-        MockMvc mvc = initMockMvc();
-        MessagesDTO messagesDTO = getMessagesDTOWithProperClientId(ObjectTestUtils.findClientInList(users));
-        mvc.perform(MockMvcRequestBuilders.post("/conversation/addMessage/{conversationID}",14444L)
-                .content(new ObjectMapper().writeValueAsString(messagesDTO))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-    }
 
     @Test
     public void getConversation() throws Exception {
