@@ -34,7 +34,7 @@ public class EnabledWebAbstractSecurity extends WebSecurityConfigurerAdapter {
 
         http.cors().configurationSource(corsConfigurationSource())
                 .and().csrf().disable()
-                .authorizeRequests().antMatchers( "/auth","/auth/logIn").permitAll()
+                .authorizeRequests().antMatchers( "/auth","/auth/logIn","/addMessage","/addMessage/**").permitAll()
 
                 .anyRequest().authenticated().and().httpBasic()
 
@@ -60,6 +60,7 @@ public class EnabledWebAbstractSecurity extends WebSecurityConfigurerAdapter {
         configuration.addAllowedHeader("content-type");
         configuration.addAllowedHeader("Access-Control-Allow-Origin");
         configuration.addAllowedHeader("Authorization");
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 

@@ -1,6 +1,7 @@
 package com.momo.notaireApplication.configuration.webSocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -18,6 +19,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private TaskScheduler messageBrokerTaskScheduler;
 
+    @Value("${front-end.url}")
+    String frontEndUrl;
+
     @Autowired
     public void setMessageBrokerTaskScheduler (TaskScheduler taskScheduler){
         this.messageBrokerTaskScheduler = taskScheduler;
@@ -26,8 +30,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/addMessage").withSockJS();
-        registry.addEndpoint("/addMessage");
+        registry.addEndpoint("/addMessage").setAllowedOrigins(frontEndUrl).withSockJS();
+        registry.addEndpoint("/addMessage").setAllowedOrigins(frontEndUrl);
     }
 
     @Override
