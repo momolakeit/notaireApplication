@@ -20,6 +20,6 @@ public class Conversation {
     @ManyToMany(fetch= FetchType.EAGER)
     private List<User> users;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.REMOVE})
     private List<Messages> messages;
 }

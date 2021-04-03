@@ -48,6 +48,9 @@ public class MessagingServiceTest {
     ArgumentCaptor<Conversation> conversationArgumentCaptor;
 
     @Captor
+    ArgumentCaptor<Messages> messagesArgumentCaptor;
+
+    @Captor
     ArgumentCaptor<List<User>> userListArgumentCaptor;
 
     private final String MESSAGE_DEFAULT = "salut";
@@ -59,17 +62,25 @@ public class MessagingServiceTest {
 
         MessagesDTO messagesDTO = ObjectTestUtils.initMessageDTO();
 
-        ConversationDTO conversationDTO = ObjectTestUtils.conversationDTO(Arrays.asList(initClient(),initNotaire()));
+        ConversationDTO conversationDTO = ObjectTestUtils.conversationDTO(Arrays.asList(initClient(), initNotaire()));
         Conversation conversation = messageService.createConversation(conversationDTO, messagesDTO);
 
         verify(conversationRepository).save(conversationArgumentCaptor.capture());
-        Conversation conversationCapturedValue = conversationArgumentCaptor.getValue();
-
         verify(userService).saveMutlipleUsers(userListArgumentCaptor.capture());
+        verify(messagesRepository).save(messagesArgumentCaptor.capture());
+
+        Conversation conversationCapturedValue = conversationArgumentCaptor.getValue();
+        Messages messageCapturedValue = messagesArgumentCaptor.getValue();
+
         List<User> userList = userListArgumentCaptor.getValue();
         for (User user : userList) {
             assertEquals(1, user.getConversations().size());
         }
+
+        ObjectTestUtils.assertUsers(messageCapturedValue.getUser().getNom(),
+                messageCapturedValue.getUser().getPrenom(),
+                messageCapturedValue.getUser().getEmailAdress(),
+                ObjectTestUtils.initClient());
         assertEquals(2, conversationCapturedValue.getUsers().size());
         assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
 
@@ -81,8 +92,8 @@ public class MessagingServiceTest {
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         when(messagesRepository.save(any(Messages.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
-        Conversation conversation = messageService.addMessage(1L,ObjectTestUtils.initMessageDTO());
-        assertEquals(1,conversation.getMessages().size());
+        Conversation conversation = messageService.addMessage(1L, ObjectTestUtils.initMessageDTO());
+        assertEquals(1, conversation.getMessages().size());
         assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
     }
 
@@ -96,7 +107,7 @@ public class MessagingServiceTest {
     @Test
     public void testGetMessageLanceException() {
         when(conversationRepository.findById(anyLong())).thenReturn(Optional.empty());
-        Assertions.assertThrows(ConversationNotFoundException.class,()->{
+        Assertions.assertThrows(ConversationNotFoundException.class, () -> {
             messageService.getConversation(1L);
         });
     }

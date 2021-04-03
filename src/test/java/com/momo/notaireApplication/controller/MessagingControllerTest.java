@@ -1,6 +1,8 @@
 package com.momo.notaireApplication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.momo.notaireApplication.mapping.SimpleUserMapper;
+import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Conversation;
 import com.momo.notaireApplication.model.db.Notaire;
@@ -62,7 +64,9 @@ class MessagingControllerTest {
     @Test
     public void createConversation() throws Exception {
         MockMvc mvc = initMockMvc();
-        MessagesDTO messagesDTO = getMessagesDTOWithProperClientId(ObjectTestUtils.findClientInList(users));
+        Client client =ObjectTestUtils.findClientInList(users);
+        MessagesDTO messagesDTO = getMessagesDTOWithProperClientId(client);
+        messagesDTO.setUser(SimpleUserMapper.instance.toDTO(client));
 
         CreateConversationDTO createConversationDTO = new CreateConversationDTO(ObjectTestUtils.conversationDTO(users), messagesDTO);
 

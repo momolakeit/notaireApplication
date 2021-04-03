@@ -59,6 +59,8 @@ public class MessagingService {
     private void addMessagesDTOtoConversation(MessagesDTO messagesDTO, Conversation conversation) {
         Messages messages = MessageMapper.instance.toEntity(messagesDTO);
         if(Objects.nonNull(messages)){
+            User user = userService.getUser(messages.getUser().getId());
+            messages.setUser(user);
             messages = messagesRepository.save(messages);
         }
         conversation.setMessages(ListUtil.ajouterObjectAListe(messages, conversation.getMessages()));

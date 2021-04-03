@@ -11,10 +11,8 @@ import org.mapstruct.factory.Mappers;
 public interface MessageMapper {
     MessageMapper instance = Mappers.getMapper(MessageMapper.class);
 
-    @Mapping(source = "user", target = "user", ignore = true)
     MessagesDTO toDTO(Messages messages);
 
-    @Mapping(source = "user", target = "user", ignore = true)
     @Mapping(source = "id", target = "id", ignore = true)
     Messages toEntity(MessagesDTO messagesDTO);
 
