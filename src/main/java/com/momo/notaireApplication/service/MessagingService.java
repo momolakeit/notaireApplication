@@ -47,7 +47,7 @@ public class MessagingService {
         conversation = saveConversation(conversation);
         return conversation;
     }
-
+    @Transactional
     public Conversation getConversation(Long id) {
         return conversationRepository.findById(id).orElseThrow(ConversationNotFoundException::new);
     }

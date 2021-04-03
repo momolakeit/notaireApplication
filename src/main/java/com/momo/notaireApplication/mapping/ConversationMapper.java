@@ -9,11 +9,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper(uses = MessageMapper.class)
+@Mapper(uses = {MessageMapper.class,SimpleUserMapper.class})
 public interface ConversationMapper {
     ConversationMapper instance = Mappers.getMapper(ConversationMapper.class);
 
-    @Mapping(source = "users", target = "users", ignore = true)
     ConversationDTO toDTO(Conversation conversation);
 
     @Mapping(source = "users", target = "users", ignore = true)

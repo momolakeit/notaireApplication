@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper
+@Mapper(uses = SimpleUserMapper.class)
 public interface MessageMapper {
     MessageMapper instance = Mappers.getMapper(MessageMapper.class);
 
