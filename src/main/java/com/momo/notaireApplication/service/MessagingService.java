@@ -9,21 +9,25 @@ import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.model.dto.ConversationDTO;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
+import com.momo.notaireApplication.repositories.MessagesRepository;
 import com.momo.notaireApplication.utils.ListUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class MessagingService {
     private ConversationRepository conversationRepository;
+    private MessagesRepository messagesRepository;
     private UserService userService;
 
-    public MessagingService(ConversationRepository conversationRepository, UserService userService) {
+    public MessagingService(ConversationRepository conversationRepository, MessagesRepository messagesRepository, UserService userService) {
         this.conversationRepository = conversationRepository;
+        this.messagesRepository = messagesRepository;
         this.userService = userService;
     }
 
@@ -54,6 +58,9 @@ public class MessagingService {
 
     private void addMessagesDTOtoConversation(MessagesDTO messagesDTO, Conversation conversation) {
         Messages messages = MessageMapper.instance.toEntity(messagesDTO);
+        if(Objects.nonNull(messages)){
+            messages = messagesRepository.save(messages);
+        }
         conversation.setMessages(ListUtil.ajouterObjectAListe(messages, conversation.getMessages()));
     }
 

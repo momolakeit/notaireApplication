@@ -1,8 +1,6 @@
 package com.momo.notaireApplication.mapping;
 
-import com.momo.notaireApplication.model.db.Conversation;
 import com.momo.notaireApplication.model.db.Messages;
-import com.momo.notaireApplication.model.dto.ConversationDTO;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

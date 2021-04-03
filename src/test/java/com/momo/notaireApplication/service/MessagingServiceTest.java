@@ -2,16 +2,15 @@ package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.exception.validation.notFound.ConversationNotFoundException;
 import com.momo.notaireApplication.mapping.UserMapper;
-import com.momo.notaireApplication.model.db.Client;
-import com.momo.notaireApplication.model.db.Conversation;
-import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.db.*;
 import com.momo.notaireApplication.model.dto.ConversationDTO;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.model.dto.UserDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
+import com.momo.notaireApplication.repositories.MessagesRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -40,6 +39,9 @@ public class MessagingServiceTest {
     private ConversationRepository conversationRepository;
 
     @Mock
+    private MessagesRepository messagesRepository;
+
+    @Mock
     private UserService userService;
 
     @Captor
@@ -49,6 +51,7 @@ public class MessagingServiceTest {
     ArgumentCaptor<List<User>> userListArgumentCaptor;
 
     private final String MESSAGE_DEFAULT = "salut";
+
 
     @Test
     public void testCreateConversation() {
@@ -76,6 +79,7 @@ public class MessagingServiceTest {
     public void testAddMessage() {
         when(conversationRepository.findById(anyLong())).thenReturn(Optional.of(new Conversation()));
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        when(messagesRepository.save(any(Messages.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
         Conversation conversation = messageService.addMessage(1L,ObjectTestUtils.initMessageDTO());
         assertEquals(1,conversation.getMessages().size());
@@ -100,6 +104,7 @@ public class MessagingServiceTest {
 
     private void initCreateConversationMock() {
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        when(messagesRepository.save(any(Messages.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         when(userService.saveMutlipleUsers(anyList())).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         Client client = initClient();
         Notaire notaire = initNotaire();
