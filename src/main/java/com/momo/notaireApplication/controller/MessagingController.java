@@ -41,7 +41,7 @@ public class MessagingController extends BaseController {
         Conversation conversation = messagingService.addMessage(conversationID,messagesDTO);
         simpMessagingTemplate.convertAndSend("/conversation/"+conversation.getId(),messagingService.toDTO(conversation));
     }
-    @PostMapping("/getConversation/{conversationID}")
+    @GetMapping("/getConversation/{conversationID}")
     @ResponseBody
     public ConversationDTO getConversation(@PathVariable Long conversationID){
         Conversation conversation = messagingService.getConversation(conversationID);

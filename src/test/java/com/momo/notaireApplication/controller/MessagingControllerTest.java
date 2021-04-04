@@ -82,7 +82,7 @@ class MessagingControllerTest {
     @Test
     public void getConversation() throws Exception {
         MockMvc mvc = initMockMvc();
-        mvc.perform(MockMvcRequestBuilders.post("/conversation/getConversation/{conversationID}",conversation.getId())
+        mvc.perform(MockMvcRequestBuilders.get("/conversation/getConversation/{conversationID}",conversation.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -92,7 +92,7 @@ class MessagingControllerTest {
     @Test
     public void getConversationNotFound() throws Exception {
         MockMvc mvc = initMockMvc();
-        mvc.perform(MockMvcRequestBuilders.post("/conversation/getConversation/{conversationID}",14444L)
+        mvc.perform(MockMvcRequestBuilders.get("/conversation/getConversation/{conversationID}",14444L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
