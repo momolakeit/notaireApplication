@@ -6,6 +6,7 @@ import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.model.dto.ConversationDTO;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
+import com.momo.notaireApplication.model.dto.RendezVousDTO;
 import com.momo.notaireApplication.model.dto.UserDTO;
 
 import java.util.ArrayList;
@@ -78,6 +79,11 @@ public class ObjectTestUtils {
         conversationDTO.setUsers(usersDTO);
         conversationDTO.setMessages(Collections.singletonList(initMessageDTO()));
         return conversationDTO;
+    }
+    public static RendezVousDTO rendezVousDTO(){
+        RendezVousDTO rendezVousDTO = new RendezVousDTO();
+        rendezVousDTO.setId(1L);
+        return rendezVousDTO;
     }
 
     public static void assertUsers(String nom, String prenom, String email, User userToAssert) {

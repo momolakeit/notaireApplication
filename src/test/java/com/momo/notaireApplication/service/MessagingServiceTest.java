@@ -27,8 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MessagingServiceTest {
@@ -44,6 +43,9 @@ public class MessagingServiceTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private RendezVousService rendezVousService;
+
     @Captor
     ArgumentCaptor<Conversation> conversationArgumentCaptor;
 
@@ -52,6 +54,9 @@ public class MessagingServiceTest {
 
     @Captor
     ArgumentCaptor<List<User>> userListArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<RendezVous> rendezVousArgumentCaptor;
 
     private final String MESSAGE_DEFAULT = "salut";
 
@@ -63,26 +68,30 @@ public class MessagingServiceTest {
         MessagesDTO messagesDTO = ObjectTestUtils.initMessageDTO();
 
         ConversationDTO conversationDTO = ObjectTestUtils.conversationDTO(Arrays.asList(initClient(), initNotaire()));
-        Conversation conversation = messageService.createConversation(conversationDTO, messagesDTO);
+        Conversation conversation = messageService.createConversation(conversationDTO, messagesDTO,ObjectTestUtils.rendezVousDTO());
 
-        verify(conversationRepository).save(conversationArgumentCaptor.capture());
+        verify(conversationRepository,times(2)).save(conversationArgumentCaptor.capture());
         verify(userService).saveMutlipleUsers(userListArgumentCaptor.capture());
         verify(messagesRepository).save(messagesArgumentCaptor.capture());
+        verify(rendezVousService).saveRendezVous(rendezVousArgumentCaptor.capture());
 
         Conversation conversationCapturedValue = conversationArgumentCaptor.getValue();
         Messages messageCapturedValue = messagesArgumentCaptor.getValue();
+        RendezVous rendezVousCapturedValue = rendezVousArgumentCaptor.getValue();
 
         List<User> userList = userListArgumentCaptor.getValue();
         for (User user : userList) {
             assertEquals(1, user.getConversations().size());
         }
-
+        assertEquals(2, conversationCapturedValue.getUsers().size());
+        assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
+        assertEquals(conversation,rendezVousCapturedValue.getConversation());
+        assertEquals(conversation.getRendezVous(),rendezVousCapturedValue);
         ObjectTestUtils.assertUsers(messageCapturedValue.getUser().getNom(),
                 messageCapturedValue.getUser().getPrenom(),
                 messageCapturedValue.getUser().getEmailAdress(),
                 ObjectTestUtils.initClient());
-        assertEquals(2, conversationCapturedValue.getUsers().size());
-        assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
+
 
     }
 
@@ -117,10 +126,11 @@ public class MessagingServiceTest {
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         when(messagesRepository.save(any(Messages.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         when(userService.saveMutlipleUsers(anyList())).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
-        Client client = initClient();
-        Notaire notaire = initNotaire();
-        when(userService.getUser(1L)).thenReturn(client);
-        when(userService.getUser(2L)).thenReturn(notaire);
+        when(rendezVousService.getRendezVous(anyLong())).thenReturn(new RendezVous());
+        when(rendezVousService.saveRendezVous(any(RendezVous.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+
+        when(userService.getUser(1L)).thenReturn(initClient());
+        when(userService.getUser(2L)).thenReturn(initNotaire());
     }
 
     private Notaire initNotaire() {

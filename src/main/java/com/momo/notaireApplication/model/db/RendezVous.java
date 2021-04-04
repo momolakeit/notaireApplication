@@ -21,6 +21,9 @@ public class RendezVous {
 
     private LocalDateTime dateFin;
 
+    @OneToOne
+    private Conversation conversation;
+
     @ManyToMany
     private List<User> users;
 

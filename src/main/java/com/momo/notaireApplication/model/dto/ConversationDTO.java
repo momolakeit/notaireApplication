@@ -18,4 +18,6 @@ public class ConversationDTO {
     private List<UserDTO> users;
 
     private List<MessagesDTO> messages;
+
+    private RendezVousDTO rendezVousDTO;
 }

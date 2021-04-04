@@ -32,7 +32,7 @@ public class MessagingController extends BaseController {
     @PostMapping
     @ResponseBody
     public ConversationDTO createConversation(@RequestBody CreateConversationDTO createConversationDTO) {
-        Conversation conversation = messagingService.createConversation(createConversationDTO.getConversationDTO(), createConversationDTO.getMessagesDTO());
+        Conversation conversation = messagingService.createConversation(createConversationDTO.getConversationDTO(), createConversationDTO.getMessagesDTO(),createConversationDTO.getRendezVousDTO());
         return messagingService.toDTO(conversation);
     }
 

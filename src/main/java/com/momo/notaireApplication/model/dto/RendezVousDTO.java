@@ -20,4 +20,6 @@ public class RendezVousDTO {
     private int dureeEnMinute;
 
     private List<UserDTO> users;
+
+    private ConversationDTO conversationDTO;
 }

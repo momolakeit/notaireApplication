@@ -1,15 +1,14 @@
 package com.momo.notaireApplication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.momo.notaireApplication.mapping.RendezVousMapper;
 import com.momo.notaireApplication.mapping.SimpleUserMapper;
 import com.momo.notaireApplication.mapping.UserMapper;
-import com.momo.notaireApplication.model.db.Client;
-import com.momo.notaireApplication.model.db.Conversation;
-import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.db.*;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.model.request.CreateConversationDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
+import com.momo.notaireApplication.repositories.RendezVousRepository;
 import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,11 +42,16 @@ class MessagingControllerTest {
     private ConversationRepository conversationRepository;
 
     @Autowired
+    private RendezVousRepository rendezVousRepository;
+
+    @Autowired
     private MessagingController messagingController;
 
     private List<User> users;
 
     private Conversation conversation;
+
+    private RendezVous rendezVous;
     @BeforeEach
     public void init() {
         Client client = ObjectTestUtils.initClient();
@@ -59,6 +63,7 @@ class MessagingControllerTest {
         conversation = new Conversation();
         conversation.setUsers(users);
         conversation = conversationRepository.save(conversation);
+        rendezVous = rendezVousRepository.save(new RendezVous());
     }
 
     @Test
@@ -68,7 +73,7 @@ class MessagingControllerTest {
         MessagesDTO messagesDTO = getMessagesDTOWithProperClientId(client);
         messagesDTO.setUser(SimpleUserMapper.instance.toDTO(client));
 
-        CreateConversationDTO createConversationDTO = new CreateConversationDTO(ObjectTestUtils.conversationDTO(users), messagesDTO);
+        CreateConversationDTO createConversationDTO = new CreateConversationDTO(ObjectTestUtils.conversationDTO(users), messagesDTO, RendezVousMapper.instance.toDTO(rendezVous));
 
         mvc.perform(MockMvcRequestBuilders.post("/conversation/")
                 .content(new ObjectMapper().writeValueAsString(createConversationDTO))

@@ -22,4 +22,8 @@ public class Conversation {
 
     @OneToMany(cascade = {CascadeType.REMOVE})
     private List<Messages> messages;
+
+    @OneToOne
+    private RendezVous rendezVous;
+
 }
