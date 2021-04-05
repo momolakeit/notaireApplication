@@ -21,5 +21,5 @@ public class RendezVousDTO {
 
     private List<UserDTO> users;
 
-    private ConversationDTO conversationDTO;
+    private ConversationDTO conversation;
 }

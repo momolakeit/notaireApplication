@@ -19,5 +19,5 @@ public class ConversationDTO {
 
     private List<MessagesDTO> messages;
 
-    private RendezVousDTO rendezVousDTO;
+    private RendezVousDTO rendezVous;
 }

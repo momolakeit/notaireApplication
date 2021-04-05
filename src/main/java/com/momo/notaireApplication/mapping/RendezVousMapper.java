@@ -9,14 +9,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper(uses = ConversationMapper.class)
+@Mapper(uses = {ConversationMapper.class,SimpleUserMapper.class})
 public interface RendezVousMapper {
     RendezVousMapper instance = Mappers.getMapper(RendezVousMapper.class);
 
-    @Mapping(source = "users", target = "users", ignore = true)
     RendezVousDTO toDTO(RendezVous rendezVous);
 
-    @Mapping(source = "users", target = "users", ignore = true)
     RendezVous toEntity(RendezVousDTO rendezVousDTO);
 
 }
