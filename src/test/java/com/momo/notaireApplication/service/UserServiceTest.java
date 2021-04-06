@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -49,85 +50,117 @@ class UserServiceTest {
     public void getNotaireLanceExceptionAssert() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
         Assertions.assertThrows(UserNotFoundException.class, () -> {
-            userService.getUser(Long.valueOf(1));
+            userService.getUser(1L);
         });
     }
 
     @Test
     public void getNotaire() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(ObjectTestUtils.initNotaire()));
-        User user = userService.getUser(Long.valueOf(1));
-        ObjectTestUtils.assertUsers(NOM,PRENOM,EMAIL,user);
+        User user = userService.getUser(1L);
+        ObjectTestUtils.assertUsers(NOM, PRENOM, EMAIL, user);
     }
+
+    @Test
+    public void getNotaireDTOSameUserNoInfoFilterd() {
+        Notaire notaire = ObjectTestUtils.initNotaire();
+        notaire.setConversations(new ArrayList<>());
+        notaire.setRendezVous(new ArrayList<>());
+        notaire.setFactures(new ArrayList<>());
+        notaire.setFichierDocuments(new ArrayList<>());
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(notaire));
+        when(headerCatcherService.getLoggedUserId()).thenReturn(1L);
+        UserDTO user = userService.getUserDTOById(1L);
+        assertNotNull(user.getFactures());
+        assertNotNull(user.getFichierDocuments());
+        assertNotNull(user.getRendezVous());
+    }
+    @Test
+    public void getNotaireDTOSameUserInfoFilterd() {
+        Notaire notaire = ObjectTestUtils.initNotaire();
+        notaire.setConversations(new ArrayList<>());
+        notaire.setRendezVous(new ArrayList<>());
+        notaire.setFactures(new ArrayList<>());
+        notaire.setFichierDocuments(new ArrayList<>());
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(notaire));
+        when(headerCatcherService.getLoggedUserId()).thenReturn(2L);
+        UserDTO user = userService.getUserDTOById(1L);
+        assertNull(user.getFactures());
+        assertNull(user.getFichierDocuments());
+        assertNull(user.getRendezVous());
+    }
+
     @Test
     public void getNotaireAvecEmail() {
         when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(ObjectTestUtils.initNotaire()));
         User user = userService.foundUserByEmail(EMAIL);
-        ObjectTestUtils.assertUsers(NOM,PRENOM,EMAIL,user);
+        ObjectTestUtils.assertUsers(NOM, PRENOM, EMAIL, user);
     }
+
     @Test
     public void saveUser() {
         when(userRepository.save(any(User.class))).thenReturn(ObjectTestUtils.initNotaire());
         User user = userService.saveUser(new User());
-        ObjectTestUtils.assertUsers(NOM,PRENOM,EMAIL,user);
+        ObjectTestUtils.assertUsers(NOM, PRENOM, EMAIL, user);
     }
 
     @Test
-    public void notaireByEmailToDTO(){
+    public void notaireByEmailToDTO() {
         Notaire notaire = ObjectTestUtils.initNotaire();
         when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(notaire));
         UserDTO userDTO = userService.foundUserDTOByEmail("email@mail.com");
-        ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),notaire);
+        ObjectTestUtils.assertUsers(userDTO.getNom(), userDTO.getPrenom(), userDTO.getEmailAdress(), notaire);
     }
 
     @Test
-    public void clientByEmailToDTO(){
+    public void clientByEmailToDTO() {
         Client client = ObjectTestUtils.initClient();
         when(userRepository.findByEmailAdress(anyString())).thenReturn(Optional.of(client));
         UserDTO userDTO = userService.foundUserDTOByEmail("email@mail");
-        ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),client);
+        ObjectTestUtils.assertUsers(userDTO.getNom(), userDTO.getPrenom(), userDTO.getEmailAdress(), client);
     }
 
     @Test
-    public void notaireByIdToDTO(){
+    public void notaireByIdToDTO() {
         Notaire notaire = ObjectTestUtils.initNotaire();
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(notaire));
         UserDTO userDTO = userService.getUserDTOById(1L);
-        ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),notaire);
+        ObjectTestUtils.assertUsers(userDTO.getNom(), userDTO.getPrenom(), userDTO.getEmailAdress(), notaire);
     }
 
     @Test
-    public void clientByIdToDTO(){
+    public void clientByIdToDTO() {
         Client client = ObjectTestUtils.initClient();
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(client));
         UserDTO userDTO = userService.getUserDTOById(1L);
-        ObjectTestUtils.assertUsers(userDTO.getNom(),userDTO.getPrenom(),userDTO.getEmailAdress(),client);
+        ObjectTestUtils.assertUsers(userDTO.getNom(), userDTO.getPrenom(), userDTO.getEmailAdress(), client);
     }
 
     @Test
-    public void searchUsersByNotaireReturnsAllClient(){
+    public void searchUsersByNotaireReturnsAllClient() {
         Client client = ObjectTestUtils.initClient();
         Notaire notaire = ObjectTestUtils.initNotaire();
         notaire.setPrenom("wesh");
         notaire.setNom("mec");
         when(headerCatcherService.getUserRole()).thenReturn("notaire");
 
-        when(userRepository.findAll()).thenReturn(Arrays.asList(notaire,client));
-        List<UserDTO> userDTOList=userService.searchUsersByQuery("nom");
-        assertEquals(1,userDTOList.size());
+        when(userRepository.findAll()).thenReturn(Arrays.asList(notaire, client));
+        List<UserDTO> userDTOList = userService.searchUsersByQuery("nom");
+        assertEquals(1, userDTOList.size());
 
     }
+
     @Test
-    public void searchUsersByClientReturnsAllNotaire(){
+    public void searchUsersByClientReturnsAllNotaire() {
         Client client = ObjectTestUtils.initClient();
         Notaire notaire = ObjectTestUtils.initNotaire();
         notaire.setPrenom("wesh");
         notaire.setNom("mec");
         when(headerCatcherService.getUserRole()).thenReturn("client");
 
-        when(userRepository.findAll()).thenReturn(Arrays.asList(notaire,client));
-        List<UserDTO> userDTOList=userService.searchUsersByQuery("wesh");
-        assertEquals(1,userDTOList.size());
+        when(userRepository.findAll()).thenReturn(Arrays.asList(notaire, client));
+        List<UserDTO> userDTOList = userService.searchUsersByQuery("wesh");
+        assertEquals(1, userDTOList.size());
 
     }
 

@@ -2,12 +2,14 @@ package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.controller.request.HeaderCatcherService;
 import com.momo.notaireApplication.exception.validation.notFound.UserNotFoundException;
+import com.momo.notaireApplication.jwt.JwtAuthentication;
 import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
 import com.momo.notaireApplication.model.dto.UserDTO;
 import com.momo.notaireApplication.repositories.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,11 +40,13 @@ public class UserService {
     }
 
     public UserDTO foundUserDTOByEmail(String email) {
-        return toDTO(foundUserByEmail(email));
+        User user = foundUserByEmail(email);
+        return toDTO(this.filterUserInfo(user));
     }
 
     public UserDTO getUserDTOById(Long id) {
-        return toDTO(getUser(id));
+        User user = getUser(id);
+        return toDTO(this.filterUserInfo(user));
     }
 
     public List<UserDTO> searchUsersByQuery(String searchQuery) {
@@ -87,6 +91,18 @@ public class UserService {
                 return null;
         }
 
+    }
+
+    private User filterUserInfo(User user) {
+        Long loggedUserId = this.headerCatcherService.getLoggedUserId();
+        if(!loggedUserId.equals(user.getId())){
+            user.setFactures(null);
+            user.setMessages(null);
+            user.setFichierDocuments(null);
+            user.setRendezVous(null);
+            user.setConversations(null);
+        }
+        return user;
     }
 
     private Boolean filterByUsersByName(String query, User user) {

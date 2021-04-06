@@ -1,5 +1,6 @@
 package com.momo.notaireApplication.controller.request;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.momo.notaireApplication.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +19,7 @@ public class HeaderCatcherService {
     private JwtProvider jwtProvider;
 
     private final String AUTHORIZATION_HEADER="Authorization";
+    private final String ROLE_CLAIM = "role";
 
     public HeaderCatcherService(HttpServletRequest httpServletRequest, JwtProvider jwtProvider) {
         this.httpServletRequest = httpServletRequest;
@@ -25,6 +27,11 @@ public class HeaderCatcherService {
     }
 
     public String getUserRole(){
-       return jwtProvider.getUserRoleFromToken(httpServletRequest.getHeader(AUTHORIZATION_HEADER));
+        DecodedJWT decodedJWT = jwtProvider.verify(httpServletRequest.getHeader(AUTHORIZATION_HEADER));
+        return decodedJWT.getClaim(ROLE_CLAIM).asString();
+    }
+    public Long getLoggedUserId(){
+        DecodedJWT decodedJWT = jwtProvider.verify(httpServletRequest.getHeader(AUTHORIZATION_HEADER));
+        return Long.valueOf(decodedJWT.getSubject());
     }
 }

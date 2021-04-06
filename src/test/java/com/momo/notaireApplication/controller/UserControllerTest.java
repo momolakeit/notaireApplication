@@ -47,6 +47,7 @@ class UserControllerTest {
     public void init() {
         user = ObjectTestUtils.initNotaire();
         user.setId(null);
+        user.setEmailAdress("lebron@jamesoui.com");
         user = userRepository.save(user);
 
         JWT_TOKEN = jwtProvider.generate(user);
@@ -56,10 +57,8 @@ class UserControllerTest {
     @Test
     public void fetchUserByEmail() throws Exception {
         MockMvc mvc = initMockMvc();
-        user = new Notaire();
-        user.setEmailAdress("lebron@jamesoui.com");
-        user = userRepository.save(user);
         mvc.perform(MockMvcRequestBuilders.get("/user/email/{email}", user.getEmailAdress())
+                .header("Authorization", JWT_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -78,6 +77,7 @@ class UserControllerTest {
     public void fetchUserById() throws Exception {
         MockMvc mvc = initMockMvc();
         mvc.perform(MockMvcRequestBuilders.get("/user/{id}", user.getId())
+                .header("Authorization", JWT_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
