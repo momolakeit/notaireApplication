@@ -95,11 +95,15 @@ public class UserService {
 
     private User filterUserInfo(User user) {
         Long loggedUserId = this.headerCatcherService.getLoggedUserId();
+        String role = headerCatcherService.getUserRole();
         if(!loggedUserId.equals(user.getId())){
             user.setFactures(null);
             user.setMessages(null);
             user.setFichierDocuments(null);
             user.setConversations(null);
+        }
+        if(role.equalsIgnoreCase("Notaire")){
+            user.setRendezVous(null);
         }
         return user;
     }
