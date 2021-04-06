@@ -99,7 +99,6 @@ public class UserService {
             user.setFactures(null);
             user.setMessages(null);
             user.setFichierDocuments(null);
-            user.setRendezVous(null);
             user.setConversations(null);
         }
         return user;

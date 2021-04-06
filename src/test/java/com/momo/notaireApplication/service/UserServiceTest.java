@@ -73,7 +73,6 @@ class UserServiceTest {
         UserDTO user = userService.getUserDTOById(1L);
         assertNotNull(user.getFactures());
         assertNotNull(user.getFichierDocuments());
-        assertNotNull(user.getRendezVous());
     }
     @Test
     public void getNotaireDTOSameUserInfoFilterd() {
@@ -87,7 +86,6 @@ class UserServiceTest {
         UserDTO user = userService.getUserDTOById(1L);
         assertNull(user.getFactures());
         assertNull(user.getFichierDocuments());
-        assertNull(user.getRendezVous());
     }
 
     @Test
