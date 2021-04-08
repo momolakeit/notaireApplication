@@ -43,13 +43,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/addMessage").setAllowedOrigins(frontEndUrl).withSockJS();
-        registry.addEndpoint("/addMessage").setAllowedOrigins(frontEndUrl);
+        registry.addEndpoint("/addMessage","/call","/respond").setAllowedOrigins(frontEndUrl).withSockJS();
+        registry.addEndpoint("/addMessage","/call","/respond").setAllowedOrigins(frontEndUrl);
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/app").enableSimpleBroker("/conversation")
+        registry.setApplicationDestinationPrefixes("/app").enableSimpleBroker("/conversation","/answerCall","/establishConnection")
                 .setHeartbeatValue(new long[]{10000, 20000})
                 .setTaskScheduler(this.messageBrokerTaskScheduler);
     }
