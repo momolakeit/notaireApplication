@@ -1,5 +1,7 @@
 package com.momo.notaireApplication.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.momo.notaireApplication.model.db.Conversation;
 import com.momo.notaireApplication.model.dto.ConversationDTO;
 import com.momo.notaireApplication.model.dto.JWTResponse;
@@ -15,6 +17,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/conversation")
@@ -42,12 +46,16 @@ public class MessagingController extends BaseController {
         simpMessagingTemplate.convertAndSend("/conversation/"+conversation.getId(),messagingService.toDTO(conversation));
     }
     @MessageMapping("/call/{userId}")
-    public void call(Object obj, @DestinationVariable Long userId) {
-        simpMessagingTemplate.convertAndSend("/answerCall/"+userId,obj);
+    public void call(String obj, @DestinationVariable Long userId) throws IOException {
+        simpMessagingTemplate.convertAndSend("/answerCall/"+userId, new ObjectMapper().writeValueAsString(obj));
     }
     @MessageMapping("/respond/{userId}")
-    public void respond(Object obj, @DestinationVariable Long userId) {
-        simpMessagingTemplate.convertAndSend("/establishConnection/"+userId,obj);
+    public void respond(String obj, @DestinationVariable Long userId) throws JsonProcessingException {
+        simpMessagingTemplate.convertAndSend("/establishConnection/"+userId,new ObjectMapper().writeValueAsString(obj));
+    }
+    @MessageMapping("/sendIceCandidate/{userId}")
+    public void establishIceConnection(String obj, @DestinationVariable Long userId) throws JsonProcessingException {
+        simpMessagingTemplate.convertAndSend("/receiveIceCandidate/"+userId,new ObjectMapper().writeValueAsString(obj));
     }
     @GetMapping("/getConversation/{conversationID}")
     @ResponseBody

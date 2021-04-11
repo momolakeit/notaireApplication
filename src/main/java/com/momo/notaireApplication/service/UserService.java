@@ -102,9 +102,6 @@ public class UserService {
             user.setFichierDocuments(null);
             user.setConversations(null);
         }
-        if(role.equalsIgnoreCase("Notaire")){
-            user.setRendezVous(null);
-        }
         return user;
     }
 

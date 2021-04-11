@@ -34,7 +34,7 @@ public class EnabledWebAbstractSecurity extends WebSecurityConfigurerAdapter {
 
         http.cors().configurationSource(corsConfigurationSource())
                 .and().csrf().disable()
-                .authorizeRequests().antMatchers( "/auth","/auth/logIn","/addMessage","/addMessage/**","/call","/call/**","/respond","/respond/**").permitAll()
+                .authorizeRequests().antMatchers( "/auth","/auth/logIn","/addMessage","/addMessage/**","/call","/call/**","/respond","/respond/**","/sendIceCandidate","/sendIceCandidate/**").permitAll()
 
                 .anyRequest().authenticated().and().httpBasic()
 
