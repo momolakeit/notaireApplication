@@ -26,7 +26,8 @@ public class FichierDocumentController extends BaseController {
     public FichierDocumentDTO createFichierDocument(@RequestBody CreateFichierDocumentRequestDTO createFichierDocumentRequestDTO) {
         return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.createDocument(
                 createFichierDocumentRequestDTO.getClientId(),
-                createFichierDocumentRequestDTO.getNotaireId()));
+                createFichierDocumentRequestDTO.getNotaireId(),
+                createFichierDocumentRequestDTO.getRendezVousId()));
     }
 
     @PostMapping("/upload/{documentId}")

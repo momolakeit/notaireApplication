@@ -16,4 +16,6 @@ public class CreateFichierDocumentRequestDTO {
 
     private Long clientId;
 
+    private Long rendezVousId;
+
 }

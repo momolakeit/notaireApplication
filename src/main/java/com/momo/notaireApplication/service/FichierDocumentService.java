@@ -1,10 +1,7 @@
 package com.momo.notaireApplication.service;
 
 import com.momo.notaireApplication.exception.validation.notFound.FichierDocumentNotFoundException;
-import com.momo.notaireApplication.model.db.Client;
-import com.momo.notaireApplication.model.db.FichierDocument;
-import com.momo.notaireApplication.model.db.Notaire;
-import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.db.*;
 import com.momo.notaireApplication.repositories.FichierDocumentRepository;
 import com.momo.notaireApplication.service.encryption.EncryptionService;
 import com.momo.notaireApplication.service.pdf.CloudMersiveService;
@@ -32,23 +29,27 @@ public class FichierDocumentService {
     private EncryptionService encryptionService;
     private ITextService iTextService;
     private UserService userService;
+    private RendezVousService rendezVousService;
     private static final Logger LOGGER = LoggerFactory.getLogger(FichierDocumentService.class);
     private String PDF_FILETYPE = "pdf";
 
-    public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, EncryptionService encryptionService, ITextService iTextService, UserService userService) {
+    public FichierDocumentService(CloudMersiveService cloudMersiveService, FichierDocumentRepository fichierDocumentRepository, EncryptionService encryptionService, ITextService iTextService, UserService userService, RendezVousService rendezVousService) {
         this.cloudMersiveService = cloudMersiveService;
         this.fichierDocumentRepository = fichierDocumentRepository;
         this.encryptionService = encryptionService;
         this.iTextService = iTextService;
         this.userService = userService;
+        this.rendezVousService = rendezVousService;
+        this.PDF_FILETYPE = PDF_FILETYPE;
     }
 
     //todo gerer le commentaire passé pour le fichier document
-    public FichierDocument createDocument(Long clientId, Long notaireId) {
+    public FichierDocument createDocument(Long clientId, Long notaireId, Long rendezVousId) {
         Notaire notaire = (Notaire) userService.getUser(notaireId);
         Client client = (Client) userService.getUser(clientId);
-        FichierDocument fichierDocument = initDocument(notaire, client);
-        linkDocumentAndItems(notaire, client, fichierDocument);
+        RendezVous rendezVous = rendezVousService.getRendezVous(rendezVousId);
+        FichierDocument fichierDocument = initDocument(notaire, client,rendezVous);
+        linkDocumentAndItems(notaire, client, fichierDocument,rendezVous);
         return fichierDocument;
 
     }
@@ -65,7 +66,7 @@ public class FichierDocumentService {
 
     }
 
-    public byte[] getFichierDocumentData(Long id){
+    public byte[] getFichierDocumentData(Long id) {
         return getDocument(id).getData();
     }
 
@@ -82,21 +83,27 @@ public class FichierDocumentService {
         saveDocument(fichierDocument);
     }
 
-    private FichierDocument initDocument(Notaire notaire, Client client) {
+    private FichierDocument initDocument(Notaire notaire, Client client, RendezVous rendezVous) {
         FichierDocument fichierDocument = new FichierDocument();
         fichierDocument.setUsers(new ArrayList<>(Arrays.asList(client, notaire)));
+        fichierDocument.setRendezVous(rendezVous);
         fichierDocument = saveDocument(fichierDocument);
         return fichierDocument;
     }
 
-    private void linkDocumentAndItems(Notaire notaire, Client client, FichierDocument fichierDocument) {
+    private void linkDocumentAndItems(Notaire notaire, Client client, FichierDocument fichierDocument,RendezVous rendezVous) {
         linkUserEtFichier(client, fichierDocument);
         linkUserEtFichier(notaire, fichierDocument);
+        linkRendezVousEtFichier(rendezVous,fichierDocument);
     }
 
     private void linkUserEtFichier(User user, FichierDocument fichierDocument) {
         ListUtil.ajouterObjectAListe(fichierDocument, user.getFichierDocuments());
         userService.saveUser(user);
+    }
+    private void linkRendezVousEtFichier(RendezVous rendezVous,FichierDocument fichierDocument){
+        rendezVous.setFichierDocument(fichierDocument);
+        rendezVousService.saveRendezVous(rendezVous);
     }
 
     private FichierDocument saveDocument(FichierDocument fichierDocument) {

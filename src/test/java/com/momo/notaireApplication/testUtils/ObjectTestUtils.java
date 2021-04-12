@@ -19,11 +19,11 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ObjectTestUtils {
-    private static final String NOM = "nom";
+    public static final String NOM = "nom";
 
-    private static final String PRENOM = "prenom";
+    public static final String PRENOM = "prenom";
 
-    private static final String EMAIL = "email";
+    public static final String EMAIL = "email";
 
     private static final String STRIPE_ACCOUNT_ID = "accountId";
 
