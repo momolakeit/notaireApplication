@@ -13,9 +13,11 @@ import org.mapstruct.factory.Mappers;
 public interface ConversationMapper {
     ConversationMapper instance = Mappers.getMapper(ConversationMapper.class);
 
+    @Mapping(source = "rendezVous", target = "rendezVous", ignore = true)
     ConversationDTO toDTO(Conversation conversation);
 
     @Mapping(source = "users", target = "users", ignore = true)
+    @Mapping(source = "rendezVous", target = "rendezVous", ignore = true)
     @Mapping(source = "id", target = "id", ignore = true)
     Conversation toEntity(ConversationDTO conversation);
 

@@ -17,4 +17,6 @@ public class FichierDocumentDTO {
     private byte[] data;
 
     private List<UserDTO> users;
+
+    private RendezVousDTO rendezVous;
 }

@@ -26,4 +26,7 @@ public class FichierDocument {
 
     @ManyToMany
     private List<User> users;
+
+    @OneToOne
+    private RendezVous rendezVous;
 }

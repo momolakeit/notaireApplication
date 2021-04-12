@@ -12,6 +12,7 @@ public interface FichierDocumentMapper {
 
     @Mapping(target = "users", ignore = true)
     @Mapping(target = "data", ignore = true)
+    @Mapping(target = "rendezVous", ignore = true)
     FichierDocumentDTO toDTO(FichierDocument fichierDocument);
 
     @Mapping(target = "users", ignore = true)

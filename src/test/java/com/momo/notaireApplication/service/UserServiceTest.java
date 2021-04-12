@@ -89,7 +89,6 @@ class UserServiceTest {
         UserDTO user = userService.getUserDTOById(1L);
         assertNull(user.getFactures());
         assertNull(user.getFichierDocuments());
-        assertNull(user.getRendezVous());
     }
 
     @Test

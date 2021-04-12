@@ -22,4 +22,6 @@ public class RendezVousDTO {
     private List<UserDTO> users;
 
     private ConversationDTO conversation;
+
+    private FichierDocumentDTO fichierDocument;
 }
