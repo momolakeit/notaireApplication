@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 
-@Mapper(uses = {MessageMapper.class,SimpleUserMapper.class,RendezVousMapper.class})
+@Mapper(uses = {MessageMapper.class,SimpleUserMapper.class,RendezVousMapper.class,FichierDocumentMapper.class})
 public interface ConversationMapper {
     ConversationMapper instance = Mappers.getMapper(ConversationMapper.class);
 
