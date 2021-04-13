@@ -46,6 +46,9 @@ public class MessagingServiceTest {
     @Mock
     private RendezVousService rendezVousService;
 
+    @Mock
+    private FichierDocumentService fichierDocumentService;
+
     @Captor
     ArgumentCaptor<Conversation> conversationArgumentCaptor;
 
@@ -68,9 +71,10 @@ public class MessagingServiceTest {
         MessagesDTO messagesDTO = ObjectTestUtils.initMessageDTO();
 
         ConversationDTO conversationDTO = ObjectTestUtils.conversationDTO(Arrays.asList(initClient(), initNotaire()));
-        Conversation conversation = messageService.createConversation(conversationDTO, messagesDTO,ObjectTestUtils.rendezVousDTO());
+        //todo fichierDocument
+        Conversation conversation = messageService.createConversation(conversationDTO, messagesDTO,ObjectTestUtils.rendezVousDTO(),ObjectTestUtils.fichierDocumentDTO());
 
-        verify(conversationRepository,times(2)).save(conversationArgumentCaptor.capture());
+        verify(conversationRepository,times(1)).save(conversationArgumentCaptor.capture());
         verify(userService).saveMutlipleUsers(userListArgumentCaptor.capture());
         verify(messagesRepository).save(messagesArgumentCaptor.capture());
         verify(rendezVousService).saveRendezVous(rendezVousArgumentCaptor.capture());
@@ -83,6 +87,7 @@ public class MessagingServiceTest {
         for (User user : userList) {
             assertEquals(1, user.getConversations().size());
         }
+        assertNotNull(conversation.getFichierDocument());
         assertEquals(2, conversationCapturedValue.getUsers().size());
         assertEquals(MESSAGE_DEFAULT, conversation.getMessages().get(0).getMessage());
         assertEquals(conversation,rendezVousCapturedValue.getConversation());
@@ -128,6 +133,7 @@ public class MessagingServiceTest {
         when(userService.saveMutlipleUsers(anyList())).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
         when(rendezVousService.getRendezVous(anyLong())).thenReturn(new RendezVous());
         when(rendezVousService.saveRendezVous(any(RendezVous.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
+        when(fichierDocumentService.getDocument(anyLong())).thenReturn(new FichierDocument());
 
         when(userService.getUser(1L)).thenReturn(initClient());
         when(userService.getUser(2L)).thenReturn(initNotaire());

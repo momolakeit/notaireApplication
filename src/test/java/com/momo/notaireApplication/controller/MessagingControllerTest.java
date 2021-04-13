@@ -1,6 +1,7 @@
 package com.momo.notaireApplication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.momo.notaireApplication.mapping.FichierDocumentMapper;
 import com.momo.notaireApplication.mapping.RendezVousMapper;
 import com.momo.notaireApplication.mapping.SimpleUserMapper;
 import com.momo.notaireApplication.mapping.UserMapper;
@@ -8,6 +9,7 @@ import com.momo.notaireApplication.model.db.*;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.model.request.CreateConversationDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
+import com.momo.notaireApplication.repositories.FichierDocumentRepository;
 import com.momo.notaireApplication.repositories.RendezVousRepository;
 import com.momo.notaireApplication.repositories.UserRepository;
 import com.momo.notaireApplication.testUtils.ObjectTestUtils;
@@ -47,11 +49,17 @@ class MessagingControllerTest {
     @Autowired
     private MessagingController messagingController;
 
+    @Autowired
+    private FichierDocumentRepository fichierDocumentRepository;
+
     private List<User> users;
 
     private Conversation conversation;
 
     private RendezVous rendezVous;
+
+    private FichierDocument fichierDocument;
+
     @BeforeEach
     public void init() {
         Client client = ObjectTestUtils.initClient();
@@ -64,16 +72,18 @@ class MessagingControllerTest {
         conversation.setUsers(users);
         conversation = conversationRepository.save(conversation);
         rendezVous = rendezVousRepository.save(new RendezVous());
+        fichierDocument = fichierDocumentRepository.save(new FichierDocument());
+
     }
 
     @Test
     public void createConversation() throws Exception {
         MockMvc mvc = initMockMvc();
-        Client client =ObjectTestUtils.findClientInList(users);
+        Client client = ObjectTestUtils.findClientInList(users);
         MessagesDTO messagesDTO = getMessagesDTOWithProperClientId(client);
         messagesDTO.setUser(SimpleUserMapper.instance.toDTO(client));
 
-        CreateConversationDTO createConversationDTO = new CreateConversationDTO(ObjectTestUtils.conversationDTO(users), messagesDTO, RendezVousMapper.instance.toDTO(rendezVous));
+        CreateConversationDTO createConversationDTO = new CreateConversationDTO(ObjectTestUtils.conversationDTO(users), messagesDTO, RendezVousMapper.instance.toDTO(rendezVous), FichierDocumentMapper.instance.toDTO(fichierDocument));
 
         mvc.perform(MockMvcRequestBuilders.post("/conversation/")
                 .content(new ObjectMapper().writeValueAsString(createConversationDTO))
@@ -83,11 +93,10 @@ class MessagingControllerTest {
     }
 
 
-
     @Test
     public void getConversation() throws Exception {
         MockMvc mvc = initMockMvc();
-        mvc.perform(MockMvcRequestBuilders.get("/conversation/getConversation/{conversationID}",conversation.getId())
+        mvc.perform(MockMvcRequestBuilders.get("/conversation/getConversation/{conversationID}", conversation.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -97,7 +106,7 @@ class MessagingControllerTest {
     @Test
     public void getConversationNotFound() throws Exception {
         MockMvc mvc = initMockMvc();
-        mvc.perform(MockMvcRequestBuilders.get("/conversation/getConversation/{conversationID}",14444L)
+        mvc.perform(MockMvcRequestBuilders.get("/conversation/getConversation/{conversationID}", 14444L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

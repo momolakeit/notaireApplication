@@ -36,30 +36,39 @@ public class MessagingController extends BaseController {
     @PostMapping
     @ResponseBody
     public ConversationDTO createConversation(@RequestBody CreateConversationDTO createConversationDTO) {
-        Conversation conversation = messagingService.createConversation(createConversationDTO.getConversationDTO(), createConversationDTO.getMessagesDTO(),createConversationDTO.getRendezVousDTO());
+        Conversation conversation = messagingService.createConversation(
+                createConversationDTO.getConversationDTO(),
+                createConversationDTO.getMessagesDTO(),
+                createConversationDTO.getRendezVousDTO(),
+                createConversationDTO.getFichierDocumentDTO()
+        );
         return messagingService.toDTO(conversation);
     }
 
     @MessageMapping("/addMessage/{conversationID}")
     public void addMessage(MessagesDTO messagesDTO, @DestinationVariable Long conversationID) {
-        Conversation conversation = messagingService.addMessage(conversationID,messagesDTO);
-        simpMessagingTemplate.convertAndSend("/conversation/"+conversation.getId(),messagingService.toDTO(conversation));
+        Conversation conversation = messagingService.addMessage(conversationID, messagesDTO);
+        simpMessagingTemplate.convertAndSend("/conversation/" + conversation.getId(), messagingService.toDTO(conversation));
     }
+
     @MessageMapping("/call/{userId}")
     public void call(String obj, @DestinationVariable Long userId) throws IOException {
-        simpMessagingTemplate.convertAndSend("/answerCall/"+userId, new ObjectMapper().writeValueAsString(obj));
+        simpMessagingTemplate.convertAndSend("/answerCall/" + userId, new ObjectMapper().writeValueAsString(obj));
     }
+
     @MessageMapping("/respond/{userId}")
     public void respond(String obj, @DestinationVariable Long userId) throws JsonProcessingException {
-        simpMessagingTemplate.convertAndSend("/establishConnection/"+userId,new ObjectMapper().writeValueAsString(obj));
+        simpMessagingTemplate.convertAndSend("/establishConnection/" + userId, new ObjectMapper().writeValueAsString(obj));
     }
+
     @MessageMapping("/sendIceCandidate/{userId}")
     public void establishIceConnection(String obj, @DestinationVariable Long userId) throws JsonProcessingException {
-        simpMessagingTemplate.convertAndSend("/receiveIceCandidate/"+userId,new ObjectMapper().writeValueAsString(obj));
+        simpMessagingTemplate.convertAndSend("/receiveIceCandidate/" + userId, new ObjectMapper().writeValueAsString(obj));
     }
+
     @GetMapping("/getConversation/{conversationID}")
     @ResponseBody
-    public ConversationDTO getConversation(@PathVariable Long conversationID){
+    public ConversationDTO getConversation(@PathVariable Long conversationID) {
         Conversation conversation = messagingService.getConversation(conversationID);
         return messagingService.toDTO(conversation);
     }

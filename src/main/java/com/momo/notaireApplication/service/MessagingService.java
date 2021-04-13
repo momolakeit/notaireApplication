@@ -3,11 +3,9 @@ package com.momo.notaireApplication.service;
 import com.momo.notaireApplication.exception.validation.notFound.ConversationNotFoundException;
 import com.momo.notaireApplication.mapping.ConversationMapper;
 import com.momo.notaireApplication.mapping.MessageMapper;
-import com.momo.notaireApplication.model.db.Conversation;
-import com.momo.notaireApplication.model.db.Messages;
-import com.momo.notaireApplication.model.db.RendezVous;
-import com.momo.notaireApplication.model.db.User;
+import com.momo.notaireApplication.model.db.*;
 import com.momo.notaireApplication.model.dto.ConversationDTO;
+import com.momo.notaireApplication.model.dto.FichierDocumentDTO;
 import com.momo.notaireApplication.model.dto.MessagesDTO;
 import com.momo.notaireApplication.model.dto.RendezVousDTO;
 import com.momo.notaireApplication.repositories.ConversationRepository;
@@ -27,23 +25,32 @@ public class MessagingService {
     private MessagesRepository messagesRepository;
     private UserService userService;
     private RendezVousService rendezVousService;
+    private FichierDocumentService fichierDocumentService;
 
-
-    public MessagingService(ConversationRepository conversationRepository, MessagesRepository messagesRepository, UserService userService, RendezVousService rendezVousService) {
+    public MessagingService(ConversationRepository conversationRepository,
+                            MessagesRepository messagesRepository,
+                            UserService userService,
+                            RendezVousService rendezVousService,
+                            FichierDocumentService fichierDocumentService) {
         this.conversationRepository = conversationRepository;
         this.messagesRepository = messagesRepository;
         this.userService = userService;
         this.rendezVousService = rendezVousService;
+        this.fichierDocumentService = fichierDocumentService;
     }
 
-    public Conversation createConversation(ConversationDTO conversationDTO, MessagesDTO messagesDTO,RendezVousDTO rendezVousDTO) {
-        List<User> users = findAllUsersFromDTO(conversationDTO);
+    public Conversation createConversation(ConversationDTO conversationDTO,
+                                           MessagesDTO messagesDTO,
+                                           RendezVousDTO rendezVousDTO,
+                                           FichierDocumentDTO fichierDocumentDTO) {
         Conversation conversation = ConversationMapper.instance.toEntity(conversationDTO);
-        addMessagesDTOtoConversation(messagesDTO, conversation);
-        conversation.setUsers(users);
+
+        List<User> users = findAllUsersFromDTO(conversationDTO);
+        RendezVous rendezVous = rendezVousService.getRendezVous(rendezVousDTO.getId());
+        FichierDocument fichierDocument = fichierDocumentService.getDocument(fichierDocumentDTO.getId());
+        addItemsToConversation(conversation,users,rendezVous,fichierDocument,messagesDTO);
         conversation = saveConversation(conversation);
-        addConversationToRendezVous(rendezVousDTO,conversation);
-        addConvoToAllUsers(users, conversation);
+        addConversationToItems(rendezVousDTO, users, conversation);
         return conversation;
     }
 
@@ -85,18 +92,29 @@ public class MessagingService {
         return users;
     }
 
+    private void addConversationToItems(RendezVousDTO rendezVousDTO, List<User> users, Conversation conversation) {
+        addConversationToRendezVous(rendezVousDTO, conversation);
+        addConvoToAllUsers(users, conversation);
+    }
+
     private void addConvoToAllUsers(List<User> users, Conversation conversation) {
         users.stream().forEach(user -> {
             user.setConversations(ListUtil.ajouterObjectAListe(conversation, user.getConversations()));
         });
         userService.saveMutlipleUsers(users);
     }
+    private void addItemsToConversation(Conversation conversation,List<User> users, RendezVous rendezVous, FichierDocument fichierDocument,MessagesDTO messagesDTO){
+        conversation.setRendezVous(rendezVous);
+        conversation.setUsers(users);
+        conversation.setFichierDocument(fichierDocument);
+        addMessagesDTOtoConversation(messagesDTO, conversation);
+    }
+
 
     private void addConversationToRendezVous(RendezVousDTO rendezVousDTO,Conversation conversation) {
         RendezVous rendezVous = rendezVousService.getRendezVous(rendezVousDTO.getId());
         rendezVous.setConversation(conversation);
         conversation.setRendezVous(rendezVous);
         rendezVousService.saveRendezVous(rendezVous);
-        saveConversation(conversation);
     }
 }

@@ -4,10 +4,7 @@ import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.User;
-import com.momo.notaireApplication.model.dto.ConversationDTO;
-import com.momo.notaireApplication.model.dto.MessagesDTO;
-import com.momo.notaireApplication.model.dto.RendezVousDTO;
-import com.momo.notaireApplication.model.dto.UserDTO;
+import com.momo.notaireApplication.model.dto.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +81,11 @@ public class ObjectTestUtils {
         RendezVousDTO rendezVousDTO = new RendezVousDTO();
         rendezVousDTO.setId(1L);
         return rendezVousDTO;
+    }
+    public static FichierDocumentDTO fichierDocumentDTO(){
+        FichierDocumentDTO fichierDocumentDTO = new FichierDocumentDTO();
+        fichierDocumentDTO.setId(1L);
+        return  fichierDocumentDTO;
     }
 
     public static void assertUsers(String nom, String prenom, String email, User userToAssert) {

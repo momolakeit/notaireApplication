@@ -20,4 +20,6 @@ public class ConversationDTO {
     private List<MessagesDTO> messages;
 
     private RendezVousDTO rendezVous;
+
+    private FichierDocumentDTO fichierDocument;
 }

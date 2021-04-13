@@ -106,7 +106,7 @@ public class FichierDocumentService {
         rendezVousService.saveRendezVous(rendezVous);
     }
 
-    private FichierDocument saveDocument(FichierDocument fichierDocument) {
+    public FichierDocument saveDocument(FichierDocument fichierDocument) {
         return this.fichierDocumentRepository.save(fichierDocument);
     }
 

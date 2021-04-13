@@ -26,4 +26,7 @@ public class Conversation {
     @OneToOne
     private RendezVous rendezVous;
 
+    @OneToOne
+    private FichierDocument fichierDocument;
+
 }
