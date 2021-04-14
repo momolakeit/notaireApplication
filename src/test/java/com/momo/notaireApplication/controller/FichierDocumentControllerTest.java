@@ -7,8 +7,12 @@ import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
 import com.momo.notaireApplication.model.db.RendezVous;
 import com.momo.notaireApplication.model.request.CreateFichierDocumentRequestDTO;
+import com.momo.notaireApplication.model.request.SignDocumentDTO;
 import com.momo.notaireApplication.repositories.*;
+import com.momo.notaireApplication.service.encryption.EncryptionService;
+import com.momo.notaireApplication.service.pdf.ITextService;
 import com.momo.notaireApplication.testUtils.TestDocumentUtils;
+import org.bouncycastle.cms.CMSException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +26,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,6 +51,10 @@ class FichierDocumentControllerTest {
     @Autowired
     private RendezVousRepository rendezVousRepository;
 
+    @Autowired
+    private EncryptionService encryptionService;
+
+
     private FichierDocument fichierDocument;
 
     private Client client;
@@ -52,8 +64,10 @@ class FichierDocumentControllerTest {
     private RendezVous rendezVous;
 
     @BeforeEach
-    public void init() {
+    public void init() throws IOException, CertificateException, CMSException, NoSuchProviderException {
         fichierDocument = new FichierDocument();
+        fichierDocument.setDescription("la mala");
+        fichierDocument.setData(encryptionService.encryptData(TestDocumentUtils.initPDFDocument()));
         fichierDocument = fichierDocumentRepository.save(fichierDocument);
         client = userRepository.save(new Client());
         notaire = userRepository.save(new Notaire());
@@ -88,6 +102,19 @@ class FichierDocumentControllerTest {
         createFichierDocumentRequestDTO.setRendezVousId(rendezVous.getId());
         mvc.perform(MockMvcRequestBuilders.post("/fichierDocument")
                 .content(new ObjectMapper().writeValueAsString(createFichierDocumentRequestDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testSignDocument() throws Exception {
+        MockMvc mvc = initMockMvc();
+        SignDocumentDTO signDocumentDTO = new SignDocumentDTO();
+        signDocumentDTO.setClientId(client.getId());
+        signDocumentDTO.setLocation("macarena");
+        mvc.perform(MockMvcRequestBuilders.post("/fichierDocument/sign")
+                .content(new ObjectMapper().writeValueAsString(signDocumentDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

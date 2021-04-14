@@ -3,6 +3,7 @@ package com.momo.notaireApplication.controller;
 import com.momo.notaireApplication.mapping.FichierDocumentMapper;
 import com.momo.notaireApplication.model.dto.FichierDocumentDTO;
 import com.momo.notaireApplication.model.request.CreateFichierDocumentRequestDTO;
+import com.momo.notaireApplication.model.request.SignDocumentDTO;
 import com.momo.notaireApplication.service.FichierDocumentService;
 import org.bouncycastle.cms.CMSException;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,13 @@ public class FichierDocumentController extends BaseController {
                 createFichierDocumentRequestDTO.getClientId(),
                 createFichierDocumentRequestDTO.getNotaireId(),
                 createFichierDocumentRequestDTO.getRendezVousId()));
+    }
+
+    @PostMapping("/sign")
+    public FichierDocumentDTO signDocument(@RequestBody SignDocumentDTO signDocumentDTO) {
+        return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.signDocument(
+                signDocumentDTO.getClientId(),
+                signDocumentDTO.getLocation()));
     }
 
     @PostMapping("/upload/{documentId}")
