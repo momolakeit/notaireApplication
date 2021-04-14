@@ -75,14 +75,15 @@ class FichierDocumentServiceTest {
     @Test
     public void testCreateDocument() throws IOException, CertificateException, CMSException, NoSuchProviderException {
         init();
-        FichierDocument fichierDocument = fichierDocumentService.createDocument(1L, 2L, 5L);
-        Mockito.verify(rendezVousService,times(1)).saveRendezVous(any(RendezVous.class));
+        String description = "Fichier pour les real";
+        FichierDocument fichierDocument = fichierDocumentService.createDocument(1L, 2L, 5L, description );
+        Mockito.verify(rendezVousService, times(1)).saveRendezVous(any(RendezVous.class));
 
-        for (User user : fichierDocument.getUsers())
-        {
+        for (User user : fichierDocument.getUsers()) {
             ObjectTestUtils.assertUsers(ObjectTestUtils.NOM, ObjectTestUtils.PRENOM, ObjectTestUtils.EMAIL, user);
         }
         assertNotNull(fichierDocument.getRendezVous());
+        assertEquals(description,fichierDocument.getDescription());
     }
 
     @Test

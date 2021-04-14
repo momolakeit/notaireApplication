@@ -18,4 +18,6 @@ public class CreateFichierDocumentRequestDTO {
 
     private Long rendezVousId;
 
+    private String description;
+
 }

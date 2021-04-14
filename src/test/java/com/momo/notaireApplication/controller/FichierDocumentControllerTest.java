@@ -100,6 +100,7 @@ class FichierDocumentControllerTest {
         createFichierDocumentRequestDTO.setClientId(client.getId());
         createFichierDocumentRequestDTO.setNotaireId(notaire.getId());
         createFichierDocumentRequestDTO.setRendezVousId(rendezVous.getId());
+        createFichierDocumentRequestDTO.setDescription("hi mate");
         mvc.perform(MockMvcRequestBuilders.post("/fichierDocument")
                 .content(new ObjectMapper().writeValueAsString(createFichierDocumentRequestDTO))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +112,7 @@ class FichierDocumentControllerTest {
     public void testSignDocument() throws Exception {
         MockMvc mvc = initMockMvc();
         SignDocumentDTO signDocumentDTO = new SignDocumentDTO();
-        signDocumentDTO.setClientId(client.getId());
+        signDocumentDTO.setClientId(fichierDocument.getId());
         signDocumentDTO.setLocation("macarena");
         mvc.perform(MockMvcRequestBuilders.post("/fichierDocument/sign")
                 .content(new ObjectMapper().writeValueAsString(signDocumentDTO))

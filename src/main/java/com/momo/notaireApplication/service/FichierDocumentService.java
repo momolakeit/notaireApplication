@@ -43,12 +43,11 @@ public class FichierDocumentService {
         this.PDF_FILETYPE = PDF_FILETYPE;
     }
 
-    //todo gerer le commentaire passé pour le fichier document
-    public FichierDocument createDocument(Long clientId, Long notaireId, Long rendezVousId) {
+    public FichierDocument createDocument(Long clientId, Long notaireId, Long rendezVousId,String description) {
         Notaire notaire = (Notaire) userService.getUser(notaireId);
         Client client = (Client) userService.getUser(clientId);
         RendezVous rendezVous = rendezVousService.getRendezVous(rendezVousId);
-        FichierDocument fichierDocument = initDocument(notaire, client,rendezVous);
+        FichierDocument fichierDocument = initDocument(notaire, client,rendezVous,description);
         linkDocumentAndItems(notaire, client, fichierDocument,rendezVous);
         return fichierDocument;
 
@@ -83,10 +82,11 @@ public class FichierDocumentService {
         saveDocument(fichierDocument);
     }
 
-    private FichierDocument initDocument(Notaire notaire, Client client, RendezVous rendezVous) {
+    private FichierDocument initDocument(Notaire notaire, Client client, RendezVous rendezVous,String description) {
         FichierDocument fichierDocument = new FichierDocument();
         fichierDocument.setUsers(new ArrayList<>(Arrays.asList(client, notaire)));
         fichierDocument.setRendezVous(rendezVous);
+        fichierDocument.setDescription(description);
         fichierDocument = saveDocument(fichierDocument);
         return fichierDocument;
     }

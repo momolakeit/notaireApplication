@@ -28,7 +28,8 @@ public class FichierDocumentController extends BaseController {
         return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.createDocument(
                 createFichierDocumentRequestDTO.getClientId(),
                 createFichierDocumentRequestDTO.getNotaireId(),
-                createFichierDocumentRequestDTO.getRendezVousId()));
+                createFichierDocumentRequestDTO.getRendezVousId(),
+                createFichierDocumentRequestDTO.getDescription()));
     }
 
     @PostMapping("/sign")
