@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class SignDocumentDTO {
-    private Long clientId;
+    private Long documentId;
     private String location;
 }

@@ -1,7 +1,6 @@
 package com.momo.notaireApplication.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.momo.notaireApplication.mapping.UserMapper;
 import com.momo.notaireApplication.model.db.Client;
 import com.momo.notaireApplication.model.db.FichierDocument;
 import com.momo.notaireApplication.model.db.Notaire;
@@ -10,7 +9,6 @@ import com.momo.notaireApplication.model.request.CreateFichierDocumentRequestDTO
 import com.momo.notaireApplication.model.request.SignDocumentDTO;
 import com.momo.notaireApplication.repositories.*;
 import com.momo.notaireApplication.service.encryption.EncryptionService;
-import com.momo.notaireApplication.service.pdf.ITextService;
 import com.momo.notaireApplication.testUtils.TestDocumentUtils;
 import org.bouncycastle.cms.CMSException;
 import org.junit.jupiter.api.BeforeEach;
@@ -112,7 +110,7 @@ class FichierDocumentControllerTest {
     public void testSignDocument() throws Exception {
         MockMvc mvc = initMockMvc();
         SignDocumentDTO signDocumentDTO = new SignDocumentDTO();
-        signDocumentDTO.setClientId(fichierDocument.getId());
+        signDocumentDTO.setDocumentId(fichierDocument.getId());
         signDocumentDTO.setLocation("macarena");
         mvc.perform(MockMvcRequestBuilders.post("/fichierDocument/sign")
                 .content(new ObjectMapper().writeValueAsString(signDocumentDTO))

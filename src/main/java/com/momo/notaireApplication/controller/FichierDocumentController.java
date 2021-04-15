@@ -33,9 +33,9 @@ public class FichierDocumentController extends BaseController {
     }
 
     @PostMapping("/sign")
-    public FichierDocumentDTO signDocument(@RequestBody SignDocumentDTO signDocumentDTO) {
+    public FichierDocumentDTO signDocument(@RequestBody SignDocumentDTO signDocumentDTO) throws CertificateException, NoSuchProviderException, CMSException, IOException {
         return FichierDocumentMapper.instance.toDTO(this.fichierDocumentService.signDocument(
-                signDocumentDTO.getClientId(),
+                signDocumentDTO.getDocumentId(),
                 signDocumentDTO.getLocation()));
     }
 
