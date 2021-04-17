@@ -168,5 +168,18 @@ class UserServiceTest {
         assertEquals(1, userDTOList.size());
 
     }
+    @Test
+    public void searchUsersByClientUnkownQueryRetourneVide() {
+        Client client = ObjectTestUtils.initClient();
+        Notaire notaire = ObjectTestUtils.initNotaire();
+        notaire.setPrenom("wesh");
+        notaire.setNom("mec");
+        when(headerCatcherService.getUserRole()).thenReturn("client");
+
+        when(userRepository.findAll()).thenReturn(Arrays.asList(notaire, client));
+        List<UserDTO> userDTOList = userService.searchUsersByQuery("zed");
+        assertEquals(0, userDTOList.size());
+
+    }
 
 }
