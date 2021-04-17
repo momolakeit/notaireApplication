@@ -95,7 +95,6 @@ public class UserService {
 
     private User filterUserInfo(User user) {
         Long loggedUserId = this.headerCatcherService.getLoggedUserId();
-        String role = headerCatcherService.getUserRole();
         if(!loggedUserId.equals(user.getId())){
             user.setFactures(null);
             user.setMessages(null);
