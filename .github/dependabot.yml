@@ -1,0 +1,53 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: com.github.Cloudmersive:Cloudmersive.APIClient.Java
+    versions:
+    - "4.10"
+    - "4.11"
+    - "4.13"
+    - "4.14"
+    - "4.18"
+    - v4.16
+  - dependency-name: com.stripe:stripe-java
+    versions:
+    - 20.40.0
+    - 20.41.0
+    - 20.42.0
+    - 20.43.0
+    - 20.44.0
+    - 20.45.0
+    - 20.46.0
+    - 20.47.0
+  - dependency-name: org.springframework:spring-messaging
+    versions:
+    - 5.3.5
+  - dependency-name: org.springframework:spring-websocket
+    versions:
+    - 5.3.5
+  - dependency-name: org.springframework.boot:spring-boot-starter-parent
+    versions:
+    - 2.4.3
+    - 2.4.4
+  - dependency-name: com.itextpdf:kernel
+    versions:
+    - 7.1.14
+  - dependency-name: org.springframework.boot:spring-boot-starter-web
+    versions:
+    - 2.4.4
+  - dependency-name: com.auth0:java-jwt
+    versions:
+    - 3.13.0
+    - 3.14.0
+  - dependency-name: org.mockito:mockito-inline
+    versions:
+    - 3.8.0
+  - dependency-name: org.mockito:mockito-core
+    versions:
+    - 3.7.7
+    - 3.8.0
